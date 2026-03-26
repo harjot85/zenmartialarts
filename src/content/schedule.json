@@ -1,0 +1,41 @@
+{
+  "_comment": "This file is managed by the owner via Decap CMS at /admin. Do not edit manually.",
+  "classes": [
+    {
+      "id": "mma-fundamentals",
+      "name": "MMA Fundamentals",
+      "description": "TODO: Add class description",
+      "days": ["Monday", "Wednesday", "Friday"],
+      "time": "TODO: 06:30",
+      "duration": 60,
+      "level": "all"
+    },
+    {
+      "id": "bjj-gi",
+      "name": "BJJ (Gi)",
+      "description": "TODO: Add class description",
+      "days": ["Tuesday", "Thursday"],
+      "time": "TODO: 19:00",
+      "duration": 90,
+      "level": "all"
+    },
+    {
+      "id": "kickboxing",
+      "name": "Kickboxing",
+      "description": "TODO: Add class description",
+      "days": ["Monday", "Wednesday"],
+      "time": "TODO: 19:00",
+      "duration": 60,
+      "level": "all"
+    },
+    {
+      "id": "kids-mma",
+      "name": "Kids MMA",
+      "description": "TODO: Add class description",
+      "days": ["Saturday"],
+      "time": "TODO: 10:00",
+      "duration": 45,
+      "level": "kids"
+    }
+  ]
+}

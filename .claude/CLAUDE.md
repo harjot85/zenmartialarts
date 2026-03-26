@@ -12,7 +12,7 @@ Primary goals: Lighthouse SEO 100, Performance 95+, strong trial booking convers
 - Tailwind CSS v4
 - TypeScript (content schemas only)
 - Decap CMS (schedule editing at /admin)
-- Deployment: Netlify
+- Deployment: Vercel
 
 ## Commands
 
@@ -65,6 +65,10 @@ fonts/ — self-hosted Fontsource files
 
 Run: `npm run astro check && npm run build`
 Fix any TypeScript or build errors before considering the task done.
+
+## Deployment
+
+- This is hosted on Github and is deployed on Vercel.
 
 ## Do Not
 

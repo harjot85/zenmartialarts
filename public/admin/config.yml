@@ -1,0 +1,48 @@
+# TODO: Set repo to your GitHub repo (e.g. your-username/zenmartialarts) before deploying
+# TODO: Create a GitHub OAuth App and configure it in Decap — see https://decapcms.org/docs/github-backend/
+backend:
+  name: github
+  repo: harjot85/zenmartialarts
+  branch: main
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: schedule
+    label: Class Schedule
+    files:
+      - name: schedule
+        label: Schedule
+        file: src/content/schedule.json
+        fields:
+          - label: Classes
+            name: classes
+            widget: list
+            fields:
+              - { label: ID, name: id, widget: string }
+              - { label: Class Name, name: name, widget: string }
+              - { label: Description, name: description, widget: text }
+              - label: Days
+                name: days
+                widget: select
+                multiple: true
+                options:
+                  - Monday
+                  - Tuesday
+                  - Wednesday
+                  - Thursday
+                  - Friday
+                  - Saturday
+                  - Sunday
+              - { label: Time, name: time, widget: string, hint: "24h format, e.g. 18:30" }
+              - { label: Duration (minutes), name: duration, widget: number }
+              - label: Level
+                name: level
+                widget: select
+                options:
+                  - { label: All levels, value: all }
+                  - { label: Beginner, value: beginner }
+                  - { label: Intermediate, value: intermediate }
+                  - { label: Advanced, value: advanced }
+                  - { label: Kids, value: kids }

@@ -1,0 +1,88 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonicalURL: string;
+  ogImage?: string;
+}
+
+const {
+  title,
+  description,
+  canonicalURL,
+  // TODO: Replace with actual default OG image path once designed
+  ogImage = "/images/og-default.jpg",
+} = Astro.props;
+
+const ogImageAbsolute = new URL(ogImage, Astro.site).href;
+
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "SportsActivityLocation",
+  name: "Zen Martial Arts",
+  // TODO: Replace with actual address
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "TODO: Street Address",
+    addressLocality: "Chilliwack",
+    addressRegion: "BC",
+    postalCode: "TODO: Postal Code",
+    addressCountry: "CA",
+  },
+  // TODO: Replace with actual phone number
+  telephone: "TODO: +1-604-XXX-XXXX",
+  // TODO: Replace with actual hours
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Wednesday", "Friday"],
+      opens: "06:00",
+      closes: "21:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Saturday", "Sunday"],
+      opens: "09:00",
+      closes: "14:00",
+    },
+  ],
+  url: Astro.site?.href,
+  // TODO: Replace with actual logo path once designed
+  logo: new URL("/images/logo.svg", Astro.site).href,
+};
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageAbsolute} />
+<meta property="og:locale" content="en_CA" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageAbsolute} />
+
+<!-- Favicons -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" href="/favicon.ico" />
+
+<!-- LocalBusiness JSON-LD -->
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(localBusinessSchema)}
+/>
+
+<!-- Slot for per-page JSON-LD (e.g. FAQPage, Event, BreadcrumbList) -->
+<slot name="jsonld" />

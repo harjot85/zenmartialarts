@@ -17,7 +17,12 @@
     "*.{astro,ts,js,mjs,css,json,md}": "prettier --write"
   },
   "dependencies": {
-    "astro": "^6.1.1"
+    "@fontsource/barlow": "^5.2.8",
+    "@fontsource/barlow-condensed": "^5.2.8",
+    "@fontsource/bebas-neue": "^5.2.7",
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^6.1.1",
+    "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
     "husky": "^9.1.7",

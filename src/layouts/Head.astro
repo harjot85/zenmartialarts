@@ -1,4 +1,12 @@
 ---
+import "@fontsource/bebas-neue/400.css";
+import "@fontsource/barlow-condensed/400.css";
+import "@fontsource/barlow-condensed/600.css";
+import "@fontsource/barlow/400.css";
+import "@fontsource/barlow/600.css";
+import "../styles/design-tokens.css";
+import "../styles/global.css";
+
 interface Props {
   title: string;
   description: string;
@@ -6,49 +14,32 @@ interface Props {
   ogImage?: string;
 }
 
-const {
-  title,
-  description,
-  canonicalURL,
-  // TODO: Replace with actual default OG image path once designed
-  ogImage = "/images/og-default.jpg",
-} = Astro.props;
+const { title, description, canonicalURL, ogImage } = Astro.props;
 
-const ogImageAbsolute = new URL(ogImage, Astro.site).href;
+const ogImageAbsolute = ogImage ? new URL(ogImage, Astro.site).href : undefined;
 
 const localBusinessSchema = {
   "@context": "https://schema.org",
-  "@type": "SportsActivityLocation",
-  name: "Zen Martial Arts",
-  // TODO: Replace with actual address
+  "@type": "LocalBusiness",
+  name: "Zen MMA",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "TODO: Street Address",
+    streetAddress: "48640 Yale Rd",
     addressLocality: "Chilliwack",
     addressRegion: "BC",
-    postalCode: "TODO: Postal Code",
+    postalCode: "V4Z 0B1",
     addressCountry: "CA",
   },
-  // TODO: Replace with actual phone number
-  telephone: "TODO: +1-604-XXX-XXXX",
-  // TODO: Replace with actual hours
-  openingHoursSpecification: [
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Wednesday", "Friday"],
-      opens: "06:00",
-      closes: "21:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Saturday", "Sunday"],
-      opens: "09:00",
-      closes: "14:00",
-    },
+  telephone: "+17788356590",
+  url: "https://zenmartialarts.ca",
+  openingHours: [
+    "Mo 06:00-21:30",
+    "Tu 06:00-21:30",
+    "We 06:00-21:30",
+    "Th 06:00-21:30",
+    "Fr 06:00-21:30",
+    "Sa 08:00-21:30",
   ],
-  url: Astro.site?.href,
-  // TODO: Replace with actual logo path once designed
-  logo: new URL("/images/logo.svg", Astro.site).href,
 };
 ---
 
@@ -65,14 +56,13 @@ const localBusinessSchema = {
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={ogImageAbsolute} />
-<meta property="og:locale" content="en_CA" />
+{ogImageAbsolute && <meta property="og:image" content={ogImageAbsolute} />}
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={ogImageAbsolute} />
+{ogImageAbsolute && <meta name="twitter:image" content={ogImageAbsolute} />}
 
 <!-- Favicons -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

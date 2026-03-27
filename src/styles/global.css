@@ -26,32 +26,34 @@
   --font-body: var(--font-body);
 }
 
-/* Base resets */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* Base resets — inside @layer base so Tailwind utilities can override */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-html {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-  scroll-behavior: smooth;
-}
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
 
-body {
-  margin: 0;
-  min-height: 100dvh;
-}
+  body {
+    margin: 0;
+    min-height: 100dvh;
+  }
 
-img,
-video {
-  display: block;
-  max-width: 100%;
-}
+  img,
+  video {
+    display: block;
+    max-width: 100%;
+  }
 
-a {
-  color: inherit;
+  a {
+    color: inherit;
+  }
 }

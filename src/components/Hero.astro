@@ -1,0 +1,173 @@
+---
+
+---
+
+<section class="relative overflow-hidden bg-[#0a0a0a] flex flex-col min-h-svh">
+  <!-- Image placeholder: full-bleed, replaced by real photo later -->
+  <div
+    class="absolute inset-0 bg-[#111] border border-dashed border-[#2a2a2a] flex flex-col items-center justify-center gap-4"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="64"
+      height="64"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="text-white opacity-15"
+    >
+      <path
+        d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
+      ></path>
+      <circle cx="12" cy="13" r="3"></circle>
+    </svg>
+    <p
+      class="[font-family:var(--font-ui)] text-xs uppercase tracking-widest text-white opacity-15"
+    >
+      TODO: Hero photo — full gym or action shot
+    </p>
+  </div>
+
+  <!-- Diagonal red line pattern overlay -->
+  <div
+    class="hero-pattern absolute inset-0 opacity-[0.045] pointer-events-none"
+  >
+  </div>
+
+  <!-- Top-right red glow -->
+  <div class="hero-glow absolute pointer-events-none"></div>
+
+  <!-- Bottom-to-top gradient overlay for text legibility -->
+  <div class="hero-overlay absolute inset-0 pointer-events-none"></div>
+
+  <!-- Main content — bottom-aligned -->
+  <div class="relative z-10 flex-1 flex flex-col justify-end">
+    <div
+      class="mx-auto w-full max-w-[var(--container-max)] px-[var(--section-padding-x)] pb-10 md:pb-14 flex flex-col gap-6"
+    >
+      <!-- Badge -->
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 shrink-0 rounded-full bg-[#CC1C1C]"></span>
+        <span
+          class="[font-family:var(--font-ui)] text-xs uppercase tracking-widest text-[#CC1C1C]"
+        >
+          Now enrolling · Chilliwack, BC
+        </span>
+      </div>
+
+      <!-- Headline -->
+      <h1
+        class="[font-family:var(--font-display)] text-[72px] md:text-[96px] lg:text-[112px] leading-none uppercase text-[var(--color-text)] max-w-3xl"
+      >
+        FORGE YOUR <span class="text-[#CC1C1C]">EDGE.</span>
+      </h1>
+
+      <!-- Subheading -->
+      <p
+        class="[font-family:var(--font-body)] text-base md:text-lg text-[#999] max-w-xl leading-relaxed"
+      >
+        World-class Muay Thai, BJJ, and MMA training. All levels welcome — from
+        first-timers to competitors.
+      </p>
+
+      <!-- Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+        <a
+          href="/free-trial"
+          class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest font-semibold bg-[#CC1C1C] text-white px-8 py-4 text-center rounded-none hover:bg-[#a81818] transition-colors w-full sm:w-auto"
+        >
+          Book Your Free Trial →
+        </a>
+        <a
+          href="/schedule"
+          class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest font-semibold bg-transparent text-white border border-[#333] px-8 py-4 text-center rounded-none hover:border-white transition-colors w-full sm:w-auto"
+        >
+          View Class Schedule
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stat strip -->
+  <div class="relative z-10 border-t border-[#1f1f1f] bg-[#0a0a0a]/80">
+    <div
+      class="mx-auto max-w-[var(--container-max)] px-[var(--section-padding-x)]"
+    >
+      <div class="grid grid-cols-3 divide-x divide-[#1f1f1f]">
+        <div class="flex flex-col items-center py-6 gap-1">
+          <span
+            class="[font-family:var(--font-display)] text-4xl text-[#CC1C1C] leading-none"
+            >12+</span
+          >
+          <span
+            class="[font-family:var(--font-ui)] text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-text-muted)]"
+            >Years Open</span
+          >
+        </div>
+
+        <div class="flex flex-col items-center py-6 gap-1">
+          <!-- TODO: Replace with real member count -->
+          <span
+            class="[font-family:var(--font-display)] text-4xl text-[#CC1C1C] leading-none"
+            >—</span
+          >
+          <span
+            class="[font-family:var(--font-ui)] text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-text-muted)]"
+            >Members</span
+          >
+        </div>
+
+        <div class="flex flex-col items-center py-6 gap-1">
+          <!-- TODO: Replace with real coach count -->
+          <span
+            class="[font-family:var(--font-display)] text-4xl text-[#CC1C1C] leading-none"
+            >—</span
+          >
+          <span
+            class="[font-family:var(--font-ui)] text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-text-muted)]"
+            >Coaches</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-pattern {
+    background-image: repeating-linear-gradient(
+      45deg,
+      #cc1c1c 0,
+      #cc1c1c 1px,
+      transparent 0,
+      transparent 50%
+    );
+    background-size: 22px 22px;
+  }
+
+  .hero-glow {
+    top: -15%;
+    right: -5%;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(204, 28, 28, 0.08) 0%,
+      transparent 70%
+    );
+  }
+
+  .hero-overlay {
+    background: linear-gradient(
+      to top,
+      rgba(10, 10, 10, 0.97) 0%,
+      rgba(10, 10, 10, 0.75) 35%,
+      rgba(10, 10, 10, 0.2) 70%,
+      rgba(10, 10, 10, 0.05) 100%
+    );
+  }
+</style>

@@ -1,19 +1,20 @@
 ---
 import Head from "./Head.astro";
-import "../styles/global.css";
 
 interface Props {
   title: string;
   description: string;
+  canonicalURL?: string;
   ogImage?: string;
 }
 
 const { title, description, ogImage } = Astro.props;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
+const canonicalURL =
+  Astro.props.canonicalURL ?? new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
-<html lang="en-CA">
+<html lang="en">
   <head>
     <Head
       title={title}
@@ -24,7 +25,95 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
       <slot name="jsonld" slot="jsonld" />
     </Head>
   </head>
-  <body>
-    <slot />
+  <body class="bg-[var(--color-bg)] text-[var(--color-text)] min-h-dvh">
+    <header
+      class="sticky top-0 z-50 bg-[var(--color-bg)] border-b border-[var(--color-border)]"
+    >
+      <div
+        class="mx-auto max-w-[var(--container-max)] px-[var(--section-padding-x)] flex items-center justify-between h-16 md:h-20"
+      >
+        <a
+          href="/"
+          class="[font-family:var(--font-display)] text-3xl tracking-widest uppercase text-[var(--color-text)] hover:opacity-90 transition-opacity"
+        >
+          ZEN <span class="text-[#CC1C1C]">MMA</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8">
+          <a
+            href="/programs"
+            class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+            >Programs</a
+          >
+          <a
+            href="/schedule"
+            class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+            >Schedule</a
+          >
+          <a
+            href="/about"
+            class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+            >About</a
+          >
+        </nav>
+
+        <a
+          href="/free-trial"
+          class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest bg-white text-[#0a0a0a] px-5 py-2.5 rounded-none font-semibold hover:bg-[var(--color-primary)] hover:text-[var(--color-text)] transition-colors"
+        >
+          Free Trial
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer
+      class="bg-[var(--color-surface)] border-t border-[var(--color-border)]"
+    >
+      <div
+        class="mx-auto max-w-[var(--container-max)] px-[var(--section-padding-x)] py-12 md:py-16"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+          <div>
+            <p
+              class="[font-family:var(--font-display)] text-3xl tracking-widest uppercase"
+            >
+              ZEN <span class="text-[#CC1C1C]">MMA</span>
+            </p>
+          </div>
+
+          <div
+            class="[font-family:var(--font-ui)] text-sm uppercase tracking-wide space-y-2 text-[var(--color-text-muted)]"
+          >
+            <p>48640 Yale Rd</p>
+            <p>Chilliwack, BC V4Z 0B1</p>
+            <a
+              href="tel:+17788356590"
+              class="block hover:text-[var(--color-text)] transition-colors"
+              >778-835-6590</a
+            >
+          </div>
+
+          <div
+            class="[font-family:var(--font-ui)] text-sm uppercase tracking-wide space-y-2 text-[var(--color-text-muted)]"
+          >
+            <p>Mon–Fri 6am–9:30pm</p>
+            <p>Sat 8am–9:30pm</p>
+            <p>Sun Closed</p>
+          </div>
+        </div>
+
+        <div class="mt-10 pt-6 border-t border-[var(--color-border)]">
+          <p
+            class="[font-family:var(--font-ui)] text-xs uppercase tracking-wide text-[var(--color-text-muted)]"
+          >
+            © 2025 Zen MMA. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

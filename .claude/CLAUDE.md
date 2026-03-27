@@ -76,3 +76,76 @@ Fix any TypeScript or build errors before considering the task done.
 - Add npm packages without asking first.
 - Modify schedule.json manually — that file is owner-managed via Decap CMS.
 - Use Google Fonts CDN.
+
+## Mockup Reference
+
+The approved design has been finalized. Match it exactly.
+
+### Global
+
+- Background: #0a0a0a
+- Text: #f5f5f5
+- Accent red: #CC1C1C
+- All buttons and inputs: border-radius 0 (sharp corners, no exceptions)
+- Fonts: Bebas Neue (headlines/logo), Barlow Condensed (labels/nav/badges),
+  Barlow (body copy)
+
+### Nav
+
+- Dark bg #0a0a0a, sticky on scroll
+- Logo: "ZEN MMA" — ZEN in white, MMA in #CC1C1C
+- "Free Trial" button: background #ffffff, color #0a0a0a,
+  sharp corners, Barlow Condensed bold uppercase
+
+### Hero
+
+- Full-bleed dark background with subtle red diagonal pattern overlay
+- Small red badge top-left: "Now enrolling · Chilliwack, BC"
+- Bebas Neue headline, large (72px mobile), red accent on last word
+- Grey subheading body text
+- Two buttons stacked: red primary CTA + ghost secondary
+- Stat strip at bottom (Years / Members / Coaches) separated by borders
+
+### Trust Bar
+
+- Solid #CC1C1C background
+- Three items in white uppercase: "No Contract · All Ages · Free First Class"
+
+### Classes Section
+
+- Dark bg, stacked card list
+- Each card: #111 bg, red left border on active card
+- Class name in Barlow Condensed bold uppercase
+- "Popular" / "New" badges in red
+
+### Instructor Carousel
+
+- Horizontally scrollable, snap-to-card
+- Cards: 200px wide, portrait photo placeholder on top, bio below
+- Red dot indicator tracks current card
+- "Swipe to see all coaches" hint text
+
+### Trial Booking Form
+
+- Light bg #f5f5f5 section
+- Inputs: white bg, 2px solid #bbb border, padding 20px, zero border-radius
+- Submit button: full width, red bg, Bebas Neue, sharp corners
+- Note text below button: "No credit card. No pressure. Just show up."
+
+### Testimonials
+
+- Dark #0d0d0d bg
+- Cards with red top border
+- Red star ratings
+- Circular member photo placeholder
+
+### Footer CTA
+
+- Solid #CC1C1C bg
+- "READY TO START?" headline in white
+- "BOOK FREE TRIAL" button: white bg, red text, sharp corners
+
+### Footer
+
+- #050505 bg
+- Gym name, address, phone, nav links in muted color

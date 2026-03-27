@@ -1,0 +1,23 @@
+---
+const items = ["No Contract", "All Ages", "Free First Class"];
+---
+
+<div class="w-full bg-[#CC1C1C] py-[14px] px-4">
+  <ul class="flex flex-wrap items-center justify-center gap-y-2">
+    {
+      items.map((item, i) => (
+        <>
+          <li class="[font-family:var(--font-ui)] text-[12px] font-semibold uppercase text-white [letter-spacing:0.2em]">
+            {item}
+          </li>
+          {i < items.length - 1 && (
+            <li
+              aria-hidden="true"
+              class="mx-4 w-1 h-1 rounded-full bg-white opacity-50 shrink-0"
+            />
+          )}
+        </>
+      ))
+    }
+  </ul>
+</div>

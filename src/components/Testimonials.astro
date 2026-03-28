@@ -1,0 +1,164 @@
+---
+const testimonials = [
+  {
+    quote:
+      "I walked in knowing nothing about martial arts and left my first class completely hooked. The coaches break everything down so you're never lost, and the training partners push you without making you feel like you don't belong. Two years later I'm in the best shape of my life.",
+    name: "Ryan Kowalski",
+    role: "Muay Thai · 2 years",
+    initials: "RK",
+  },
+  {
+    quote:
+      "The BJJ program here is legit. Coach runs tight, technical classes — no ego, just good drilling and honest rolling. I've trained at a few gyms around the valley and Zen is the one that actually kept me consistent. The community makes a huge difference.",
+    name: "Priya Sandhu",
+    role: "BJJ · 18 months",
+    initials: "PS",
+  },
+  {
+    quote:
+      "My son started the kids program at 8 and the change in his confidence and focus has been incredible. The coaches are patient, firm, and genuinely care about the kids. Worth every penny — I only wish we'd found this place sooner.",
+    name: "Melissa Tran",
+    role: "Kids Program · Member since 2023",
+    initials: "MT",
+  },
+];
+---
+
+<section class="testimonials-section">
+  <div class="testimonials-inner">
+    <div class="testimonials-header">
+      <span class="testimonials-label">Real members</span>
+      <h2 class="testimonials-title">WHAT THEY SAY</h2>
+    </div>
+
+    <ul class="testimonials-list" role="list">
+      {
+        testimonials.map((t) => (
+          <li class="testimonial-card">
+            <div class="testimonial-stars" aria-label="5 out of 5 stars">
+              ★★★★★
+            </div>
+            <blockquote class="testimonial-quote">{t.quote}</blockquote>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" aria-hidden="true">
+                {t.initials}
+              </div>
+              <div class="testimonial-author-info">
+                <span class="testimonial-name">{t.name}</span>
+                <span class="testimonial-role">{t.role}</span>
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .testimonials-section {
+    background: #0d0d0d;
+    padding: 48px 24px;
+  }
+
+  .testimonials-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .testimonials-header {
+    margin-bottom: 32px;
+  }
+
+  .testimonials-label {
+    display: block;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #cc1c1c;
+    margin-bottom: 8px;
+  }
+
+  .testimonials-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 44px;
+    color: #f5f5f5;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .testimonials-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .testimonial-card {
+    background: #111;
+    border-top: 2px solid #cc1c1c;
+    padding: 24px;
+  }
+
+  .testimonial-stars {
+    color: #cc1c1c;
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .testimonial-quote {
+    font-family: "Barlow", sans-serif;
+    font-size: 15px;
+    color: #ccc;
+    line-height: 1.7;
+    font-style: italic;
+    margin: 0 0 16px;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .testimonial-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #cc1c1c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 16px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .testimonial-author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .testimonial-name {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #f5f5f5;
+    line-height: 1.2;
+  }
+
+  .testimonial-role {
+    font-family: "Barlow", sans-serif;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.3;
+  }
+</style>

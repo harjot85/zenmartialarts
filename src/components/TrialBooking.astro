@@ -1,0 +1,194 @@
+---
+
+---
+
+<section class="trial-section" id="trial">
+  <span class="trial-decor" aria-hidden="true">FREE</span>
+
+  <div class="trial-inner">
+    <div class="trial-header">
+      <span class="trial-label">No commitment</span>
+      <h2 class="trial-title">BOOK YOUR FREE TRIAL</h2>
+      <p class="trial-subtext">
+        One class, on us. Show up, train hard, see if it fits.
+      </p>
+    </div>
+
+    <!-- TODO: Replace action="#" with Tally.so form URL once created -->
+    <form class="trial-form" action="#" method="POST" novalidate>
+      <div class="trial-fields">
+        <input
+          class="trial-input"
+          type="text"
+          name="full_name"
+          id="full_name"
+          placeholder="Full name"
+          autocomplete="name"
+          required
+        />
+        <input
+          class="trial-input"
+          type="tel"
+          name="phone"
+          id="phone"
+          placeholder="Phone number"
+          autocomplete="tel"
+          required
+        />
+        <select
+          class="trial-input trial-select"
+          name="class_interest"
+          id="class_interest"
+          required
+        >
+          <option value="" disabled selected>Which class interests you?</option>
+          <option value="muay-thai">Muay Thai</option>
+          <option value="bjj">BJJ</option>
+          <option value="mma-fundamentals">MMA Fundamentals</option>
+          <option value="kids-teens">Kids &amp; Teens</option>
+        </select>
+      </div>
+
+      <button class="trial-submit" type="submit">CLAIM YOUR FREE CLASS →</button
+      >
+      <p class="trial-note">No credit card. No pressure. Just show up.</p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .trial-section {
+    background: #f5f5f5;
+    color: #0a0a0a;
+    padding: 48px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .trial-decor {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 120px;
+    color: #cc1c1c;
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 0;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .trial-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .trial-header {
+    margin-bottom: 32px;
+  }
+
+  .trial-label {
+    display: block;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #cc1c1c;
+    margin-bottom: 8px;
+  }
+
+  .trial-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 52px;
+    color: #0a0a0a;
+    line-height: 1;
+    margin: 0 0 12px;
+  }
+
+  .trial-subtext {
+    font-family: "Barlow", sans-serif;
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .trial-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .trial-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .trial-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border: 2px solid #bbb;
+    border-radius: 0;
+    padding: 20px 18px;
+    font-family: "Barlow", sans-serif;
+    font-size: 15px;
+    color: #0a0a0a;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+  }
+
+  .trial-input::placeholder {
+    color: #aaa;
+  }
+
+  .trial-input:focus {
+    border-color: #cc1c1c;
+  }
+
+  .trial-select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    padding-right: 44px;
+  }
+
+  .trial-select option[value=""][disabled] {
+    color: #aaa;
+  }
+
+  .trial-submit {
+    width: 100%;
+    background: #cc1c1c;
+    color: #fff;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    padding: 20px;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+
+  .trial-submit:hover {
+    background: #a81717;
+  }
+
+  .trial-note {
+    font-family: "Barlow", sans-serif;
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+    margin: 0;
+    line-height: 1.5;
+  }
+</style>

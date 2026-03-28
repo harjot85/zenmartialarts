@@ -1,0 +1,237 @@
+---
+const instructors = [
+  {
+    name: "TODO: Coach Name",
+    title: "Head Coach · Muay Thai",
+    bio: "TODO: bio",
+  },
+  {
+    name: "TODO: Coach Name",
+    title: "BJJ Coach · Black Belt",
+    bio: "TODO: bio",
+  },
+  { name: "TODO: Coach Name", title: "MMA · Striking Coach", bio: "TODO: bio" },
+  { name: "TODO: Coach Name", title: "Kids Program · Lead", bio: "TODO: bio" },
+];
+---
+
+<section class="instructors-section">
+  <div class="instructors-inner">
+    <div class="instructors-header">
+      <span class="instructors-label">Meet the coaches</span>
+      <h2 class="instructors-title">INSTRUCTORS</h2>
+      <span class="instructors-hint">Swipe to see all coaches →</span>
+    </div>
+
+    <div class="instructors-carousel" id="instructors-carousel" role="list">
+      {
+        instructors.map((instructor) => (
+          <article class="instructor-card" role="listitem">
+            <div class="instructor-photo">
+              <svg
+                class="instructor-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+              </svg>
+              <span class="instructor-photo-label">Headshot</span>
+            </div>
+            <div class="instructor-body">
+              <span class="instructor-name">{instructor.name}</span>
+              <span class="instructor-title">{instructor.title}</span>
+              <p class="instructor-bio">{instructor.bio}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="instructors-dots" id="instructors-dots" aria-hidden="true">
+      {
+        instructors.map((_, i) => (
+          <span
+            class:list={["dot", { "dot--active": i === 0 }]}
+            data-index={i}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const carousel = document.getElementById("instructors-carousel");
+  const dots = document.querySelectorAll<HTMLElement>("#instructors-dots .dot");
+
+  function updateDots() {
+    if (!carousel) return;
+    const scrollLeft = carousel.scrollLeft;
+    const cardWidth = 200 + 14; // card width + gap
+    const index = Math.round(scrollLeft / cardWidth);
+    const clamped = Math.max(0, Math.min(index, dots.length - 1));
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("dot--active", i === clamped);
+    });
+  }
+
+  carousel?.addEventListener("scroll", updateDots, { passive: true });
+</script>
+
+<style>
+  .instructors-section {
+    background: #0d0d0d;
+    padding: 48px 0;
+  }
+
+  .instructors-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 24px;
+  }
+
+  .instructors-header {
+    padding-right: 24px;
+    margin-bottom: 28px;
+  }
+
+  .instructors-label {
+    display: block;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #cc1c1c;
+    margin-bottom: 8px;
+  }
+
+  .instructors-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 44px;
+    color: #f5f5f5;
+    margin: 0 0 8px;
+    line-height: 1;
+  }
+
+  .instructors-hint {
+    display: block;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #444;
+  }
+
+  .instructors-carousel {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 14px;
+    padding-right: 24px;
+    scrollbar-width: none;
+  }
+
+  .instructors-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .instructor-card {
+    width: 200px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    background: #111;
+    border-radius: 0;
+  }
+
+  .instructor-photo {
+    width: 200px;
+    height: 220px;
+    background: #181818;
+    border: 1px dashed #2a2a2a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .instructor-icon {
+    width: 56px;
+    height: 56px;
+    color: #fff;
+    opacity: 0.18;
+  }
+
+  .instructor-photo-label {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #333;
+    letter-spacing: 1px;
+  }
+
+  .instructor-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .instructor-name {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #f5f5f5;
+    line-height: 1.2;
+  }
+
+  .instructor-title {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #cc1c1c;
+    line-height: 1.3;
+  }
+
+  .instructor-bio {
+    font-family: "Barlow", sans-serif;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+    margin: 4px 0 0;
+  }
+
+  .instructors-dots {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding: 20px 24px 0;
+  }
+
+  .dot {
+    height: 3px;
+    width: 20px;
+    background: #222;
+    border-radius: 0;
+    transition:
+      width 0.2s ease,
+      background 0.2s ease;
+    display: block;
+  }
+
+  .dot--active {
+    width: 32px;
+    background: #cc1c1c;
+  }
+</style>

@@ -14,15 +14,14 @@
       </p>
     </div>
 
-    <!-- TODO: Replace action="#" with Tally.so form URL once created -->
-    <form class="trial-form" action="#" method="POST" novalidate>
+    <form class="trial-form" action="https://tally.so/r/BzD1XN" method="POST">
       <div class="trial-fields">
         <input
           class="trial-input"
           type="text"
-          name="full_name"
+          name="name"
           id="full_name"
-          placeholder="Full name"
+          placeholder="Your full name"
           autocomplete="name"
           required
         />
@@ -35,18 +34,38 @@
           autocomplete="tel"
           required
         />
-        <select
-          class="trial-input trial-select"
-          name="class_interest"
-          id="class_interest"
+        <input
+          class="trial-input"
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Email address"
+          autocomplete="email"
           required
+        />
+        <select
+          class="trial-input trial-select trial-select--multiple"
+          name="class"
+          id="class_interest"
         >
-          <option value="" disabled selected>Which class interests you?</option>
+          <option value="">Which class interests you?</option>
           <option value="muay-thai">Muay Thai</option>
-          <option value="bjj">BJJ</option>
-          <option value="mma-fundamentals">MMA Fundamentals</option>
-          <option value="kids-teens">Kids &amp; Teens</option>
+          <option value="bjj">BJJ / Jiu-Jitsu</option>
+          <option value="kickboxing">Kickboxing</option>
+          <option value="kids-program">Kids Program</option>
+          <option value="not-sure">Not sure yet</option>
         </select>
+        <div class="trial-date-wrap">
+          <label class="trial-date-label" for="preferred_date"
+            >Preferred date to come in</label
+          >
+          <input
+            class="trial-input trial-date"
+            type="date"
+            name="preferred_date"
+            id="preferred_date"
+          />
+        </div>
       </div>
 
       <button class="trial-submit" type="submit">CLAIM YOUR FREE CLASS →</button
@@ -162,6 +181,25 @@
 
   .trial-select option[value=""][disabled] {
     color: #aaa;
+  }
+
+  .trial-select--multiple {
+    background-image: none;
+    padding-right: 18px;
+  }
+
+  .trial-date {
+    font-size: 18px;
+    min-height: 64px;
+    padding-right: 48px;
+  }
+
+  .trial-date-label {
+    display: block;
+    font-family: "Barlow", sans-serif;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 6px;
   }
 
   .trial-submit {

@@ -1,5 +1,5 @@
 ---
-
+const accessKey = import.meta.env.WEB3FORMS_KEY;
 ---
 
 <section class="trial-section" id="trial">
@@ -14,7 +14,16 @@
       </p>
     </div>
 
-    <form class="trial-form" action="https://tally.so/r/BzD1XN" method="POST">
+    <form id="trial-form" class="trial-form">
+      <!-- Web3Forms hidden fields -->
+      <input type="hidden" name="access_key" value={accessKey} />
+      <input
+        type="hidden"
+        name="subject"
+        value="New Free Trial Booking — Zen MMA"
+      />
+      <input type="hidden" name="from_name" value="Zen MMA Website" />
+
       <div class="trial-fields">
         <input
           class="trial-input"
@@ -44,11 +53,12 @@
           required
         />
         <select
-          class="trial-input trial-select trial-select--multiple"
+          class="trial-input trial-select"
           name="class"
           id="class_interest"
+          required
         >
-          <option value="">Which class interests you?</option>
+          <option value="" disabled selected>Which class interests you?</option>
           <option value="muay-thai">Muay Thai</option>
           <option value="bjj">BJJ / Jiu-Jitsu</option>
           <option value="kickboxing">Kickboxing</option>
@@ -68,12 +78,71 @@
         </div>
       </div>
 
-      <button class="trial-submit" type="submit">CLAIM YOUR FREE CLASS →</button
+      <div id="trial-error" class="trial-error hidden">
+        Something went wrong. Please try again or call us directly.
+      </div>
+
+      <button id="trial-submit" class="trial-submit" type="submit"
+        >CLAIM YOUR FREE CLASS →</button
       >
       <p class="trial-note">No credit card. No pressure. Just show up.</p>
     </form>
+
+    <!-- Success state -->
+    <div id="trial-success" class="trial-success hidden">
+      <p class="trial-success-heading">YOU'RE IN!</p>
+      <p class="trial-success-sub">
+        We'll be in touch soon to confirm your free class. See you on the mat.
+      </p>
+    </div>
   </div>
 </section>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("trial-form");
+    const success = document.getElementById("trial-success");
+    const error = document.getElementById("trial-error");
+    const submit = document.getElementById("trial-submit");
+    const originalLabel = submit.textContent;
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      // Loading state
+      submit.textContent = "SENDING...";
+      submit.disabled = true;
+      error.classList.add("hidden");
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          form.classList.add("hidden");
+          success.classList.remove("hidden");
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (err) {
+        submit.textContent = originalLabel;
+        submit.disabled = false;
+        error.classList.remove("hidden");
+      }
+    });
+  });
+</script>
 
 <style>
   .trial-section {
@@ -183,11 +252,6 @@
     color: #aaa;
   }
 
-  .trial-select--multiple {
-    background-image: none;
-    padding-right: 18px;
-  }
-
   .trial-date {
     font-size: 18px;
     min-height: 64px;
@@ -200,6 +264,13 @@
     font-size: 13px;
     color: #555;
     margin-bottom: 6px;
+  }
+
+  .trial-error {
+    font-family: "Barlow", sans-serif;
+    font-size: 13px;
+    color: var(--color-accent);
+    margin-bottom: 10px;
   }
 
   .trial-submit {
@@ -221,6 +292,11 @@
     opacity: 0.9;
   }
 
+  .trial-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
   .trial-note {
     font-family: "Barlow", sans-serif;
     font-size: 13px;
@@ -228,5 +304,30 @@
     text-align: center;
     margin: 0;
     line-height: 1.5;
+  }
+
+  .trial-success {
+    text-align: center;
+    padding: 32px 0;
+  }
+
+  .trial-success-heading {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 64px;
+    color: var(--color-accent);
+    line-height: 1;
+    margin: 0 0 12px;
+  }
+
+  .trial-success-sub {
+    font-family: "Barlow", sans-serif;
+    font-size: 15px;
+    color: #555;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .hidden {
+    display: none;
   }
 </style>

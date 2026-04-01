@@ -1,4 +1,3 @@
-# TODO: Set repo to your GitHub repo (e.g. your-username/zenmartialarts) before deploying
 # TODO: Create a GitHub OAuth App and configure it in Decap — see https://decapcms.org/docs/github-backend/
 backend:
   name: github
@@ -16,33 +15,22 @@ collections:
         label: Schedule
         file: src/content/schedule.json
         fields:
-          - label: Classes
-            name: classes
+          - label: Days
+            name: days
             widget: list
             fields:
-              - { label: ID, name: id, widget: string }
-              - { label: Class Name, name: name, widget: string }
-              - { label: Description, name: description, widget: text }
-              - label: Days
-                name: days
-                widget: select
-                multiple: true
-                options:
-                  - Monday
-                  - Tuesday
-                  - Wednesday
-                  - Thursday
-                  - Friday
-                  - Saturday
-                  - Sunday
-              - { label: Time, name: time, widget: string, hint: "24h format, e.g. 18:30" }
-              - { label: Duration (minutes), name: duration, widget: number }
-              - label: Level
-                name: level
-                widget: select
-                options:
-                  - { label: All levels, value: all }
-                  - { label: Beginner, value: beginner }
-                  - { label: Intermediate, value: intermediate }
-                  - { label: Advanced, value: advanced }
-                  - { label: Kids, value: kids }
+              - { label: Day, name: day, widget: string, hint: "e.g. Monday" }
+              - { label: Short Day, name: shortDay, widget: string, hint: "e.g. Mon" }
+              - label: Classes
+                name: classes
+                widget: list
+                fields:
+                  - { label: Time, name: time, widget: string, hint: "e.g. 6:30 PM" }
+                  - { label: Class Name, name: name, widget: string }
+                  - label: Category
+                    name: category
+                    widget: select
+                    options:
+                      - { label: Adults, value: adults }
+                      - { label: Kids, value: kids }
+                  - { label: Duration (optional), name: duration, widget: string, required: false, hint: "e.g. 4:00–5:15pm" }

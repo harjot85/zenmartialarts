@@ -1,41 +1,147 @@
 {
-  "_comment": "This file is managed by the owner via Decap CMS at /admin. Do not edit manually.",
-  "classes": [
+  "days": [
     {
-      "id": "mma-fundamentals",
-      "name": "MMA Fundamentals",
-      "description": "TODO: Add class description",
-      "days": ["Monday", "Wednesday", "Friday"],
-      "time": "TODO: 06:30",
-      "duration": 60,
-      "level": "all"
+      "day": "Monday",
+      "shortDay": "Mon",
+      "classes": [
+        {
+          "time": "10:00 AM",
+          "name": "Adult NO GI Jiu-Jitsu",
+          "category": "adults"
+        },
+        {
+          "time": "4:00 PM",
+          "name": "Kids Competitive BJJ",
+          "duration": "4:00–5:15pm",
+          "category": "kids"
+        },
+        {
+          "time": "5:15 PM",
+          "name": "Beginner Kids Jiu-Jitsu",
+          "category": "kids"
+        },
+        { "time": "6:30 PM", "name": "Adult NO GI BJJ", "category": "adults" },
+        { "time": "7:30 PM", "name": "Adult Kickboxing", "category": "adults" }
+      ]
     },
     {
-      "id": "bjj-gi",
-      "name": "BJJ (Gi)",
-      "description": "TODO: Add class description",
-      "days": ["Tuesday", "Thursday"],
-      "time": "TODO: 19:00",
-      "duration": 90,
-      "level": "all"
+      "day": "Tuesday",
+      "shortDay": "Tue",
+      "classes": [
+        {
+          "time": "6:00 AM",
+          "name": "Adult NO GI Jiu-Jitsu",
+          "category": "adults"
+        },
+        {
+          "time": "10:00 AM",
+          "name": "Adult Cardio Kickboxing",
+          "category": "adults"
+        },
+        {
+          "time": "4:00 PM",
+          "name": "Kids age 5-7 Boxing",
+          "category": "kids"
+        },
+        {
+          "time": "4:45 PM",
+          "name": "Kids age 8-11 Boxing",
+          "category": "kids"
+        },
+        { "time": "5:30 PM", "name": "Adult Boxing", "category": "adults" },
+        {
+          "time": "6:30 PM",
+          "name": "Adult GI Jiu-Jitsu",
+          "category": "adults"
+        }
+      ]
     },
     {
-      "id": "kickboxing",
-      "name": "Kickboxing",
-      "description": "TODO: Add class description",
-      "days": ["Monday", "Wednesday"],
-      "time": "TODO: 19:00",
-      "duration": 60,
-      "level": "all"
+      "day": "Wednesday",
+      "shortDay": "Wed",
+      "classes": [
+        {
+          "time": "10:00 AM",
+          "name": "Adult NO GI Jiu-Jitsu",
+          "category": "adults"
+        },
+        {
+          "time": "4:00 PM",
+          "name": "Kids Competitive BJJ",
+          "duration": "4:00–5:15pm",
+          "category": "kids"
+        },
+        {
+          "time": "5:15 PM",
+          "name": "Mixed Martial Arts for Kids",
+          "category": "kids"
+        },
+        { "time": "6:30 PM", "name": "Adult NO GI BJJ", "category": "adults" },
+        { "time": "7:30 PM", "name": "Adult Kickboxing", "category": "adults" }
+      ]
     },
     {
-      "id": "kids-mma",
-      "name": "Kids MMA",
-      "description": "TODO: Add class description",
-      "days": ["Saturday"],
-      "time": "TODO: 10:00",
-      "duration": 45,
-      "level": "kids"
+      "day": "Thursday",
+      "shortDay": "Thu",
+      "classes": [
+        {
+          "time": "6:00 AM",
+          "name": "Adult NO GI Jiu-Jitsu",
+          "category": "adults"
+        },
+        {
+          "time": "10:00 AM",
+          "name": "Adult Cardio Kickboxing",
+          "category": "adults"
+        },
+        {
+          "time": "4:00 PM",
+          "name": "Kids age 5-7 Boxing",
+          "category": "kids"
+        },
+        {
+          "time": "4:45 PM",
+          "name": "Kids age 8-11 Boxing",
+          "category": "kids"
+        },
+        { "time": "5:30 PM", "name": "Adult Boxing", "category": "adults" },
+        {
+          "time": "6:30 PM",
+          "name": "Adult GI Jiu-Jitsu",
+          "category": "adults"
+        }
+      ]
+    },
+    {
+      "day": "Friday",
+      "shortDay": "Fri",
+      "classes": [
+        {
+          "time": "TBD",
+          "name": "TODO: Add Friday classes",
+          "category": "adults"
+        }
+      ]
+    },
+    {
+      "day": "Saturday",
+      "shortDay": "Sat",
+      "classes": [
+        {
+          "time": "TBD",
+          "name": "TODO: Add Saturday classes",
+          "category": "adults"
+        }
+      ]
+    },
+    {
+      "day": "Sunday",
+      "shortDay": "Sun",
+      "classes": []
     }
+  ],
+  "notes": [
+    "Group or private training available",
+    "Contact 778-835-6590 for weekend training or private sessions"
   ]
 }

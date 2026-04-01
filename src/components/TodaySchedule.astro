@@ -1,0 +1,213 @@
+---
+import scheduleData from "../content/schedule.json";
+
+// Map day name to JS getDay() index (0=Sun, 1=Mon ... 6=Sat)
+const dayIndexMap: Record<string, number> = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+};
+---
+
+<section class="today-section">
+  <div class="today-inner">
+    <div class="today-header">
+      <span class="today-label">Today at Zen MMA</span>
+      <h2 class="today-title">TODAY'S CLASSES</h2>
+      <p class="today-date" id="today-date">&nbsp;</p>
+    </div>
+
+    <div class="day-panels">
+      {
+        scheduleData.days.map((day) => (
+          <div class="day-panel" data-day={dayIndexMap[day.day]}>
+            {day.classes.length > 0 ? (
+              <div class="class-cards">
+                {day.classes.map((cls) => (
+                  <div class="class-card" data-category={cls.category}>
+                    <div class="class-time">{cls.time}</div>
+                    <div class="class-name">{cls.name}</div>
+                    <div class="class-category-badge">
+                      {cls.category === "kids" ? "Kids" : "Adults"}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div class="no-classes">
+                <p>Closed today. See you tomorrow!</p>
+                <p>
+                  Contact us for private training:{" "}
+                  <a href="tel:+17788356590" class="no-classes-phone">
+                    778-835-6590
+                  </a>
+                </p>
+              </div>
+            )}
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="today-footer">
+      <a href="/schedule" class="today-link">View Full Schedule →</a>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", function () {
+    var dayIndex = new Date().getDay();
+
+    var panel = document.querySelector(
+      '.day-panel[data-day="' + dayIndex + '"]',
+    );
+    if (panel) {
+      panel.style.display = "flex";
+      panel.style.flexDirection = "column";
+    }
+
+    var dateEl = document.getElementById("today-date");
+    if (dateEl) {
+      var options = { weekday: "long", month: "long", day: "numeric" };
+      dateEl.textContent = new Date().toLocaleDateString("en-CA", options);
+    }
+  });
+</script>
+
+<style>
+  .today-section {
+    background: #0a0a0a;
+    padding: 48px 24px;
+  }
+
+  .today-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .today-header {
+    margin-bottom: 32px;
+  }
+
+  .today-label {
+    display: block;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--color-accent);
+    margin-bottom: 8px;
+  }
+
+  .today-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 44px;
+    color: #f5f5f5;
+    margin: 0 0 6px;
+    line-height: 1;
+  }
+
+  .today-date {
+    font-family: "Barlow", sans-serif;
+    font-size: 14px;
+    color: var(--color-secondary);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .day-panel {
+    display: none;
+  }
+
+  .class-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .class-card {
+    background: #111;
+    border-left: 3px solid var(--color-accent);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0;
+    gap: 12px;
+  }
+
+  .class-time {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 20px;
+    color: var(--color-accent);
+    min-width: 80px;
+    line-height: 1.1;
+    flex-shrink: 0;
+  }
+
+  .class-name {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #f5f5f5;
+    line-height: 1.2;
+    flex: 1;
+  }
+
+  .class-category-badge {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+    padding: 4px 10px;
+    border-radius: 0;
+    flex-shrink: 0;
+    line-height: 1.4;
+  }
+
+  .no-classes {
+    text-align: center;
+    padding: 32px 0;
+    font-family: "Barlow", sans-serif;
+    font-size: 15px;
+    color: #666;
+    line-height: 1.7;
+  }
+
+  .no-classes p {
+    margin: 0;
+  }
+
+  .no-classes-phone {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .today-footer {
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  .today-link {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .today-link:hover {
+    opacity: 0.8;
+  }
+</style>

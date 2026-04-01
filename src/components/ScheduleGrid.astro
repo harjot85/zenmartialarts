@@ -1,0 +1,542 @@
+---
+import scheduleData from "../content/schedule.json";
+
+const timeSlots = [
+  "6:00 AM",
+  "8:00 AM",
+  "10:00 AM",
+  "4:00 PM",
+  "4:45 PM",
+  "5:15 PM",
+  "5:30 PM",
+  "6:30 PM",
+  "7:30 PM",
+  "TBD",
+];
+
+// Build lookup: dayName → time → class entry
+type ClassEntry = {
+  time: string;
+  name: string;
+  category: string;
+  duration?: string;
+};
+const classByDayAndTime: Record<string, Record<string, ClassEntry>> = {};
+for (const day of scheduleData.days) {
+  classByDayAndTime[day.day] = {};
+  for (const cls of day.classes) {
+    classByDayAndTime[day.day][cls.time] = cls;
+  }
+}
+
+// Maps day name → getDay() value (0=Sun, 1=Mon … 6=Sat)
+const getDayIndex: Record<string, number> = {
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+  Sunday: 0,
+};
+---
+
+<section class="sg-section">
+  <!-- ═══════════════════════════════════════════
+       DESKTOP TABLE (768px+)
+  ═══════════════════════════════════════════ -->
+  <div class="desktop-grid">
+    <div class="table-scroll">
+      <table class="schedule-table">
+        <thead>
+          <tr>
+            <th class="th-time-header" scope="col"></th>
+            {
+              scheduleData.days.map((day, colIndex) => (
+                <th class="schedule-th" scope="col" data-col={colIndex}>
+                  {day.shortDay}
+                </th>
+              ))
+            }
+          </tr>
+        </thead>
+        <tbody>
+          {
+            timeSlots.map((time) => (
+              <tr>
+                <td class="td-time">{time}</td>
+                {scheduleData.days.map((day, colIndex) => {
+                  const cls = classByDayAndTime[day.day]?.[time];
+                  return (
+                    <td
+                      class:list={["grid-cell", { "grid-cell--filled": !!cls }]}
+                      data-col={colIndex}
+                    >
+                      {cls && (
+                        <div class="cell-inner">
+                          <span class="cell-name">{cls.name}</span>
+                          <span class="cell-badge">
+                            {cls.category === "kids" ? "Kids" : "Adults"}
+                          </span>
+                        </div>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MOBILE TABS (under 768px)
+  ═══════════════════════════════════════════ -->
+  <div class="mobile-schedule">
+    <div class="tab-strip" role="tablist" aria-label="Day selector">
+      {
+        scheduleData.days.map((day) => (
+          <button
+            class="tab-btn"
+            role="tab"
+            data-day={getDayIndex[day.day]}
+            aria-selected="false"
+          >
+            {day.shortDay}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="tab-content">
+      {
+        scheduleData.days.map((day) => (
+          <div
+            class="mobile-panel"
+            role="tabpanel"
+            data-day={getDayIndex[day.day]}
+          >
+            {day.classes.length > 0 ? (
+              <div class="m-cards">
+                {day.classes.map((cls) => (
+                  <div class="m-card" data-category={cls.category}>
+                    <div class="m-time">{cls.time}</div>
+                    <div class="m-name">{cls.name}</div>
+                    <div class="m-badge">
+                      {cls.category === "kids" ? "Kids" : "Adults"}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div class="m-closed">
+                <p>Closed today. See you tomorrow!</p>
+                <p>
+                  Contact us for private training:&nbsp;
+                  <a href="tel:+17788356590" class="m-phone">
+                    778-835-6590
+                  </a>
+                </p>
+              </div>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       NOTES
+  ═══════════════════════════════════════════ -->
+  <div class="notes-block">
+    <span class="notes-label">Notes</span>
+    <ul class="notes-list">
+      {scheduleData.notes.map((note) => <li class="notes-item">{note}</li>)}
+    </ul>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       BOOK TRIAL CTA
+  ═══════════════════════════════════════════ -->
+  <div class="schedule-cta">
+    <h2 class="cta-headline">Ready to train?</h2>
+    <p class="cta-subtext">Book your free first class — no commitment.</p>
+    <a href="/#trial" class="cta-btn">BOOK FREE TRIAL →</a>
+  </div>
+</section>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", function () {
+    var todayGetDay = new Date().getDay(); // 0=Sun, 1=Mon … 6=Sat
+    // Column index in the table (Mon=0 … Sun=6)
+    var todayColIndex = (todayGetDay + 6) % 7;
+
+    // ── DESKTOP: highlight today's header column ──
+    var todayTh = document.querySelector(
+      '.schedule-th[data-col="' + todayColIndex + '"]',
+    );
+    if (todayTh) {
+      todayTh.classList.add("th-today");
+    }
+
+    // ── MOBILE: tab switching ──
+    var tabBtns = document.querySelectorAll(".tab-btn");
+    var mobilePanels = document.querySelectorAll(".mobile-panel");
+
+    function activateTab(dayVal) {
+      var dayStr = String(dayVal);
+      tabBtns.forEach(function (btn) {
+        var isActive = btn.getAttribute("data-day") === dayStr;
+        btn.classList.toggle("tab-btn--active", isActive);
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+      mobilePanels.forEach(function (panel) {
+        panel.classList.toggle(
+          "mobile-panel--active",
+          panel.getAttribute("data-day") === dayStr,
+        );
+      });
+    }
+
+    tabBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        activateTab(btn.getAttribute("data-day"));
+      });
+    });
+
+    // Auto-select today; fall back to Monday (1) if no match (e.g. Sunday closed)
+    activateTab(todayGetDay);
+  });
+</script>
+
+<style>
+  /* ─── Section wrapper ─── */
+  .sg-section {
+    background: #0a0a0a;
+    padding: 0 0 0;
+  }
+
+  /* ─── Show/hide desktop vs mobile ─── */
+  .desktop-grid {
+    display: none;
+  }
+  .mobile-schedule {
+    display: block;
+    padding: 0 24px;
+  }
+
+  @media (min-width: 768px) {
+    .desktop-grid {
+      display: block;
+      padding: 0 24px 0;
+    }
+    .mobile-schedule {
+      display: none;
+    }
+  }
+
+  /* ════════════════════════════════════
+     DESKTOP TABLE
+  ════════════════════════════════════ */
+  .table-scroll {
+    overflow-x: auto;
+    max-width: 1200px;
+    margin: 0 auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .schedule-table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  /* Header row */
+  .th-time-header,
+  .schedule-th {
+    background: #111;
+    border-bottom: 2px solid var(--color-accent);
+    border-right: 1px solid #1f1f1f;
+    padding: 14px 10px;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 16px;
+    color: #f5f5f5;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .th-time-header {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    min-width: 80px;
+    width: 80px;
+  }
+
+  /* Today's column header (added by JS) */
+  .th-today {
+    background: var(--color-accent);
+    color: #0a0a0a;
+  }
+
+  /* Time cells */
+  .td-time {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: #0d0d0d;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 14px;
+    color: var(--color-accent);
+    padding: 10px 12px;
+    border-right: 1px solid #1f1f1f;
+    border-bottom: 1px solid #1f1f1f;
+    min-width: 80px;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  /* Body cells */
+  .grid-cell {
+    background: #111;
+    border: 1px solid #1f1f1f;
+    padding: 10px 10px;
+    vertical-align: top;
+    min-width: 110px;
+  }
+
+  .grid-cell--filled {
+    background: #161616;
+    border-left: 2px solid var(--color-accent);
+  }
+
+  .cell-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .cell-name {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #f5f5f5;
+    line-height: 1.2;
+  }
+
+  .cell-badge {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+    line-height: 1.3;
+  }
+
+  /* ════════════════════════════════════
+     MOBILE TABS
+  ════════════════════════════════════ */
+  .tab-strip {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 16px;
+    scrollbar-width: none;
+  }
+
+  .tab-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-btn {
+    flex-shrink: 0;
+    background: #111;
+    color: #666;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 14px;
+    border: 1px solid #222;
+    border-radius: 0;
+    cursor: pointer;
+    line-height: 1;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+
+  .tab-btn--active {
+    background: var(--color-accent);
+    color: #0a0a0a;
+    border-color: var(--color-accent);
+  }
+
+  .tab-content {
+    padding-bottom: 8px;
+  }
+
+  .mobile-panel {
+    display: none;
+  }
+
+  .mobile-panel--active {
+    display: block;
+  }
+
+  .m-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .m-card {
+    background: #111;
+    border-left: 3px solid var(--color-accent);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 0;
+  }
+
+  .m-time {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 20px;
+    color: var(--color-accent);
+    min-width: 72px;
+    flex-shrink: 0;
+    line-height: 1.1;
+  }
+
+  .m-name {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #f5f5f5;
+    flex: 1;
+    line-height: 1.2;
+  }
+
+  .m-badge {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+    padding: 4px 10px;
+    border-radius: 0;
+    flex-shrink: 0;
+    line-height: 1.4;
+  }
+
+  .m-closed {
+    text-align: center;
+    padding: 40px 0;
+    font-family: "Barlow", sans-serif;
+    font-size: 15px;
+    color: #666;
+    line-height: 1.8;
+  }
+
+  .m-closed p {
+    margin: 0;
+  }
+
+  .m-phone {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  /* ════════════════════════════════════
+     NOTES
+  ════════════════════════════════════ */
+  .notes-block {
+    background: #111;
+    padding: 24px;
+    margin: 24px 24px 0;
+    max-width: 1200px;
+  }
+
+  @media (min-width: 768px) {
+    .notes-block {
+      margin: 24px auto 0;
+    }
+  }
+
+  .notes-label {
+    display: block;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--color-accent);
+    margin-bottom: 10px;
+  }
+
+  .notes-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .notes-item {
+    font-family: "Barlow", sans-serif;
+    font-size: 14px;
+    color: var(--color-secondary);
+    line-height: 1.5;
+  }
+
+  /* ════════════════════════════════════
+     BOOK TRIAL CTA
+  ════════════════════════════════════ */
+  .schedule-cta {
+    padding: 48px 24px;
+    text-align: center;
+  }
+
+  .cta-headline {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 44px;
+    color: #f5f5f5;
+    margin: 0 0 10px;
+    line-height: 1;
+  }
+
+  .cta-subtext {
+    font-family: "Barlow", sans-serif;
+    font-size: 15px;
+    color: #666;
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--color-accent);
+    color: #0a0a0a;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    padding: 18px 40px;
+    border-radius: 0;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .cta-btn:hover {
+    opacity: 0.9;
+  }
+</style>

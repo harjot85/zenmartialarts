@@ -1,7 +1,9 @@
 :root {
   /* Colors */
-  --color-primary: #b61b1b;
-  --color-primary-dark: #8f1515;
+  --color-accent: #c9a84c; /* gold */
+  --color-accent-subtle: rgba(201, 168, 76, 0.12); /* gold at 12% opacity */
+  --color-accent-border: rgba(201, 168, 76, 0.4); /* gold at 40% opacity */
+  --color-secondary: #a8a8a8; /* silver — secondary text */
   --color-bg: #0a0a0a;
   --color-surface: #141414;
   --color-border: #2a2a2a;

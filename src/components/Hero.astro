@@ -2,7 +2,7 @@
 
 ---
 
-<section class="relative overflow-hidden bg-[#0a0a0a] flex flex-col min-h-svh">
+<section class="relative overflow-hidden bg-[#1a1400] flex flex-col min-h-svh">
   <!-- Image placeholder: full-bleed, replaced by real photo later -->
   <div
     class="absolute inset-0 bg-[#111] border border-dashed border-[#2a2a2a] flex flex-col items-center justify-center gap-4"
@@ -50,9 +50,10 @@
     >
       <!-- Badge -->
       <div class="flex items-center gap-2">
-        <span class="w-2 h-2 shrink-0 rounded-full bg-[#CC1C1C]"></span>
+        <span class="w-2 h-2 shrink-0 rounded-full bg-[var(--color-accent)]"
+        ></span>
         <span
-          class="[font-family:var(--font-ui)] text-xs uppercase tracking-widest text-[#CC1C1C]"
+          class="[font-family:var(--font-ui)] text-xs uppercase tracking-widest text-[var(--color-accent)]"
         >
           Now enrolling · Chilliwack, BC
         </span>
@@ -62,7 +63,7 @@
       <h1
         class="[font-family:var(--font-display)] text-[72px] md:text-[96px] lg:text-[112px] leading-none uppercase text-[var(--color-text)] max-w-3xl"
       >
-        FORGE YOUR <span class="text-[#CC1C1C]">EDGE.</span>
+        FORGE YOUR <span class="text-[var(--color-accent)]">EDGE.</span>
       </h1>
 
       <!-- Subheading -->
@@ -77,7 +78,7 @@
       <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
         <a
           href="/free-trial"
-          class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest font-semibold bg-[#CC1C1C] text-white px-8 py-4 text-center rounded-none hover:bg-[#a81818] transition-colors w-full sm:w-auto"
+          class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest font-semibold bg-[var(--color-accent)] text-[#0a0a0a] px-8 py-4 text-center rounded-none hover:opacity-90 transition-opacity w-full sm:w-auto"
         >
           Book Your Free Trial →
         </a>
@@ -99,7 +100,7 @@
       <div class="grid grid-cols-3 divide-x divide-[#1f1f1f]">
         <div class="flex flex-col items-center py-6 gap-1">
           <span
-            class="[font-family:var(--font-display)] text-4xl text-[#CC1C1C] leading-none"
+            class="[font-family:var(--font-display)] text-4xl text-[var(--color-accent)] leading-none"
             >12+</span
           >
           <span
@@ -111,7 +112,7 @@
         <div class="flex flex-col items-center py-6 gap-1">
           <!-- TODO: Replace with real member count -->
           <span
-            class="[font-family:var(--font-display)] text-4xl text-[#CC1C1C] leading-none"
+            class="[font-family:var(--font-display)] text-4xl text-[var(--color-accent)] leading-none"
             >—</span
           >
           <span
@@ -123,7 +124,7 @@
         <div class="flex flex-col items-center py-6 gap-1">
           <!-- TODO: Replace with real coach count -->
           <span
-            class="[font-family:var(--font-display)] text-4xl text-[#CC1C1C] leading-none"
+            class="[font-family:var(--font-display)] text-4xl text-[var(--color-accent)] leading-none"
             >—</span
           >
           <span
@@ -140,8 +141,8 @@
   .hero-pattern {
     background-image: repeating-linear-gradient(
       45deg,
-      #cc1c1c 0,
-      #cc1c1c 1px,
+      #c9a84c 0,
+      #c9a84c 1px,
       transparent 0,
       transparent 50%
     );
@@ -156,7 +157,7 @@
     border-radius: 50%;
     background: radial-gradient(
       circle,
-      rgba(204, 28, 28, 0.08) 0%,
+      rgba(201, 168, 76, 0.08) 0%,
       transparent 70%
     );
   }

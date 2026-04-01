@@ -1,21 +1,19 @@
 ---
-const items = ["No Contract", "All Ages", "Free First Class"];
+const items = ["No Contract", "All Ages", "Free First Three Classes"];
 ---
 
-<div
-  class="w-full bg-[#1a1a1a] border-t border-b border-[var(--color-accent)] py-[14px] px-4"
->
+<div class="w-full bg-[#1a1a1a] border-t border-b border-accent py-3.5 px-4">
   <ul class="flex flex-wrap items-center justify-center gap-y-2">
     {
       items.map((item, i) => (
         <>
-          <li class="[font-family:var(--font-ui)] text-[12px] font-semibold uppercase text-[var(--color-accent)] [letter-spacing:0.2em]">
+          <li class="font-ui text-[12px] font-semibold uppercase text-accent tracking-[0.2em]">
             {item}
           </li>
           {i < items.length - 1 && (
             <li
               aria-hidden="true"
-              class="mx-4 w-1 h-1 rounded-full bg-[var(--color-accent)] opacity-50 shrink-0"
+              class="mx-4 w-1 h-1 rounded-full bg-accent opacity-50 shrink-0"
             />
           )}
         </>

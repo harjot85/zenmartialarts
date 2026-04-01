@@ -109,7 +109,7 @@ The approved design has been finalized. Match it exactly.
 ### Trust Bar
 
 - Solid #CC1C1C background
-- Three items in white uppercase: "No Contract · All Ages · Free First Class"
+- Three items in white uppercase: "No Contract · All Ages · Free First Three Classes"
 
 ### Classes Section
 

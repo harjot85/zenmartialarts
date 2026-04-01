@@ -3,33 +3,15 @@
 ---
 
 <section class="relative overflow-hidden bg-[#1a1400] flex flex-col min-h-svh">
-  <!-- Image placeholder: full-bleed, replaced by real photo later -->
-  <div
-    class="absolute inset-0 bg-[#111] border border-dashed border-[#2a2a2a] flex flex-col items-center justify-center gap-4"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="64"
-      height="64"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="text-white opacity-15"
-    >
-      <path
-        d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
-      ></path>
-      <circle cx="12" cy="13" r="3"></circle>
-    </svg>
-    <p
-      class="[font-family:var(--font-ui)] text-xs uppercase tracking-widest text-white opacity-15"
-    >
-      TODO: Hero photo — full gym or action shot
-    </p>
-  </div>
+  <!-- Hero image — full-bleed background -->
+  <img
+    src="/images/bjj-1.webp"
+    alt="BJJ training at Zen MMA in Chilliwack, BC"
+    width="1920"
+    height="1080"
+    loading="eager"
+    class="absolute inset-0 w-full h-full object-cover object-[60%_center]"
+  />
 
   <!-- Diagonal red line pattern overlay -->
   <div
@@ -141,8 +123,8 @@
   .hero-pattern {
     background-image: repeating-linear-gradient(
       45deg,
-      #c9a84c 0,
-      #c9a84c 1px,
+      #cc1c1c 0,
+      #cc1c1c 1px,
       transparent 0,
       transparent 50%
     );
@@ -157,7 +139,7 @@
     border-radius: 50%;
     background: radial-gradient(
       circle,
-      rgba(201, 168, 76, 0.08) 0%,
+      rgba(204, 28, 28, 0.12) 0%,
       transparent 70%
     );
   }

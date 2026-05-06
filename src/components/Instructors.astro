@@ -1,20 +1,38 @@
 ---
-const instructors = [
-  {
-    name: "TODO: Coach Name",
-    title: "Head Coach · Muay Thai",
-    bio: "TODO: bio",
-  },
-  {
-    name: "TODO: Coach Name",
-    title: "BJJ Coach · Black Belt",
-    bio: "TODO: bio",
-  },
-  { name: "TODO: Coach Name", title: "MMA · Striking Coach", bio: "TODO: bio" },
-  { name: "TODO: Coach Name", title: "Kids Program · Lead", bio: "TODO: bio" },
-  { name: "TODO: Coach Name", title: "Kids Program · Lead", bio: "TODO: bio" },
-  { name: "TODO: Coach Name", title: "Kids Program · Lead", bio: "TODO: bio" },
-];
+import scheduleData from "../content/schedule.json";
+
+function toDiscipline(className: string): string {
+  const s = className.toLowerCase();
+  if (s.includes("muay thai")) return "Muay Thai";
+  if (s.includes("wrestling")) return "Wrestling";
+  if (s.includes("boxing")) return "Boxing";
+  if (s.includes("kickboxing")) return "Kickboxing";
+  if (s.includes("bjj") || s.includes("jiu-jitsu")) return "BJJ";
+  if (s.includes("gi training")) return "Gi BJJ";
+  if (s.includes("self defense")) return "Self Defense";
+  if (s.includes("open mat")) return "Open Mat";
+  return className;
+}
+
+type ClsEntry = { name: string; instructor?: string };
+const instructorMap = new Map<string, Set<string>>();
+
+for (const day of scheduleData.days) {
+  for (const cls of day.classes as ClsEntry[]) {
+    if (!cls.instructor) continue;
+    if (!instructorMap.has(cls.instructor))
+      instructorMap.set(cls.instructor, new Set());
+    instructorMap.get(cls.instructor)!.add(toDiscipline(cls.name));
+  }
+}
+
+const instructors = Array.from(instructorMap.entries()).map(
+  ([name, disciplines]) => ({
+    name,
+    title: [...disciplines].slice(0, 3).join(" · "),
+    bio: "Full coach profile coming soon.",
+  }),
+);
 ---
 
 <section class="instructors-section">
@@ -39,7 +57,7 @@ const instructors = [
               >
                 <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
               </svg>
-              <span class="instructor-photo-label">Headshot</span>
+              <span class="instructor-photo-label">Photo Coming Soon</span>
             </div>
             <div class="instructor-body">
               <span class="instructor-name">{instructor.name}</span>

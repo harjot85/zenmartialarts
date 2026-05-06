@@ -1,23 +1,23 @@
 ---
-const classes = [
-  {
-    name: "Muay Thai",
-    schedule: "Mon / Wed / Fri · All levels",
-    badge: "Popular",
-  },
-  {
-    name: "Brazilian Jiu-Jitsu",
-    schedule: "Tue / Thu / Sat · Gi & No-Gi",
-    badge: null,
-  },
-  {
-    name: "MMA Fundamentals",
-    schedule: "Wed / Sat · Beginner friendly",
-    badge: null,
-  },
-  { name: "Kids & Teens", schedule: "Sat · Ages 6–16", badge: "New" },
-  // TODO: replace schedule data with real times from owner
-];
+import scheduleData from "../content/schedule.json";
+
+const classMap = new Map<string, { days: string[]; category: string }>();
+for (const day of scheduleData.days) {
+  for (const cls of day.classes) {
+    if (!classMap.has(cls.name)) {
+      classMap.set(cls.name, { days: [day.shortDay], category: cls.category });
+    } else {
+      const entry = classMap.get(cls.name)!;
+      if (!entry.days.includes(day.shortDay)) entry.days.push(day.shortDay);
+    }
+  }
+}
+
+const classes = Array.from(classMap.entries()).map(([name, info]) => ({
+  name,
+  schedule: info.days.join(" / "),
+  category: info.category,
+}));
 ---
 
 <section class="classes-section">
@@ -35,11 +35,6 @@ const classes = [
               <span class="class-card__name">{cls.name}</span>
               <span class="class-card__schedule">{cls.schedule}</span>
             </div>
-            {cls.badge && (
-              <div class="class-card__right">
-                <span class="class-badge">{cls.badge}</span>
-              </div>
-            )}
           </li>
         ))
       }

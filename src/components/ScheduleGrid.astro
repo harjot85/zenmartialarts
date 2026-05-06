@@ -1,18 +1,22 @@
 ---
 import scheduleData from "../content/schedule.json";
 
+const parseMinutes = (t: string) => {
+  const m = t.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!m) return 9999;
+  let h = parseInt(m[1]);
+  const min = parseInt(m[2]);
+  const period = m[3].toUpperCase();
+  if (period === "PM" && h !== 12) h += 12;
+  if (period === "AM" && h === 12) h = 0;
+  return h * 60 + min;
+};
+
 const timeSlots = [
-  "6:00 AM",
-  "8:00 AM",
-  "10:00 AM",
-  "4:00 PM",
-  "4:45 PM",
-  "5:15 PM",
-  "5:30 PM",
-  "6:30 PM",
-  "7:30 PM",
-  "TBD",
-];
+  ...new Set(
+    scheduleData.days.flatMap((day) => day.classes.map((cls) => cls.time)),
+  ),
+].sort((a, b) => parseMinutes(a) - parseMinutes(b));
 
 // Build lookup: dayName → time → class entry
 type ClassEntry = {

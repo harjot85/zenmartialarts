@@ -5,32 +5,32 @@
       "shortDay": "Mon",
       "classes": [
         {
-          "time": "6:00 AM",
-          "name": "Brazilian Jiu-Jitsu",
-          "instructor": "Eric A.",
-          "category": "adults"
-        },
-        {
           "time": "10:00 AM",
           "name": "No Gi BJJ Fundamentals",
           "instructor": "Eric A.",
           "category": "adults"
         },
         {
+          "time": "4:00 PM",
+          "name": "BJJ No Gi Kids — Ages 4–8",
+          "instructor": "Eric A.",
+          "category": "kids"
+        },
+        {
           "time": "5:00 PM",
-          "name": "BJJ No Gi Kids — Ages 6–12 (Summer)",
+          "name": "BJJ No Gi Kids — Ages 9–13",
           "instructor": "Eric A.",
           "category": "kids"
         },
         {
           "time": "6:00 PM",
-          "name": "No Gi All Levels",
+          "name": "No Gi BJJ All Levels",
           "instructor": "Devlin C.",
           "category": "adults"
         },
         {
           "time": "7:30 PM",
-          "name": "Muay Thai Level 2",
+          "name": "Muay Thai",
           "instructor": "Devlin C.",
           "category": "adults"
         }
@@ -41,26 +41,13 @@
       "shortDay": "Tue",
       "classes": [
         {
-          "time": "4:00 PM",
-          "name": "Kids Kickboxing with Parents",
-          "instructor": "Bronson P.",
-          "category": "kids"
-        },
-        {
-          "time": "4:00 PM",
-          "name": "Ladies Self Defense",
-          "instructor": "Eric A.",
-          "category": "adults"
-        },
-        {
           "time": "5:00 PM",
-          "name": "Wrestling for Adults with Coach Americo",
-          "instructor": "Eric A.",
+          "name": "Wrestling — Adults & Kids 8+",
           "category": "adults"
         },
         {
           "time": "6:30 PM",
-          "name": "Gi Training with Zain Crew",
+          "name": "Gi BJJ All Levels",
           "instructor": "Eric A.",
           "category": "adults"
         },
@@ -78,7 +65,7 @@
       "classes": [
         {
           "time": "6:00 AM",
-          "name": "Brazilian Jiu-Jitsu",
+          "name": "No Gi BJJ",
           "instructor": "Eric A.",
           "category": "adults"
         },
@@ -89,20 +76,24 @@
           "category": "adults"
         },
         {
+          "time": "4:00 PM",
+          "name": "Kids MMA — Ages 4–8",
+          "category": "kids"
+        },
+        {
           "time": "5:00 PM",
-          "name": "BJJ No Gi Kids — Ages 6–12 (Summer)",
-          "instructor": "Eric A.",
+          "name": "Kids MMA — Ages 9–13",
           "category": "kids"
         },
         {
           "time": "6:00 PM",
-          "name": "No Gi All Levels",
+          "name": "No Gi BJJ All Levels",
           "instructor": "Devlin C.",
           "category": "adults"
         },
         {
           "time": "7:30 PM",
-          "name": "Muay Thai Level 2",
+          "name": "Muay Thai",
           "instructor": "Devlin C.",
           "category": "adults"
         }
@@ -113,26 +104,20 @@
       "shortDay": "Thu",
       "classes": [
         {
-          "time": "4:00 PM",
-          "name": "Kids Kickboxing with Parents",
-          "instructor": "Bronson P.",
-          "category": "kids"
-        },
-        {
-          "time": "4:00 PM",
-          "name": "Ladies Self Defense",
+          "time": "11:00 AM",
+          "name": "Ladies Self-Defence",
           "instructor": "Eric A.",
           "category": "adults"
         },
         {
           "time": "5:00 PM",
-          "name": "Wrestling for Adults with Coach Americo",
+          "name": "BJJ No Gi Kids — Ages 8+",
           "instructor": "Eric A.",
-          "category": "adults"
+          "category": "kids"
         },
         {
           "time": "6:30 PM",
-          "name": "Gi Training with Zain Crew",
+          "name": "Gi BJJ All Levels",
           "instructor": "Eric A.",
           "category": "adults"
         },
@@ -150,15 +135,9 @@
       "classes": [
         {
           "time": "6:00 AM",
-          "name": "Brazilian Jiu-Jitsu",
+          "name": "No Gi BJJ",
           "instructor": "Eric A.",
           "category": "adults"
-        },
-        {
-          "time": "5:00 PM",
-          "name": "Kickboxing — Kids & Parents (All Ages)",
-          "instructor": "Bronson P.",
-          "category": "kids"
         },
         {
           "time": "6:00 PM",
@@ -168,7 +147,7 @@
         },
         {
           "time": "7:30 PM",
-          "name": "No Gi BJJ",
+          "name": "No Gi BJJ All Levels",
           "instructor": "Andriy G.",
           "category": "adults"
         }
@@ -179,14 +158,8 @@
       "shortDay": "Sat",
       "classes": [
         {
-          "time": "8:00 AM",
-          "name": "Adult Boxing",
-          "instructor": "Stephan S.",
-          "category": "adults"
-        },
-        {
           "time": "9:30 AM",
-          "name": "Wrestling for Adults with Coach Americo",
+          "name": "Wrestling — Adults & Kids 8+",
           "category": "adults"
         }
       ]
@@ -195,7 +168,11 @@
       "day": "Sunday",
       "shortDay": "Sun",
       "classes": [
-        { "time": "12:00 PM", "name": "Open Mat", "category": "adults" }
+        {
+          "time": "12:00 PM",
+          "name": "Sunday Open Mat — All Levels",
+          "category": "adults"
+        }
       ]
     }
   ],

@@ -1,23 +1,89 @@
 ---
 import scheduleData from "../content/schedule.json";
 
-const classMap = new Map<string, { days: string[]; category: string }>();
+// Maps each specific schedule class name → its broad discipline label.
+// Unknown names fall through to their raw class name.
+const disciplineMap: Record<string, string> = {
+  "No Gi BJJ Fundamentals": "No Gi BJJ",
+  "No Gi BJJ All Levels": "No Gi BJJ",
+  "No Gi BJJ": "No Gi BJJ",
+  "BJJ No Gi Kids — Ages 4–8": "No Gi BJJ",
+  "BJJ No Gi Kids — Ages 9–13": "No Gi BJJ",
+  "BJJ No Gi Kids — Ages 8+": "No Gi BJJ",
+  "Gi BJJ All Levels": "Gi BJJ",
+  "Muay Thai": "Muay Thai",
+  "Adult Boxing": "Boxing",
+  "Wrestling — Adults & Kids 8+": "Wrestling",
+  "Kids MMA — Ages 4–8": "Kids MMA",
+  "Kids MMA — Ages 9–13": "Kids MMA",
+  "Ladies Self-Defence": "Ladies Self-Defence",
+  "Sunday Open Mat — All Levels": "Open Mat",
+};
+
+const dayOrder: Record<string, number> = {
+  Mon: 0,
+  Tue: 1,
+  Wed: 2,
+  Thu: 3,
+  Fri: 4,
+  Sat: 5,
+  Sun: 6,
+};
+
+type DisciplineInfo = {
+  days: Set<string>;
+  hasKids: boolean;
+  hasAdults: boolean;
+};
+
+// Some classes serve multiple audiences even when the schedule.json category
+// is single-valued (e.g. Wrestling is Adults & Kids 8+ but stored as "adults").
+const audienceOverride: Record<
+  string,
+  { hasKids?: boolean; hasAdults?: boolean }
+> = {
+  Wrestling: { hasKids: true, hasAdults: true },
+};
+
+const disciplineData = new Map<string, DisciplineInfo>();
 for (const day of scheduleData.days) {
   for (const cls of day.classes) {
-    if (!classMap.has(cls.name)) {
-      classMap.set(cls.name, { days: [day.shortDay], category: cls.category });
-    } else {
-      const entry = classMap.get(cls.name)!;
-      if (!entry.days.includes(day.shortDay)) entry.days.push(day.shortDay);
+    const label = disciplineMap[cls.name] ?? cls.name;
+    if (!disciplineData.has(label)) {
+      disciplineData.set(label, {
+        days: new Set(),
+        hasKids: false,
+        hasAdults: false,
+      });
     }
+    const info = disciplineData.get(label)!;
+    info.days.add(day.shortDay);
+    if (cls.category === "kids") info.hasKids = true;
+    else info.hasAdults = true;
   }
 }
 
-const classes = Array.from(classMap.entries()).map(([name, info]) => ({
-  name,
-  schedule: info.days.join(" / "),
-  category: info.category,
-}));
+for (const [label, overrides] of Object.entries(audienceOverride)) {
+  const info = disciplineData.get(label);
+  if (!info) continue;
+  if (overrides.hasKids !== undefined) info.hasKids = overrides.hasKids;
+  if (overrides.hasAdults !== undefined) info.hasAdults = overrides.hasAdults;
+}
+
+// Disciplines that appear on the schedule but should not be listed as classes
+// on the main page (e.g. open mat is a drop-in session, not a class).
+const excludeFromList = new Set(["Open Mat"]);
+
+const classes = Array.from(disciplineData.entries())
+  .filter(([name]) => !excludeFromList.has(name))
+  .map(([name, info]) => ({
+    name,
+    schedule: Array.from(info.days)
+      .sort((a, b) => dayOrder[a] - dayOrder[b])
+      .join(" / "),
+    hasKids: info.hasKids,
+    hasAdults: info.hasAdults,
+  }));
 ---
 
 <section class="classes-section">
@@ -34,6 +100,20 @@ const classes = Array.from(classMap.entries()).map(([name, info]) => ({
             <div class="class-card__left">
               <span class="class-card__name">{cls.name}</span>
               <span class="class-card__schedule">{cls.schedule}</span>
+            </div>
+            <div class="class-card__right">
+              <span
+                class:list={[
+                  "class-badge",
+                  { "class-badge--muted": !cls.hasKids },
+                ]}
+              >
+                {cls.hasKids && cls.hasAdults
+                  ? "Adults & Kids"
+                  : cls.hasKids
+                    ? "Kids"
+                    : "Adults"}
+              </span>
             </div>
           </li>
         ))
@@ -60,7 +140,7 @@ const classes = Array.from(classMap.entries()).map(([name, info]) => ({
   .classes-label {
     display: block;
     font-family: "Barlow Condensed", sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 4px;
@@ -131,11 +211,18 @@ const classes = Array.from(classMap.entries()).map(([name, info]) => ({
     background: var(--color-accent);
     color: #0a0a0a;
     font-family: "Barlow Condensed", sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     padding: 6px 12px;
+    border: 1px solid var(--color-accent);
     border-radius: 0;
+  }
+
+  .class-badge--muted {
+    background: transparent;
+    color: var(--color-secondary);
+    border-color: #333;
   }
 </style>

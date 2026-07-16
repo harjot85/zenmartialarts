@@ -52,6 +52,11 @@
           "category": "adults"
         },
         {
+          "time": "6:30 PM",
+          "name": "Muay Thai",
+          "category": "adults"
+        },
+        {
           "time": "7:30 PM",
           "name": "Adult Boxing",
           "instructor": "Eric A.",

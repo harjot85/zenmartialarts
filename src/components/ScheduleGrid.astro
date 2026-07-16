@@ -18,18 +18,22 @@ const timeSlots = [
   ),
 ].sort((a, b) => parseMinutes(a) - parseMinutes(b));
 
-// Build lookup: dayName → time → class entry
+// Build lookup: dayName → time → class entries (array to support concurrent classes)
 type ClassEntry = {
   time: string;
   name: string;
+  instructor?: string;
   category: string;
   duration?: string;
 };
-const classByDayAndTime: Record<string, Record<string, ClassEntry>> = {};
+const classByDayAndTime: Record<string, Record<string, ClassEntry[]>> = {};
 for (const day of scheduleData.days) {
   classByDayAndTime[day.day] = {};
   for (const cls of day.classes) {
-    classByDayAndTime[day.day][cls.time] = cls;
+    if (!classByDayAndTime[day.day][cls.time]) {
+      classByDayAndTime[day.day][cls.time] = [];
+    }
+    classByDayAndTime[day.day][cls.time].push(cls);
   }
 }
 
@@ -70,18 +74,30 @@ const getDayIndex: Record<string, number> = {
               <tr>
                 <td class="td-time">{time}</td>
                 {scheduleData.days.map((day, colIndex) => {
-                  const cls = classByDayAndTime[day.day]?.[time];
+                  const entries = classByDayAndTime[day.day]?.[time] ?? [];
                   return (
                     <td
-                      class:list={["grid-cell", { "grid-cell--filled": !!cls }]}
+                      class:list={[
+                        "grid-cell",
+                        { "grid-cell--filled": entries.length > 0 },
+                      ]}
                       data-col={colIndex}
                     >
-                      {cls && (
+                      {entries.length > 0 && (
                         <div class="cell-inner">
-                          <span class="cell-name">{cls.name}</span>
-                          <span class="cell-badge">
-                            {cls.category === "kids" ? "Kids" : "Adults"}
-                          </span>
+                          {entries.map((cls, i) => (
+                            <div
+                              class:list={[
+                                "cell-entry",
+                                { "cell-entry--stacked": i > 0 },
+                              ]}
+                            >
+                              <span class="cell-name">{cls.name}</span>
+                              <span class="cell-badge">
+                                {cls.category === "kids" ? "Kids" : "Adults"}
+                              </span>
+                            </div>
+                          ))}
                         </div>
                       )}
                     </td>
@@ -266,7 +282,7 @@ const getDayIndex: Record<string, number> = {
     border-right: 1px solid #1f1f1f;
     padding: 14px 10px;
     font-family: "Bebas Neue", sans-serif;
-    font-size: 16px;
+    font-size: 17px;
     color: #f5f5f5;
     text-align: center;
     font-weight: 400;
@@ -293,7 +309,7 @@ const getDayIndex: Record<string, number> = {
     z-index: 2;
     background: #0d0d0d;
     font-family: "Bebas Neue", sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--color-accent);
     padding: 10px 12px;
     border-right: 1px solid #1f1f1f;
@@ -323,9 +339,21 @@ const getDayIndex: Record<string, number> = {
     gap: 4px;
   }
 
+  .cell-entry {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .cell-entry--stacked {
+    border-top: 1px solid #1f1f1f;
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+
   .cell-name {
     font-family: "Barlow Condensed", sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
     color: #f5f5f5;
@@ -334,7 +362,7 @@ const getDayIndex: Record<string, number> = {
 
   .cell-badge {
     font-family: "Barlow Condensed", sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     text-transform: uppercase;
     color: var(--color-secondary);
     line-height: 1.3;

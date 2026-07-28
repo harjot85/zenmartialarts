@@ -1,16 +1,215 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import ComingSoon from "../components/ComingSoon.astro";
 import Footer from "../components/Footer.astro";
+import { programs } from "../lib/programs";
 ---
 
 <Layout
-  title="Programs — Zen MMA Chilliwack"
-  description="Full program details for BJJ, Muay Thai, Boxing, Wrestling and kids classes at Zen MMA in Chilliwack, BC. Coming soon."
+  title="Programs — Martial Arts Classes in Chilliwack | Zen MMA"
+  description="Explore every program at Zen MMA in Chilliwack, BC — Brazilian Jiu-Jitsu, Muay Thai, boxing, wrestling, and kids classes. Find your discipline and book a free trial."
 >
-  <ComingSoon
-    headline="Programs Page Coming Soon"
-    message="We're putting together a full breakdown of every program we offer — classes, skill levels, pricing, and more. In the meantime, come in for a free trial and see everything firsthand."
-  />
+  <section class="programs-section">
+    <div class="programs-inner">
+      <header class="programs-header">
+        <span class="programs-label">What we teach</span>
+        <h1 class="programs-title">OUR PROGRAMS</h1>
+        <p class="programs-intro">
+          From the mats to the ring, every program at Zen MMA is coached by
+          people who compete and care. Find your discipline below and come try
+          your first class free.
+        </p>
+      </header>
+
+      <ul class="programs-grid" role="list">
+        {
+          programs.map((program) => (
+            <li class="program-card">
+              <span class="program-card__accent" aria-hidden="true" />
+              <h2 class="program-card__name">{program.name}</h2>
+              <p class="program-card__desc">{program.description}</p>
+              <div class="program-card__schedule">
+                <span class="program-card__schedule-label">Schedule</span>
+                <span class="program-card__schedule-days">
+                  {program.days.join(" · ")}
+                </span>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="programs-footer">
+        <p class="programs-footer-note">
+          Want exact class times? See the full weekly breakdown.
+        </p>
+        <a href="/schedule" class="programs-footer-link">View Full Schedule →</a
+        >
+      </div>
+    </div>
+  </section>
   <Footer />
 </Layout>
+
+<style>
+  .programs-section {
+    background: var(--color-bg);
+    padding: 64px 24px 80px;
+  }
+
+  .programs-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .programs-header {
+    margin-bottom: 40px;
+    max-width: 620px;
+  }
+
+  .programs-label {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--color-accent);
+    margin-bottom: 10px;
+  }
+
+  .programs-title {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 12vw, 68px);
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1;
+  }
+
+  .programs-intro {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-secondary);
+    line-height: 1.7;
+    margin: 16px 0 0;
+  }
+
+  .programs-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .program-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #0d0d0d;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 36px 30px;
+    overflow: hidden;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  /* Gold accent bar — highlights the program at a glance. */
+  .program-card__accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--color-accent);
+  }
+
+  .program-card:hover {
+    border-color: var(--color-accent-border);
+    transform: translateY(-2px);
+  }
+
+  .program-card__name {
+    font-family: var(--font-ui);
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-accent);
+    line-height: 1.15;
+    margin: 0 0 40px;
+  }
+
+  .program-card__desc {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--color-secondary);
+    line-height: 1.7;
+    /* Minimum gap between the description and the schedule bar; shorter cards
+       get more because the schedule stays pinned to the bottom of the row. */
+    margin: 0 0 32px;
+  }
+
+  .program-card__schedule {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    /* Pin to the card bottom so schedules align across a row regardless of
+       how many lines the description runs. */
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .program-card__schedule-label {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  .program-card__schedule-days {
+    font-family: var(--font-ui);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--color-accent);
+  }
+
+  .programs-footer {
+    margin-top: 48px;
+    text-align: center;
+  }
+
+  .programs-footer-note {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--color-secondary);
+    margin: 0 0 12px;
+  }
+
+  .programs-footer-link {
+    font-family: var(--font-ui);
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .programs-footer-link:hover {
+    opacity: 0.8;
+  }
+
+  @media (min-width: 700px) {
+    .programs-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

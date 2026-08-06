@@ -1,16 +1,369 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import ComingSoon from "../components/ComingSoon.astro";
 import Footer from "../components/Footer.astro";
+
+const record = [
+  { label: "Amateur MMA", value: "7-3-0" },
+  { label: "Amateur Kickboxing", value: "3-0-0" },
+  { label: "Professional MMA", value: "1-1-0" },
+];
+
+const credentials = [
+  { years: "20+", discipline: "Brazilian Jiu-Jitsu" },
+  { years: "12", discipline: "Muay Thai" },
+  { years: "4", discipline: "Wrestling" },
+];
 ---
 
 <Layout
-  title="About Zen MMA — Chilliwack Martial Arts Gym"
-  description="Learn about the team, coaches, and mission behind Zen MMA in Chilliwack, BC. Full about page coming soon."
+  title="About Zen MMA — Coach Eric & Our Gym in Chilliwack, BC"
+  description="Meet Coach Eric, a BJJ Black Belt under Marcus Soares (Carlson Gracie), and learn about Zen Martial Arts & Fitness — 4 years of BJJ, Muay Thai, and MMA in Chilliwack, BC."
 >
-  <ComingSoon
-    headline="Our Story Is Being Written"
-    message="Great gyms are built by great people. We're working on sharing the story behind Zen MMA — our coaches, our values, and why we show up every day. Check back soon."
-  />
+  <section class="about-section">
+    <div class="about-inner">
+      <header class="about-header">
+        <span class="about-label">Our story</span>
+        <h1 class="about-title">ABOUT ZEN</h1>
+        <p class="about-intro">
+          Zen Martial Arts &amp; Fitness has proudly served the Chilliwack
+          community for 4 years, offering high-quality Brazilian Jiu-Jitsu,
+          wrestling, Muay Thai, boxing, and MMA training for all ages and
+          experience levels.
+        </p>
+      </header>
+
+      <article class="coach">
+        <div class="coach-media" aria-hidden="true">
+          <svg
+            class="coach-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"
+            ></path>
+          </svg>
+          <span class="coach-media-label">Photo Coming Soon</span>
+        </div>
+
+        <div class="coach-body">
+          <span class="coach-eyebrow">Head Coach</span>
+          <h2 class="coach-name">COACH ERIC</h2>
+          <p class="coach-bio">
+            Coach Eric brings over 20 years of Brazilian Jiu-Jitsu experience
+            and holds a Black Belt under Marcus Soares (Carlson Gracie lineage).
+            He also has 12 years of Muay Thai and 4 years of wrestling training.
+          </p>
+
+          <ul class="credentials" role="list">
+            {
+              credentials.map((c) => (
+                <li class="credential">
+                  <span class="credential-years">{c.years}</span>
+                  <span class="credential-discipline">
+                    Years
+                    <br />
+                    {c.discipline}
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </article>
+
+      <section class="record" aria-labelledby="record-title">
+        <h2 id="record-title" class="record-title">COMPETITIVE RECORD</h2>
+        <ul class="record-grid" role="list">
+          {
+            record.map((r) => (
+              <li class="record-card">
+                <span class="record-value">{r.value}</span>
+                <span class="record-label">{r.label}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <p class="about-closer">
+        Whether you&rsquo;re a complete beginner or an experienced martial
+        artist, Coach Eric and the Zen team are here to help you grow in a
+        supportive, family-oriented environment.
+      </p>
+
+      <div class="about-actions">
+        <a href="/#trial" class="about-btn about-btn--primary"
+          >Book a Free Trial</a
+        >
+        <a href="/programs" class="about-btn about-btn--ghost">View Programs</a>
+      </div>
+    </div>
+  </section>
   <Footer />
 </Layout>
+
+<style>
+  .about-section {
+    background: var(--color-bg);
+    padding: 64px 24px 80px;
+  }
+
+  .about-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .about-header {
+    margin-bottom: 48px;
+    max-width: 680px;
+  }
+
+  .about-label {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--color-accent);
+    margin-bottom: 10px;
+  }
+
+  .about-title {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 12vw, 68px);
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1;
+  }
+
+  .about-intro {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-secondary);
+    line-height: 1.7;
+    margin: 16px 0 0;
+  }
+
+  /* Coach feature */
+  .coach {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    background: #0d0d0d;
+    border: 1px solid var(--color-border);
+    padding: 24px;
+    margin-bottom: 48px;
+  }
+
+  .coach-media {
+    position: relative;
+    background: #141414;
+    border: 1px dashed var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 260px;
+  }
+
+  .coach-icon {
+    width: 64px;
+    height: 64px;
+    color: #fff;
+    opacity: 0.18;
+  }
+
+  .coach-media-label {
+    font-family: var(--font-ui);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #333;
+  }
+
+  .coach-eyebrow {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--color-accent);
+    margin-bottom: 6px;
+  }
+
+  .coach-name {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 8vw, 48px);
+    color: var(--color-text);
+    line-height: 1;
+    margin: 0 0 16px;
+  }
+
+  .coach-bio {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--color-secondary);
+    line-height: 1.7;
+    margin: 0 0 28px;
+  }
+
+  .credentials {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .credential {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+  }
+
+  .credential-years {
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .credential-discipline {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    line-height: 1.3;
+  }
+
+  /* Competitive record */
+  .record {
+    margin-bottom: 48px;
+  }
+
+  .record-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 7vw, 40px);
+    color: var(--color-text);
+    line-height: 1;
+    margin: 0 0 20px;
+  }
+
+  .record-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .record-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #0d0d0d;
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-accent);
+    padding: 28px 24px;
+  }
+
+  .record-value {
+    font-family: var(--font-display);
+    font-size: 44px;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .record-label {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text-muted);
+  }
+
+  .about-closer {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-secondary);
+    line-height: 1.7;
+    margin: 0 0 40px;
+    max-width: 680px;
+  }
+
+  .about-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .about-btn {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 0;
+    transition: opacity 0.15s;
+  }
+
+  .about-btn:hover {
+    opacity: 0.85;
+  }
+
+  .about-btn--primary {
+    background: var(--color-accent);
+    color: #0a0a0a;
+  }
+
+  .about-btn--ghost {
+    background: transparent;
+    color: var(--color-text);
+    border: 1px solid #333;
+  }
+
+  .about-btn--ghost:hover {
+    border-color: #555;
+    opacity: 1;
+  }
+
+  @media (min-width: 700px) {
+    .coach {
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      padding: 32px;
+    }
+
+    .record-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .about-actions {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .about-btn {
+      flex: 0 0 auto;
+    }
+  }
+</style>

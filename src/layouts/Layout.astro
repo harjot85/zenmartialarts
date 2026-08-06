@@ -27,6 +27,7 @@ const canonicalURL =
   </head>
   <body class="bg-[var(--color-bg)] text-[var(--color-text)] min-h-dvh">
     <header
+      id="site-header"
       class="sticky top-0 z-50 bg-[var(--color-bg)] border-b border-[var(--color-border)]"
     >
       <div
@@ -57,14 +58,113 @@ const canonicalURL =
           >
         </nav>
 
-        <a
-          href="/#trial"
-          class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest bg-[var(--color-accent)] text-[#0a0a0a] px-5 py-2.5 rounded-none font-semibold hover:opacity-90 transition-opacity"
-        >
-          Free Trial
-        </a>
+        <div class="flex items-center gap-2">
+          <a
+            href="/#trial"
+            class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest bg-[var(--color-accent)] text-[#0a0a0a] px-5 py-2.5 rounded-none font-semibold hover:opacity-90 transition-opacity"
+          >
+            Free Trial
+          </a>
+
+          <button
+            id="nav-toggle"
+            type="button"
+            class="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-[var(--color-text)]"
+            aria-label="Open menu"
+            aria-controls="mobile-menu"
+            aria-expanded="false"
+          >
+            <svg
+              class="nav-icon-open w-6 h-6"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="square"
+              aria-hidden="true"
+            >
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <svg
+              class="nav-icon-close hidden w-6 h-6"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="square"
+              aria-hidden="true"
+            >
+              <line x1="5" y1="5" x2="19" y2="19"></line>
+              <line x1="19" y1="5" x2="5" y2="19"></line>
+            </svg>
+          </button>
+        </div>
       </div>
+
+      <nav
+        id="mobile-menu"
+        class="hidden md:hidden border-t border-[var(--color-border)] bg-[var(--color-bg)]"
+        aria-label="Primary"
+      >
+        <a
+          href="/programs"
+          class="[font-family:var(--font-ui)] block px-[var(--section-padding-x)] py-4 text-lg uppercase tracking-widest text-[var(--color-text-muted)] border-b border-[var(--color-border)] hover:text-[var(--color-text)] transition-colors"
+          >Programs</a
+        >
+        <a
+          href="/schedule"
+          class="[font-family:var(--font-ui)] block px-[var(--section-padding-x)] py-4 text-lg uppercase tracking-widest text-[var(--color-text-muted)] border-b border-[var(--color-border)] hover:text-[var(--color-text)] transition-colors"
+          >Schedule</a
+        >
+        <a
+          href="/about"
+          class="[font-family:var(--font-ui)] block px-[var(--section-padding-x)] py-4 text-lg uppercase tracking-widest text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+          >About</a
+        >
+      </nav>
     </header>
+
+    <script>
+      const toggle = document.getElementById("nav-toggle");
+      const menu = document.getElementById("mobile-menu");
+      const iconOpen = toggle?.querySelector(".nav-icon-open");
+      const iconClose = toggle?.querySelector(".nav-icon-close");
+
+      function setMenu(open: boolean) {
+        if (!toggle || !menu || !iconOpen || !iconClose) return;
+        menu.classList.toggle("hidden", !open);
+        iconOpen.classList.toggle("hidden", open);
+        iconClose.classList.toggle("hidden", !open);
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      }
+
+      toggle?.addEventListener("click", () => {
+        const open = toggle.getAttribute("aria-expanded") === "true";
+        setMenu(!open);
+      });
+
+      // Close when a link is tapped.
+      menu?.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => setMenu(false));
+      });
+
+      // Close on Escape.
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") setMenu(false);
+      });
+
+      // Reset if resized up to desktop, where the menu isn't used.
+      window
+        .matchMedia("(min-width: 768px)")
+        .addEventListener("change", (e) => {
+          if (e.matches) setMenu(false);
+        });
+    </script>
 
     <main>
       <slot />

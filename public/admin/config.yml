@@ -34,3 +34,18 @@ collections:
                       - { label: Adults, value: adults }
                       - { label: Kids, value: kids }
                   - { label: Duration (optional), name: duration, widget: string, required: false, hint: "e.g. 4:00–5:15pm" }
+
+  - name: testimonials
+    label: Testimonials
+    files:
+      - name: testimonials
+        label: Member Reviews
+        file: src/content/testimonials.json
+        fields:
+          - label: Testimonials
+            name: testimonials
+            widget: list
+            fields:
+              - { label: Quote, name: quote, widget: text }
+              - { label: Name, name: name, widget: string, hint: "e.g. Jane Doe" }
+              - { label: Initials (optional), name: initials, widget: string, required: false, hint: "Leave blank to auto-fill from the name" }

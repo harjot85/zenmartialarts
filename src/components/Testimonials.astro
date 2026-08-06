@@ -1,27 +1,38 @@
 ---
-const testimonials = [
-  {
-    quote:
-      "I walked in knowing nothing about martial arts and left my first class completely hooked. The coaches break everything down so you're never lost, and the training partners push you without making you feel like you don't belong. Two years later I'm in the best shape of my life.",
-    name: "Ryan Kowalski",
-    role: "Muay Thai · 2 years",
-    initials: "RK",
-  },
-  {
-    quote:
-      "The BJJ program here is legit. Coach runs tight, technical classes — no ego, just good drilling and honest rolling. I've trained at a few gyms around the valley and Zen is the one that actually kept me consistent. The community makes a huge difference.",
-    name: "Priya Sandhu",
-    role: "BJJ · 18 months",
-    initials: "PS",
-  },
-  {
-    quote:
-      "My son started the kids program at 8 and the change in his confidence and focus has been incredible. The coaches are patient, firm, and genuinely care about the kids. Worth every penny — I only wish we'd found this place sooner.",
-    name: "Melissa Tran",
-    role: "Kids Program · Member since 2023",
-    initials: "MT",
-  },
-];
+import testimonialsData from "../content/testimonials.json";
+
+type Testimonial = {
+  quote: string;
+  name: string;
+  initials?: string;
+};
+
+// Derive initials from the name when the CMS entry leaves the field blank.
+function initialsFor(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0]!.toUpperCase())
+    .join("");
+}
+
+// Split a quote into paragraphs on blank lines so multi-paragraph reviews
+// render with real spacing instead of HTML collapsing the line breaks.
+function toParagraphs(quote: string): string[] {
+  return quote
+    .split(/\n\s*\n/)
+    .map((para) => para.trim())
+    .filter(Boolean);
+}
+
+const testimonials = (testimonialsData.testimonials as Testimonial[]).map(
+  (t) => ({
+    ...t,
+    initials: t.initials?.trim() || initialsFor(t.name),
+    paragraphs: toParagraphs(t.quote),
+  }),
+);
 ---
 
 <section class="testimonials-section">
@@ -38,14 +49,17 @@ const testimonials = [
             <div class="testimonial-stars" aria-label="5 out of 5 stars">
               ★★★★★
             </div>
-            <blockquote class="testimonial-quote">{t.quote}</blockquote>
+            <blockquote class="testimonial-quote">
+              {t.paragraphs.map((para) => (
+                <p class="testimonial-para">{para}</p>
+              ))}
+            </blockquote>
             <div class="testimonial-author">
               <div class="testimonial-avatar" aria-hidden="true">
                 {t.initials}
               </div>
               <div class="testimonial-author-info">
                 <span class="testimonial-name">{t.name}</span>
-                <span class="testimonial-role">{t.role}</span>
               </div>
             </div>
           </li>
@@ -112,12 +126,20 @@ const testimonials = [
   }
 
   .testimonial-quote {
+    margin: 0 0 16px;
+  }
+
+  .testimonial-para {
     font-family: "Barlow", sans-serif;
     font-size: 15px;
     color: #ccc;
     line-height: 1.7;
     font-style: italic;
-    margin: 0 0 16px;
+    margin: 0 0 12px;
+  }
+
+  .testimonial-para:last-child {
+    margin-bottom: 0;
   }
 
   .testimonial-author {
@@ -153,12 +175,5 @@ const testimonials = [
     text-transform: uppercase;
     color: #f5f5f5;
     line-height: 1.2;
-  }
-
-  .testimonial-role {
-    font-family: "Barlow", sans-serif;
-    font-size: 12px;
-    color: var(--color-secondary);
-    line-height: 1.3;
   }
 </style>

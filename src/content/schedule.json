@@ -41,25 +41,35 @@
       "shortDay": "Tue",
       "classes": [
         {
-          "time": "5:00 PM",
-          "name": "Wrestling — Adults & Kids 8+",
-          "category": "adults"
-        },
-        {
-          "time": "6:30 PM",
+          "time": "6:00 AM",
           "name": "Gi BJJ All Levels",
-          "instructor": "Eric A.",
+          "category": "adults"
+        },
+        {
+          "time": "10:00 AM",
+          "name": "Wrestling — Adults",
+          "category": "adults"
+        },
+        {
+          "time": "5:00 PM",
+          "name": "Wrestling — Adults & Kids",
           "category": "adults"
         },
         {
           "time": "6:30 PM",
-          "name": "Muay Thai",
+          "name": "Gi BJJ (In Cage)",
+          "instructor": "Eric A.",
           "category": "adults"
         },
         {
           "time": "7:30 PM",
-          "name": "Adult Boxing",
+          "name": "Fundamentals Boxing",
           "instructor": "Eric A.",
+          "category": "adults"
+        },
+        {
+          "time": "8:30 PM",
+          "name": "Advanced Boxing",
           "category": "adults"
         }
       ]
@@ -70,7 +80,7 @@
       "classes": [
         {
           "time": "6:00 AM",
-          "name": "No Gi BJJ",
+          "name": "No Gi BJJ All Levels",
           "instructor": "Eric A.",
           "category": "adults"
         },
@@ -109,6 +119,16 @@
       "shortDay": "Thu",
       "classes": [
         {
+          "time": "6:00 AM",
+          "name": "Gi BJJ All Levels",
+          "category": "adults"
+        },
+        {
+          "time": "10:00 AM",
+          "name": "Wrestling — Adults",
+          "category": "adults"
+        },
+        {
           "time": "11:00 AM",
           "name": "Ladies Self-Defence",
           "instructor": "Eric A.",
@@ -140,20 +160,29 @@
       "classes": [
         {
           "time": "6:00 AM",
-          "name": "No Gi BJJ",
+          "name": "No Gi BJJ All Levels",
           "instructor": "Eric A.",
           "category": "adults"
         },
         {
+          "time": "10:00 AM",
+          "name": "Gi BJJ All Levels",
+          "category": "adults"
+        },
+        {
           "time": "6:00 PM",
-          "name": "Adult Boxing",
+          "name": "Fundamentals Boxing",
           "instructor": "Stefan S.",
           "category": "adults"
         },
         {
-          "time": "7:30 PM",
-          "name": "No Gi BJJ All Levels",
-          "instructor": "Andriy G.",
+          "time": "7:00 PM",
+          "name": "Advanced Boxing",
+          "category": "adults"
+        },
+        {
+          "time": "8:00 PM",
+          "name": "Open Mat",
           "category": "adults"
         }
       ]
@@ -163,8 +192,18 @@
       "shortDay": "Sat",
       "classes": [
         {
+          "time": "7:00 AM",
+          "name": "BJJ Open Mat — All Levels",
+          "category": "adults"
+        },
+        {
+          "time": "8:00 AM",
+          "name": "Boxing — All Levels",
+          "category": "adults"
+        },
+        {
           "time": "9:30 AM",
-          "name": "Wrestling — Adults & Kids 8+",
+          "name": "Wrestling — Adults & Kids",
           "category": "adults"
         }
       ]

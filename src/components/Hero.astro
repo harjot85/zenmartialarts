@@ -1,17 +1,48 @@
 ---
-
+const slides = [
+  {
+    src: "/images/zen_group_.jpg",
+    alt: "The team and members of Zen MMA in Chilliwack, BC",
+    position: "60% center",
+  },
+  {
+    src: "/images/team-bjj-wide.jpg",
+    alt: "Zen MMA members training Brazilian Jiu-Jitsu on the mats",
+    position: "center center",
+  },
+];
 ---
 
 <section class="relative overflow-hidden bg-[#1a1400] flex flex-col min-h-svh">
-  <!-- Hero image — full-bleed background -->
-  <img
-    src="/images/zen_group_.jpg"
-    alt="The team and members of Zen MMA in Chilliwack, BC"
-    width="1920"
-    height="980"
-    loading="eager"
-    class="absolute inset-0 w-full h-full object-cover object-[60%_center]"
-  />
+  <!-- Hero image carousel — full-bleed background -->
+  <div
+    class="hero-carousel absolute inset-0"
+    data-hero-carousel
+    data-interval="5000"
+    role="group"
+    aria-roledescription="carousel"
+    aria-label="Zen MMA gym photos"
+  >
+    {
+      slides.map((slide, i) => (
+        <img
+          src={slide.src}
+          alt={slide.alt}
+          width="1920"
+          height="980"
+          loading={i === 0 ? "eager" : "lazy"}
+          fetchpriority={i === 0 ? "high" : "auto"}
+          data-slide
+          aria-hidden={i === 0 ? "false" : "true"}
+          class:list={[
+            "absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-out",
+            i === 0 ? "opacity-100" : "opacity-0",
+          ]}
+          style={`object-position: ${slide.position}`}
+        />
+      ))
+    }
+  </div>
 
   <!-- Diagonal red line pattern overlay -->
   <div
@@ -31,7 +62,9 @@
       class="mx-auto w-full max-w-[var(--container-max)] px-[var(--section-padding-x)] pb-10 md:pb-14 flex flex-col gap-6"
     >
       <!-- Badge -->
-      <div class="flex items-center gap-2">
+      <div
+        class="self-start flex items-center gap-2 bg-[#0a0a0a]/85 backdrop-blur-sm border border-[#2a2a2a] px-4 py-2"
+      >
         <span class="w-2 h-2 shrink-0 rounded-full bg-[var(--color-accent)]"
         ></span>
         <span
@@ -71,6 +104,25 @@
           View Class Schedule
         </a>
       </div>
+    </div>
+  </div>
+
+  <!-- Carousel controls -->
+  <div
+    class="relative z-10 mx-auto w-full max-w-[var(--container-max)] px-[var(--section-padding-x)] pb-6"
+  >
+    <div class="flex items-center gap-3" data-hero-dots>
+      {
+        slides.map((_, i) => (
+          <button
+            type="button"
+            data-dot
+            aria-label={`Show image ${i + 1} of ${slides.length}`}
+            aria-current={i === 0 ? "true" : "false"}
+            class="hero-dot"
+          />
+        ))
+      }
     </div>
   </div>
 
@@ -153,4 +205,160 @@
       rgba(10, 10, 10, 0.05) 100%
     );
   }
+  .hero-dot {
+    width: 32px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.28);
+    cursor: pointer;
+    transition:
+      background-color 0.3s ease,
+      width 0.3s ease;
+  }
+
+  .hero-dot:hover {
+    background: rgba(255, 255, 255, 0.55);
+  }
+
+  .hero-dot[aria-current="true"] {
+    width: 48px;
+    background: var(--color-accent);
+  }
+
+  .hero-dot:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+
+  .hero-carousel {
+    touch-action: pan-y;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-carousel [data-slide] {
+      transition-duration: 0.01ms;
+    }
+  }
 </style>
+
+<script>
+  function initHeroCarousel(root: HTMLElement) {
+    const slides = Array.from(
+      root.querySelectorAll<HTMLImageElement>("[data-slide]"),
+    );
+    if (slides.length < 2) return;
+
+    const section = root.closest("section");
+    const dots = Array.from(
+      section?.querySelectorAll<HTMLButtonElement>("[data-dot]") ?? [],
+    );
+    const interval = Number(root.dataset.interval ?? 5000);
+
+    let current = 0;
+    let timer: number | undefined;
+
+    const show = (next: number) => {
+      current = (next + slides.length) % slides.length;
+      slides.forEach((slide, i) => {
+        const active = i === current;
+        slide.classList.toggle("opacity-100", active);
+        slide.classList.toggle("opacity-0", !active);
+        slide.setAttribute("aria-hidden", active ? "false" : "true");
+      });
+      dots.forEach((dot, i) =>
+        dot.setAttribute("aria-current", i === current ? "true" : "false"),
+      );
+    };
+
+    const stop = () => {
+      if (timer !== undefined) {
+        window.clearInterval(timer);
+        timer = undefined;
+      }
+    };
+
+    const start = () => {
+      stop();
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      timer = window.setInterval(() => show(current + 1), interval);
+    };
+
+    const goTo = (next: number) => {
+      show(next);
+      start();
+    };
+
+    dots.forEach((dot, i) => dot.addEventListener("click", () => goTo(i)));
+
+    // Swipe / drag
+    let startX = 0;
+    let startY = 0;
+    let tracking = false;
+
+    const onDown = (x: number, y: number) => {
+      startX = x;
+      startY = y;
+      tracking = true;
+    };
+
+    const onUp = (x: number, y: number) => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = x - startX;
+      const dy = y - startY;
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+      goTo(current + (dx < 0 ? 1 : -1));
+    };
+
+    const swipeTarget = section ?? root;
+
+    swipeTarget.addEventListener(
+      "touchstart",
+      (e) => {
+        const t = (e as TouchEvent).changedTouches[0];
+        onDown(t.clientX, t.clientY);
+      },
+      { passive: true },
+    );
+
+    swipeTarget.addEventListener(
+      "touchend",
+      (e) => {
+        const t = (e as TouchEvent).changedTouches[0];
+        onUp(t.clientX, t.clientY);
+      },
+      { passive: true },
+    );
+
+    swipeTarget.addEventListener("mousedown", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("a, button")) return;
+      onDown((e as MouseEvent).clientX, (e as MouseEvent).clientY);
+    });
+
+    swipeTarget.addEventListener("mouseup", (e) =>
+      onUp((e as MouseEvent).clientX, (e as MouseEvent).clientY),
+    );
+
+    swipeTarget.addEventListener("mouseleave", () => {
+      tracking = false;
+    });
+
+    // Pause when off-screen or tab hidden
+    document.addEventListener("visibilitychange", () =>
+      document.hidden ? stop() : start(),
+    );
+
+    if ("IntersectionObserver" in window && section) {
+      new IntersectionObserver(
+        ([entry]) => (entry.isIntersecting ? start() : stop()),
+        { threshold: 0.1 },
+      ).observe(section);
+    } else {
+      start();
+    }
+  }
+
+  document
+    .querySelectorAll<HTMLElement>("[data-hero-carousel]")
+    .forEach(initHeroCarousel);
+</script>

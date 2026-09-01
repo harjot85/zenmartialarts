@@ -1,41 +1,10 @@
 ---
-import scheduleData from "../content/schedule.json";
+import { getInstructorListings } from "../lib/coaches";
 
-function toDiscipline(className: string): string {
-  const s = className.toLowerCase();
-  if (s.includes("muay thai")) return "Muay Thai";
-  if (s.includes("wrestling")) return "Wrestling";
-  if (s.includes("boxing")) return "Boxing";
-  if (s.includes("kickboxing")) return "Kickboxing";
-  if (s.includes("bjj") || s.includes("jiu-jitsu")) return "BJJ";
-  if (s.includes("gi training")) return "Gi BJJ";
-  if (s.includes("self defense")) return "Self Defense";
-  if (s.includes("open mat")) return "Open Mat";
-  return className;
-}
-
-type ClsEntry = { name: string; instructor?: string };
-const instructorMap = new Map<string, Set<string>>();
-
-for (const day of scheduleData.days) {
-  for (const cls of day.classes as ClsEntry[]) {
-    if (!cls.instructor) continue;
-    if (!instructorMap.has(cls.instructor))
-      instructorMap.set(cls.instructor, new Set());
-    instructorMap.get(cls.instructor)!.add(toDiscipline(cls.name));
-  }
-}
-
-const instructors = Array.from(instructorMap.entries()).map(
-  ([name, disciplines]) => ({
-    name,
-    title: [...disciplines].slice(0, 3).join(" · "),
-    bio: "Full coach profile coming soon.",
-  }),
-);
+const instructors = getInstructorListings();
 ---
 
-<section class="instructors-section">
+<section class="instructors-section" id="instructors">
   <div class="instructors-inner">
     <div class="instructors-header">
       <span class="instructors-label">Meet the coaches</span>
@@ -45,27 +14,56 @@ const instructors = Array.from(instructorMap.entries()).map(
 
     <div class="instructors-carousel" id="instructors-carousel" role="list">
       {
-        instructors.map((instructor) => (
-          <article class="instructor-card" role="listitem">
-            <div class="instructor-photo">
-              <svg
-                class="instructor-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-              </svg>
-              <span class="instructor-photo-label">Photo Coming Soon</span>
-            </div>
-            <div class="instructor-body">
-              <span class="instructor-name">{instructor.name}</span>
-              <span class="instructor-title">{instructor.title}</span>
-              <p class="instructor-bio">{instructor.bio}</p>
-            </div>
-          </article>
-        ))
+        instructors.map((instructor) => {
+          const Tag = instructor.href ? "a" : "article";
+          return (
+            <Tag
+              class:list={[
+                "instructor-card",
+                { "instructor-card--link": instructor.href },
+              ]}
+              href={instructor.href}
+              role="listitem"
+              aria-label={
+                instructor.href
+                  ? `View ${instructor.name}'s profile`
+                  : undefined
+              }
+            >
+              {instructor.photo ? (
+                <img
+                  class="instructor-photo instructor-photo--img"
+                  src={instructor.photo}
+                  alt={instructor.photoAlt ?? instructor.name}
+                  width="200"
+                  height="220"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="instructor-photo">
+                  <svg
+                    class="instructor-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+                  </svg>
+                  <span class="instructor-photo-label">Photo Coming Soon</span>
+                </div>
+              )}
+              <div class="instructor-body">
+                <span class="instructor-name">{instructor.name}</span>
+                <span class="instructor-title">{instructor.title}</span>
+                <p class="instructor-bio">{instructor.bio}</p>
+                {instructor.href && (
+                  <span class="instructor-more">Read profile →</span>
+                )}
+              </div>
+            </Tag>
+          );
+        })
       }
     </div>
 
@@ -167,6 +165,39 @@ const instructors = Array.from(instructorMap.entries()).map(
     scroll-snap-align: start;
     background: #111;
     border-radius: 0;
+    display: block;
+    text-decoration: none;
+  }
+
+  .instructor-card--link {
+    transition:
+      background 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .instructor-card--link:hover {
+    background: #161616;
+    transform: translateY(-2px);
+  }
+
+  .instructor-card--link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .instructor-card--link:hover .instructor-more {
+    color: var(--color-accent);
+  }
+
+  .instructor-more {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text-muted);
+    margin-top: 8px;
+    transition: color 0.2s ease;
   }
 
   .instructor-photo {
@@ -179,6 +210,13 @@ const instructors = Array.from(instructorMap.entries()).map(
     align-items: center;
     justify-content: center;
     gap: 8px;
+  }
+
+  .instructor-photo--img {
+    display: block;
+    object-fit: cover;
+    object-position: center top;
+    border: 1px solid #2a2a2a;
   }
 
   .instructor-icon {

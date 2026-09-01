@@ -1,0 +1,261 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Footer from "../../components/Footer.astro";
+import CoachProfile from "../../components/CoachProfile.astro";
+import { coaches, getDisciplines } from "../../lib/coaches";
+
+export function getStaticPaths() {
+  return coaches.map((coach) => ({
+    params: { slug: coach.slug },
+    props: { coach },
+  }));
+}
+
+const { coach } = Astro.props;
+const disciplines = getDisciplines(coach.scheduleName);
+---
+
+<Layout
+  title={`${coach.displayName} — ${coach.role} at Zen MMA, Chilliwack BC`}
+  description={coach.bio}
+>
+  <section class="coach-page">
+    <div class="coach-page-inner">
+      <a href="/#instructors" class="back-link">← All coaches</a>
+
+      <CoachProfile coach={coach} headingLevel="h1" />
+
+      {
+        disciplines.length > 0 && (
+          <section class="teaches">
+            <h2 class="teaches-title">Classes {coach.displayName} Teaches</h2>
+            <ul class="teaches-list" role="list">
+              {disciplines.map((d) => (
+                <li class="teaches-item">{d}</li>
+              ))}
+            </ul>
+            <a href="/schedule" class="coach-btn coach-btn--ghost">
+              View Class Schedule
+            </a>
+          </section>
+        )
+      }
+
+      {
+        coach.archive && coach.archive.length > 0 && (
+          <section class="archive" aria-labelledby="archive-title">
+            <h2 id="archive-title" class="archive-title">
+              From the Archives
+            </h2>
+            {coach.archive.map((moment) => (
+              <figure class="moment">
+                <img
+                  class="moment-img"
+                  src={moment.src}
+                  alt={moment.alt}
+                  width={moment.width}
+                  height={moment.height}
+                  loading="lazy"
+                />
+                <figcaption class="moment-caption">
+                  <span class="moment-year">{moment.year}</span>
+                  <span class="moment-title">{moment.title}</span>
+                  <p class="moment-text">{moment.caption}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </section>
+        )
+      }
+
+      <div class="coach-actions">
+        <a href="/#trial" class="coach-btn coach-btn--primary">
+          Book a Free Trial
+        </a>
+        <a href="/about" class="coach-btn coach-btn--ghost">About the Gym</a>
+      </div>
+    </div>
+  </section>
+  <Footer />
+</Layout>
+
+<style>
+  .coach-page {
+    background: var(--color-bg);
+    padding: 40px 24px 80px;
+  }
+
+  .coach-page-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    margin-bottom: 24px;
+    transition: color 0.15s;
+  }
+
+  .back-link:hover {
+    color: var(--color-text);
+  }
+
+  .teaches {
+    margin-top: 48px;
+  }
+
+  .teaches-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 7vw, 40px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    line-height: 1;
+    margin: 0 0 20px;
+  }
+
+  .teaches-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+  }
+
+  .teaches-item {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text);
+    background: #0d0d0d;
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    padding: 12px 18px;
+  }
+
+  .archive {
+    margin-top: 48px;
+  }
+
+  .archive-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 7vw, 40px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    line-height: 1;
+    margin: 0 0 20px;
+  }
+
+  .moment {
+    margin: 0;
+    background: #0d0d0d;
+    border: 1px solid var(--color-border);
+  }
+
+  .moment + .moment {
+    margin-top: 20px;
+  }
+
+  .moment-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* An old, low-resolution photo — keep the browser from over-smoothing it. */
+    image-rendering: auto;
+    filter: saturate(0.85) contrast(1.05);
+  }
+
+  .moment-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 20px;
+    border-top: 3px solid var(--color-accent);
+  }
+
+  .moment-year {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--color-accent);
+  }
+
+  .moment-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 6vw, 30px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    line-height: 1;
+  }
+
+  .moment-text {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--color-secondary);
+    line-height: 1.7;
+    margin: 6px 0 0;
+    max-width: 60ch;
+  }
+
+  .coach-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 48px;
+  }
+
+  .coach-btn {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .coach-btn:hover {
+    opacity: 0.85;
+  }
+
+  .coach-btn--primary {
+    background: var(--color-accent);
+    color: #0a0a0a;
+  }
+
+  .coach-btn--ghost {
+    background: transparent;
+    color: var(--color-text);
+    border: 1px solid #333;
+  }
+
+  .coach-btn--ghost:hover {
+    border-color: #555;
+    opacity: 1;
+  }
+
+  @media (min-width: 700px) {
+    .coach-actions {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .coach-btn {
+      flex: 0 0 auto;
+    }
+  }
+</style>

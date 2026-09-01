@@ -1,0 +1,260 @@
+---
+import type { CoachProfileData } from "../lib/coaches";
+
+interface Props {
+  coach: CoachProfileData;
+  /** Renders the coach's name as an <h1> instead of an <h2>. */
+  headingLevel?: "h1" | "h2";
+  /** Hide the competitive record block (e.g. on a compact page). */
+  showRecord?: boolean;
+}
+
+const { coach, headingLevel = "h2", showRecord = true } = Astro.props;
+const Heading = headingLevel;
+const hasRecord = showRecord && coach.record.length > 0;
+---
+
+<article class="coach" id={`coach-${coach.slug}`}>
+  {
+    coach.photo ? (
+      <img
+        class="coach-photo"
+        src={coach.photo}
+        alt={coach.photoAlt ?? `${coach.displayName} at Zen MMA`}
+        width={coach.photoWidth ?? 560}
+        height={coach.photoHeight ?? 700}
+        loading="lazy"
+      />
+    ) : (
+      <div class="coach-media" aria-hidden="true">
+        <svg
+          class="coach-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+        </svg>
+        <span class="coach-media-label">Photo Coming Soon</span>
+      </div>
+    )
+  }
+
+  <div class="coach-body">
+    <span class="coach-eyebrow">{coach.role}</span>
+    <Heading class="coach-name">{coach.displayName}</Heading>
+    <p class="coach-bio">{coach.bio}</p>
+
+    {
+      coach.credentials.length > 0 && (
+        <ul class="credentials" role="list">
+          {coach.credentials.map((c) => (
+            <li class="credential">
+              <span class="credential-years">{c.years}</span>
+              <span class="credential-discipline">
+                Years
+                <br />
+                {c.discipline}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      hasRecord && (
+        <div class="record" aria-labelledby={`record-${coach.slug}`}>
+          <h3 id={`record-${coach.slug}`} class="record-title">
+            Competitive Record
+          </h3>
+          <ul class="record-grid" role="list">
+            {coach.record.map((r) => (
+              <li class="record-card">
+                <span class="record-value">{r.value}</span>
+                <span class="record-label">{r.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .coach {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    background: #0d0d0d;
+    border: 1px solid var(--color-border);
+    padding: 24px;
+  }
+
+  .coach-media,
+  .coach-photo {
+    align-self: start;
+    width: 100%;
+    min-height: 260px;
+  }
+
+  .coach-photo {
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center top;
+    border: 1px solid var(--color-border);
+  }
+
+  .coach-media {
+    position: relative;
+    background: #141414;
+    border: 1px dashed var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .coach-icon {
+    width: 64px;
+    height: 64px;
+    color: #fff;
+    opacity: 0.18;
+  }
+
+  .coach-media-label {
+    font-family: var(--font-ui);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #333;
+  }
+
+  .coach-eyebrow {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--color-accent);
+    margin-bottom: 6px;
+  }
+
+  .coach-name {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 8vw, 48px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    line-height: 1;
+    margin: 0 0 16px;
+  }
+
+  .coach-bio {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--color-secondary);
+    line-height: 1.7;
+    margin: 0 0 28px;
+  }
+
+  .credentials {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .credential {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+  }
+
+  .credential-years {
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .credential-discipline {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    line-height: 1.3;
+  }
+
+  /* Competitive record */
+  .record {
+    margin-top: 32px;
+  }
+
+  .record-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 6vw, 32px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    line-height: 1;
+    margin: 0 0 16px;
+  }
+
+  .record-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .record-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-accent);
+    padding: 20px;
+  }
+
+  .record-value {
+    font-family: var(--font-display);
+    font-size: 40px;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .record-label {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 700px) {
+    .coach {
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      padding: 32px;
+    }
+
+    .record-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

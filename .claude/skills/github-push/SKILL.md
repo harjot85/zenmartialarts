@@ -35,8 +35,8 @@ Examples:
 
 ### Post-push
 
-7. Confirm Vercel deploy triggered at
-   https://zenmartialarts.vercel.app
+7. Confirm Netlify deploy triggered at
+   https://app.netlify.com (Deploys tab for this site)
 8. Wait for deploy to complete (~30 seconds)
 9. Verify live site at https://zenmartialarts.ca
 10. Report: commit hash, deploy status, live URL

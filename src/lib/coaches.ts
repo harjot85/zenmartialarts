@@ -84,7 +84,7 @@ const coachDefs: Record<string, Omit<CoachProfileData, "scheduleName">> = {
         title: "First Pro MMA Fight",
         year: "2010",
         caption:
-          "Coach Eric's first professional MMA fight — and a win. Every coach on our mats started with one nervous first step, then the work.",
+          "Coach Eric's first professional MMA fight — and a win. A black belt and two decades of coaching came later. Every coach on our mats started with one nervous first step, then the work.",
         width: 1721,
         height: 968,
       },

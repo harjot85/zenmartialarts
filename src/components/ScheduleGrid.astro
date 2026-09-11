@@ -1,127 +1,128 @@
 ---
-import scheduleData from "../content/schedule.json";
+import {
+  notes,
+  dayIndexMap,
+  formatRange,
+  daysFor,
+  bandRows,
+  bandRange,
+  disciplineOf,
+  levelOf,
+} from "../lib/schedule";
 
-const parseMinutes = (t: string) => {
-  const m = t.match(/(\d+):(\d+)\s*(AM|PM)/i);
-  if (!m) return 9999;
-  let h = parseInt(m[1]);
-  const min = parseInt(m[2]);
-  const period = m[3].toUpperCase();
-  if (period === "PM" && h !== 12) h += 12;
-  if (period === "AM" && h === 12) h = 0;
-  return h * 60 + min;
-};
+const tables = (["adults", "kids"] as const).map((audience) => {
+  // Kids run Mon–Sat only, so drop empty day columns from that table.
+  const days = daysFor(audience).filter(
+    (d) => audience === "adults" || d.classes.length > 0,
+  );
+  return {
+    audience,
+    title: audience === "adults" ? "Adults" : "Kids",
+    blurb:
+      audience === "adults"
+        ? "Drop into any class marked All Levels or Fundamentals."
+        : "Ages 4–8 and Ages 9–13 train separately. Blocks marked All Ages welcome parents and older kids on the same mat.",
+    days,
+    rows: bandRows(days),
+  };
+});
 
-const timeSlots = [
-  ...new Set(
-    scheduleData.days.flatMap((day) => day.classes.map((cls) => cls.time)),
-  ),
-].sort((a, b) => parseMinutes(a) - parseMinutes(b));
-
-// Build lookup: dayName → time → class entries (array to support concurrent classes)
-type ClassEntry = {
-  time: string;
-  name: string;
-  instructor?: string;
-  category: string;
-  duration?: string;
-};
-const classByDayAndTime: Record<string, Record<string, ClassEntry[]>> = {};
-for (const day of scheduleData.days) {
-  classByDayAndTime[day.day] = {};
-  for (const cls of day.classes) {
-    if (!classByDayAndTime[day.day][cls.time]) {
-      classByDayAndTime[day.day][cls.time] = [];
-    }
-    classByDayAndTime[day.day][cls.time].push(cls);
-  }
-}
-
-// Maps day name → getDay() value (0=Sun, 1=Mon … 6=Sat)
-const getDayIndex: Record<string, number> = {
-  Monday: 1,
-  Tuesday: 2,
-  Wednesday: 3,
-  Thursday: 4,
-  Friday: 5,
-  Saturday: 6,
-  Sunday: 0,
-};
+const mobileDays = daysFor("adults");
 ---
 
 <section class="sg-section">
   <!-- ═══════════════════════════════════════════
-       DESKTOP TABLE (768px+)
+       DESKTOP TABLES (768px+) — Adults, then Kids
   ═══════════════════════════════════════════ -->
   <div class="desktop-grid">
-    <div class="table-scroll">
-      <table class="schedule-table">
-        <thead>
-          <tr>
-            <th class="th-time-header" scope="col"></th>
-            {
-              scheduleData.days.map((day, colIndex) => (
-                <th class="schedule-th" scope="col" data-col={colIndex}>
-                  {day.shortDay}
-                </th>
-              ))
-            }
-          </tr>
-        </thead>
-        <tbody>
-          {
-            timeSlots.map((time) => (
-              <tr>
-                <td class="td-time">{time}</td>
-                {scheduleData.days.map((day, colIndex) => {
-                  const entries = classByDayAndTime[day.day]?.[time] ?? [];
-                  return (
-                    <td
-                      class:list={[
-                        "grid-cell",
-                        { "grid-cell--filled": entries.length > 0 },
-                      ]}
-                      data-col={colIndex}
+    {
+      tables.map((table) => (
+        <div class="table-block">
+          <div class="table-head">
+            <h2 class="table-title">{table.title}</h2>
+            <p class="table-blurb">{table.blurb}</p>
+          </div>
+          <div class="table-scroll">
+            <table class="schedule-table">
+              <caption class="sr-only">
+                {table.title} class schedule, grouped by time of day
+              </caption>
+              <thead>
+                <tr>
+                  <th class="th-band-head" scope="col">
+                    Block
+                  </th>
+                  {table.days.map((day) => (
+                    <th
+                      class="schedule-th"
+                      scope="col"
+                      data-day={dayIndexMap[day.day]}
                     >
-                      {entries.length > 0 && (
-                        <div class="cell-inner">
-                          {entries.map((cls, i) => (
-                            <div
-                              class:list={[
-                                "cell-entry",
-                                { "cell-entry--stacked": i > 0 },
-                              ]}
-                            >
-                              <span class="cell-name">{cls.name}</span>
-                              <span class="cell-badge">
-                                {cls.category === "kids" ? "Kids" : "Adults"}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    </div>
+                      {day.shortDay}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {table.rows.map((row) => (
+                  <tr>
+                    <th class="td-band" scope="row">
+                      <span class="band-label">{row.label}</span>
+                      <span class="band-span">{bandRange(row)}</span>
+                    </th>
+                    {row.perDay.map((classes, i) => (
+                      <td
+                        class:list={[
+                          "grid-cell",
+                          { "grid-cell--filled": classes.length > 0 },
+                        ]}
+                        data-day={dayIndexMap[table.days[i].day]}
+                      >
+                        {classes.map((cls, n) => (
+                          <div
+                            class:list={[
+                              "cell-entry",
+                              { "cell-entry--stacked": n > 0 },
+                            ]}
+                            data-discipline={disciplineOf(cls)}
+                            data-level={levelOf(cls)}
+                          >
+                            <span class="cell-time">
+                              {formatRange(cls.start, cls.end)}
+                            </span>
+                            <span class="cell-name">{cls.name}</span>
+                            {cls.detail && (
+                              <span class="cell-detail">{cls.detail}</span>
+                            )}
+                            {cls.category === "both" && (
+                              <span class="cell-tag">All Ages</span>
+                            )}
+                          </div>
+                        ))}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))
+    }
   </div>
 
   <!-- ═══════════════════════════════════════════
-       MOBILE TABS (under 768px)
+       MOBILE TABS (under 768px) — one day, grouped by audience
   ═══════════════════════════════════════════ -->
   <div class="mobile-schedule">
     <div class="tab-strip" role="tablist" aria-label="Day selector">
       {
-        scheduleData.days.map((day) => (
+        mobileDays.map((day) => (
           <button
             class="tab-btn"
             role="tab"
-            data-day={getDayIndex[day.day]}
+            type="button"
+            data-day={dayIndexMap[day.day]}
             aria-selected="false"
           >
             {day.shortDay}
@@ -132,37 +133,58 @@ const getDayIndex: Record<string, number> = {
 
     <div class="tab-content">
       {
-        scheduleData.days.map((day) => (
-          <div
-            class="mobile-panel"
-            role="tabpanel"
-            data-day={getDayIndex[day.day]}
-          >
-            {day.classes.length > 0 ? (
-              <div class="m-cards">
-                {day.classes.map((cls) => (
-                  <div class="m-card" data-category={cls.category}>
-                    <div class="m-time">{cls.time}</div>
-                    <div class="m-name">{cls.name}</div>
-                    <div class="m-badge">
-                      {cls.category === "kids" ? "Kids" : "Adults"}
+        mobileDays.map((day) => {
+          const groups = tables
+            .map((t) => ({
+              title: t.title,
+              classes: t.days.find((d) => d.day === day.day)?.classes ?? [],
+            }))
+            .filter((g) => g.classes.length > 0);
+          return (
+            <div
+              class="mobile-panel"
+              role="tabpanel"
+              data-day={dayIndexMap[day.day]}
+            >
+              {groups.length > 0 ? (
+                groups.map((g) => (
+                  <div class="m-group">
+                    <h3 class="m-group-title">{g.title}</h3>
+                    <div class="m-cards">
+                      {g.classes.map((cls) => (
+                        <div
+                          class="m-card"
+                          data-discipline={disciplineOf(cls)}
+                          data-level={levelOf(cls)}
+                        >
+                          <div class="m-time">
+                            {formatRange(cls.start, cls.end)}
+                          </div>
+                          <div class="m-body">
+                            <div class="m-name">{cls.name}</div>
+                            {cls.detail && (
+                              <div class="m-detail">{cls.detail}</div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div class="m-closed">
-                <p>Closed today. See you tomorrow!</p>
-                <p>
-                  Contact us for private training:&nbsp;
-                  <a href="tel:+17788356590" class="m-phone">
-                    778-835-6590
-                  </a>
-                </p>
-              </div>
-            )}
-          </div>
-        ))
+                ))
+              ) : (
+                <div class="m-closed">
+                  <p>Closed today. See you tomorrow!</p>
+                  <p>
+                    Contact us for private training:&nbsp;
+                    <a href="tel:+17788356590" class="m-phone">
+                      778-835-6590
+                    </a>
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        })
       }
     </div>
   </div>
@@ -173,7 +195,7 @@ const getDayIndex: Record<string, number> = {
   <div class="notes-block">
     <span class="notes-label">Notes</span>
     <ul class="notes-list">
-      {scheduleData.notes.map((note) => <li class="notes-item">{note}</li>)}
+      {notes.map((note) => <li class="notes-item">{note}</li>)}
     </ul>
   </div>
 
@@ -190,16 +212,15 @@ const getDayIndex: Record<string, number> = {
 <script is:inline>
   document.addEventListener("DOMContentLoaded", function () {
     var todayGetDay = new Date().getDay(); // 0=Sun, 1=Mon … 6=Sat
-    // Column index in the table (Mon=0 … Sun=6)
-    var todayColIndex = (todayGetDay + 6) % 7;
+    var daySel = '[data-day="' + todayGetDay + '"]';
 
-    // ── DESKTOP: highlight today's header column ──
-    var todayTh = document.querySelector(
-      '.schedule-th[data-col="' + todayColIndex + '"]',
-    );
-    if (todayTh) {
-      todayTh.classList.add("th-today");
-    }
+    // ── DESKTOP: highlight today's column in every table ──
+    document.querySelectorAll(".schedule-th" + daySel).forEach(function (th) {
+      th.classList.add("th-today");
+    });
+    document.querySelectorAll(".grid-cell" + daySel).forEach(function (td) {
+      td.classList.add("cell-today");
+    });
 
     // ── MOBILE: tab switching ──
     var tabBtns = document.querySelectorAll(".tab-btn");
@@ -226,7 +247,6 @@ const getDayIndex: Record<string, number> = {
       });
     });
 
-    // Auto-select today; fall back to Monday (1) if no match (e.g. Sunday closed)
     activateTab(todayGetDay);
   });
 </script>
@@ -235,7 +255,55 @@ const getDayIndex: Record<string, number> = {
   /* ─── Section wrapper ─── */
   .sg-section {
     background: #0a0a0a;
-    padding: 0 0 0;
+    padding: 0;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ─── Discipline colour, and the brighter shade for advanced ─── */
+  [data-discipline="bjj"] {
+    --std: var(--discipline-bjj);
+    --adv: var(--discipline-bjj-adv);
+  }
+  [data-discipline="wrestling"] {
+    --std: var(--discipline-wrestling);
+    --adv: var(--discipline-wrestling-adv);
+  }
+  [data-discipline="striking"] {
+    --std: var(--discipline-striking);
+    --adv: var(--discipline-striking-adv);
+  }
+  [data-discipline="boxing"] {
+    --std: var(--discipline-boxing);
+    --adv: var(--discipline-boxing-adv);
+  }
+  [data-discipline="mma"] {
+    --std: var(--discipline-mma);
+    --adv: var(--discipline-mma-adv);
+  }
+  [data-discipline="specialty"] {
+    --std: var(--discipline-specialty);
+    --adv: var(--discipline-specialty-adv);
+  }
+  [data-discipline="openmat"] {
+    --std: var(--discipline-openmat);
+    --adv: var(--discipline-openmat-adv);
+  }
+  [data-discipline] {
+    --hue: var(--std);
+  }
+  [data-discipline][data-level="advanced"] {
+    --hue: var(--adv);
   }
 
   /* ─── Show/hide desktop vs mobile ─── */
@@ -250,7 +318,7 @@ const getDayIndex: Record<string, number> = {
   @media (min-width: 768px) {
     .desktop-grid {
       display: block;
-      padding: 0 24px 0;
+      padding: 0 24px;
     }
     .mobile-schedule {
       display: none;
@@ -258,8 +326,46 @@ const getDayIndex: Record<string, number> = {
   }
 
   /* ════════════════════════════════════
-     DESKTOP TABLE
+     DESKTOP TABLES
   ════════════════════════════════════ */
+  .table-block + .table-block {
+    margin-top: 56px;
+  }
+
+  .table-head {
+    max-width: 1200px;
+    margin: 0 auto 16px;
+  }
+
+  .table-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 34px;
+    font-weight: 400;
+    color: var(--color-accent);
+    margin: 0 0 6px;
+    line-height: 1;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .table-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #242424;
+  }
+
+  .table-blurb {
+    font-family: "Barlow", sans-serif;
+    font-size: 14px;
+    color: var(--color-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+
   .table-scroll {
     overflow-x: auto;
     max-width: 1200px;
@@ -269,31 +375,33 @@ const getDayIndex: Record<string, number> = {
 
   .schedule-table {
     width: 100%;
-    min-width: 640px;
+    min-width: 960px;
     border-collapse: collapse;
     table-layout: fixed;
   }
 
   /* Header row */
-  .th-time-header,
+  .th-band-head,
   .schedule-th {
     background: #111;
     border-bottom: 2px solid var(--color-accent);
     border-right: 1px solid #1f1f1f;
-    padding: 14px 10px;
+    padding: 13px 10px;
     font-family: "Bebas Neue", sans-serif;
-    font-size: 17px;
+    font-size: 20px;
     color: #f5f5f5;
     text-align: center;
     font-weight: 400;
+    letter-spacing: 1.5px;
   }
 
-  .th-time-header {
+  .th-band-head {
     position: sticky;
     left: 0;
     z-index: 3;
-    min-width: 80px;
-    width: 80px;
+    width: 152px;
+    min-width: 152px;
+    color: var(--color-secondary);
   }
 
   /* Today's column header (added by JS) */
@@ -302,70 +410,109 @@ const getDayIndex: Record<string, number> = {
     color: #0a0a0a;
   }
 
-  /* Time cells */
-  .td-time {
+  /* Band label cells */
+  .td-band {
     position: sticky;
     left: 0;
     z-index: 2;
-    background: #0d0d0d;
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 15px;
-    color: var(--color-accent);
-    padding: 10px 12px;
+    background: #0e0e0e;
+    width: 152px;
+    min-width: 152px;
+    padding: 14px 12px;
+    text-align: left;
+    vertical-align: top;
     border-right: 1px solid #1f1f1f;
     border-bottom: 1px solid #1f1f1f;
-    min-width: 80px;
-    white-space: nowrap;
-    text-align: center;
+    font-weight: 400;
+  }
+
+  .band-label {
+    display: block;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 19px;
+    color: var(--color-accent);
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+  }
+
+  .band-span {
+    display: block;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 13px;
+    color: #6a6a6a;
+    letter-spacing: 0.5px;
+    font-variant-numeric: tabular-nums;
   }
 
   /* Body cells */
   .grid-cell {
-    background: #111;
-    border: 1px solid #1f1f1f;
-    padding: 10px 10px;
+    background: #101010;
+    border-right: 1px solid #1f1f1f;
+    border-bottom: 1px solid #1f1f1f;
+    padding: 0;
     vertical-align: top;
-    min-width: 110px;
   }
 
   .grid-cell--filled {
-    background: #161616;
-    border-left: 2px solid var(--color-accent);
+    background: #171717;
   }
 
-  .cell-inner {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  .cell-today.grid-cell--filled {
+    background: #1c1a12;
   }
 
   .cell-entry {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
+    padding: 10px 11px 11px;
+    border-left: 3px solid var(--hue);
   }
 
   .cell-entry--stacked {
     border-top: 1px solid #1f1f1f;
-    padding-top: 8px;
-    margin-top: 4px;
+  }
+
+  .cell-time {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 15.5px;
+    color: var(--color-accent);
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+    font-variant-numeric: tabular-nums;
   }
 
   .cell-name {
     font-family: "Barlow Condensed", sans-serif;
-    font-size: 14px;
+    font-size: 16.5px;
     font-weight: 700;
     text-transform: uppercase;
     color: #f5f5f5;
     line-height: 1.2;
   }
 
-  .cell-badge {
+  .cell-detail {
     font-family: "Barlow Condensed", sans-serif;
-    font-size: 11px;
+    font-size: 13px;
     text-transform: uppercase;
     color: var(--color-secondary);
     line-height: 1.3;
+    letter-spacing: 0.3px;
+  }
+
+  .cell-tag {
+    align-self: flex-start;
+    margin-top: 4px;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--hue);
+    border: 1px solid var(--hue);
+    padding: 1px 7px;
+    line-height: 1.5;
+    opacity: 0.85;
   }
 
   /* ════════════════════════════════════
@@ -389,11 +536,11 @@ const getDayIndex: Record<string, number> = {
     background: #111;
     color: #666;
     font-family: "Barlow Condensed", sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    padding: 8px 14px;
+    padding: 9px 15px;
     border: 1px solid #222;
     border-radius: 0;
     cursor: pointer;
@@ -421,6 +568,31 @@ const getDayIndex: Record<string, number> = {
     display: block;
   }
 
+  .m-group + .m-group {
+    margin-top: 24px;
+  }
+
+  .m-group-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--color-accent);
+    margin: 0 0 10px;
+    line-height: 1;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .m-group-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #242424;
+  }
+
   .m-cards {
     display: flex;
     flex-direction: column;
@@ -428,46 +600,47 @@ const getDayIndex: Record<string, number> = {
   }
 
   .m-card {
-    background: #111;
-    border-left: 3px solid var(--color-accent);
-    padding: 16px;
+    background: #171717;
+    border-left: 3px solid var(--hue);
+    padding: 14px 16px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    gap: 14px;
     border-radius: 0;
   }
 
   .m-time {
     font-family: "Bebas Neue", sans-serif;
-    font-size: 20px;
+    font-size: 16.5px;
     color: var(--color-accent);
-    min-width: 72px;
+    min-width: 112px;
     flex-shrink: 0;
-    line-height: 1.1;
+    line-height: 1.15;
+    letter-spacing: 0.5px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .m-body {
+    flex: 1;
+    min-width: 0;
   }
 
   .m-name {
     font-family: "Barlow Condensed", sans-serif;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
     text-transform: uppercase;
     color: #f5f5f5;
-    flex: 1;
     line-height: 1.2;
   }
 
-  .m-badge {
-    background: #1a1a1a;
-    border: 1px solid #333;
+  .m-detail {
     font-family: "Barlow Condensed", sans-serif;
-    font-size: 10px;
+    font-size: 13px;
     text-transform: uppercase;
     color: var(--color-secondary);
-    padding: 4px 10px;
-    border-radius: 0;
-    flex-shrink: 0;
-    line-height: 1.4;
+    line-height: 1.3;
+    letter-spacing: 0.3px;
   }
 
   .m-closed {
@@ -494,13 +667,13 @@ const getDayIndex: Record<string, number> = {
   .notes-block {
     background: #111;
     padding: 24px;
-    margin: 24px 24px 0;
+    margin: 40px 24px 0;
     max-width: 1200px;
   }
 
   @media (min-width: 768px) {
     .notes-block {
-      margin: 24px auto 0;
+      margin: 40px auto 0;
     }
   }
 

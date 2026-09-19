@@ -21,7 +21,7 @@ const tables = (["adults", "kids"] as const).map((audience) => {
     blurb:
       audience === "adults"
         ? "Drop into any class marked All Levels or Fundamentals."
-        : "Ages 4–8 and Ages 9–13 train separately. Blocks marked All Ages welcome parents and older kids on the same mat.",
+        : "Ages 4–8 and Ages 9–13 train separately. Blocks marked All ages welcome parents and older kids on the same mat.",
     days,
     rows: bandRows(days),
   };
@@ -30,182 +30,175 @@ const tables = (["adults", "kids"] as const).map((audience) => {
 const mobileDays = daysFor("adults");
 ---
 
-<section class="sg-section">
-  <!-- ═══════════════════════════════════════════
+<section class="sg-section section">
+  <div class="wrap">
+    <!-- ═══════════════════════════════════════════
        DESKTOP TABLES (768px+) — Adults, then Kids
   ═══════════════════════════════════════════ -->
-  <div class="desktop-grid">
-    {
-      tables.map((table) => (
-        <div class="table-block">
-          <div class="table-head">
-            <h2 class="table-title">{table.title}</h2>
-            <p class="table-blurb">{table.blurb}</p>
-          </div>
-          <div class="table-scroll">
-            <table class="schedule-table">
-              <caption class="sr-only">
-                {table.title} class schedule, grouped by time of day
-              </caption>
-              <thead>
-                <tr>
-                  <th class="th-band-head" scope="col">
-                    Block
-                  </th>
-                  {table.days.map((day) => (
-                    <th
-                      class="schedule-th"
-                      scope="col"
-                      data-day={dayIndexMap[day.day]}
-                    >
-                      {day.shortDay}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {table.rows.map((row) => (
+    <div class="desktop-grid">
+      {
+        tables.map((table) => (
+          <div class="table-block">
+            <div class="table-head">
+              <h2 class="table-title">{table.title}</h2>
+              <p class="table-blurb">{table.blurb}</p>
+            </div>
+            <div class="table-scroll">
+              <table class="schedule-table">
+                <caption class="sr-only">
+                  {table.title} class schedule, grouped by time of day
+                </caption>
+                <thead>
                   <tr>
-                    <th class="td-band" scope="row">
-                      <span class="band-label">{row.label}</span>
-                      <span class="band-span">{bandRange(row)}</span>
+                    <th class="th-band-head" scope="col">
+                      Block
                     </th>
-                    {row.perDay.map((classes, i) => (
-                      <td
-                        class:list={[
-                          "grid-cell",
-                          { "grid-cell--filled": classes.length > 0 },
-                        ]}
-                        data-day={dayIndexMap[table.days[i].day]}
+                    {table.days.map((day) => (
+                      <th
+                        class="schedule-th"
+                        scope="col"
+                        data-day={dayIndexMap[day.day]}
                       >
-                        {classes.map((cls, n) => (
-                          <div
-                            class:list={[
-                              "cell-entry",
-                              { "cell-entry--stacked": n > 0 },
-                            ]}
-                            data-discipline={disciplineOf(cls)}
-                            data-level={levelOf(cls)}
-                          >
-                            <span class="cell-time">
-                              {formatRange(cls.start, cls.end)}
-                            </span>
-                            <span class="cell-name">{cls.name}</span>
-                            {cls.detail && (
-                              <span class="cell-detail">{cls.detail}</span>
-                            )}
-                            {cls.category === "both" && (
-                              <span class="cell-tag">All Ages</span>
-                            )}
-                          </div>
-                        ))}
-                      </td>
+                        {day.shortDay}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {table.rows.map((row) => (
+                    <tr>
+                      <th class="td-band" scope="row">
+                        <span class="band-label">{row.label}</span>
+                        <span class="band-span">{bandRange(row)}</span>
+                      </th>
+                      {row.perDay.map((classes, i) => (
+                        <td
+                          class:list={[
+                            "grid-cell",
+                            { "grid-cell--filled": classes.length > 0 },
+                          ]}
+                          data-day={dayIndexMap[table.days[i].day]}
+                        >
+                          {classes.map((cls, n) => (
+                            <div
+                              class:list={[
+                                "cell-entry",
+                                { "cell-entry--stacked": n > 0 },
+                              ]}
+                              data-discipline={disciplineOf(cls)}
+                              data-level={levelOf(cls)}
+                            >
+                              <span class="cell-time">
+                                {formatRange(cls.start, cls.end)}
+                              </span>
+                              <span class="cell-name">{cls.name}</span>
+                              {cls.detail && (
+                                <span class="cell-detail">{cls.detail}</span>
+                              )}
+                              {cls.category === "both" && (
+                                <span class="cell-tag">All ages</span>
+                              )}
+                            </div>
+                          ))}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      ))
-    }
-  </div>
-
-  <!-- ═══════════════════════════════════════════
-       MOBILE TABS (under 768px) — one day, grouped by audience
-  ═══════════════════════════════════════════ -->
-  <div class="mobile-schedule">
-    <div class="tab-strip" role="tablist" aria-label="Day selector">
-      {
-        mobileDays.map((day) => (
-          <button
-            class="tab-btn"
-            role="tab"
-            type="button"
-            data-day={dayIndexMap[day.day]}
-            aria-selected="false"
-          >
-            {day.shortDay}
-          </button>
         ))
       }
     </div>
 
-    <div class="tab-content">
-      {
-        mobileDays.map((day) => {
-          const groups = tables
-            .map((t) => ({
-              title: t.title,
-              classes: t.days.find((d) => d.day === day.day)?.classes ?? [],
-            }))
-            .filter((g) => g.classes.length > 0);
-          return (
-            <div
-              class="mobile-panel"
-              role="tabpanel"
+    <!-- ═══════════════════════════════════════════
+       MOBILE TABS (under 768px) — one day, grouped by audience
+  ═══════════════════════════════════════════ -->
+    <div class="mobile-schedule">
+      <div class="tab-strip" role="tablist" aria-label="Day selector">
+        {
+          mobileDays.map((day) => (
+            <button
+              class="tab-btn"
+              role="tab"
+              type="button"
               data-day={dayIndexMap[day.day]}
+              aria-selected="false"
             >
-              {groups.length > 0 ? (
-                groups.map((g) => (
-                  <div class="m-group">
-                    <h3 class="m-group-title">{g.title}</h3>
-                    <div class="m-cards">
-                      {g.classes.map((cls) => (
-                        <div
-                          class="m-card"
-                          data-discipline={disciplineOf(cls)}
-                          data-level={levelOf(cls)}
-                        >
-                          <div class="m-time">
-                            {formatRange(cls.start, cls.end)}
-                          </div>
-                          <div class="m-body">
-                            <div class="m-name">{cls.name}</div>
-                            {cls.detail && (
-                              <div class="m-detail">{cls.detail}</div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div class="m-closed">
-                  <p>Closed today. See you tomorrow!</p>
-                  <p>
-                    Contact us for private training:&nbsp;
-                    <a href="tel:+17788356590" class="m-phone">
-                      778-835-6590
-                    </a>
-                  </p>
-                </div>
-              )}
-            </div>
-          );
-        })
-      }
-    </div>
-  </div>
+              {day.shortDay}
+            </button>
+          ))
+        }
+      </div>
 
-  <!-- ═══════════════════════════════════════════
+      <div class="tab-content">
+        {
+          mobileDays.map((day) => {
+            const groups = tables
+              .map((t) => ({
+                title: t.title,
+                classes: t.days.find((d) => d.day === day.day)?.classes ?? [],
+              }))
+              .filter((g) => g.classes.length > 0);
+            return (
+              <div
+                class="mobile-panel"
+                role="tabpanel"
+                data-day={dayIndexMap[day.day]}
+              >
+                {groups.length > 0 ? (
+                  groups.map((g) => (
+                    <div class="m-group">
+                      <h3 class="m-group-title">{g.title}</h3>
+                      <div class="m-cards">
+                        {g.classes.map((cls) => (
+                          <div
+                            class="m-card"
+                            data-discipline={disciplineOf(cls)}
+                            data-level={levelOf(cls)}
+                          >
+                            <div class="m-time">
+                              {formatRange(cls.start, cls.end)}
+                            </div>
+                            <div class="m-body">
+                              <div class="m-name">{cls.name}</div>
+                              {cls.detail && (
+                                <div class="m-detail">{cls.detail}</div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div class="m-closed">
+                    <p>Closed today. See you tomorrow!</p>
+                    <p>
+                      Contact us for private training:&nbsp;
+                      <a href="tel:+17788356590" class="m-phone">
+                        778-835-6590
+                      </a>
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
        NOTES
   ═══════════════════════════════════════════ -->
-  <div class="notes-block">
-    <span class="notes-label">Notes</span>
-    <ul class="notes-list">
-      {notes.map((note) => <li class="notes-item">{note}</li>)}
-    </ul>
-  </div>
-
-  <!-- ═══════════════════════════════════════════
-       BOOK TRIAL CTA
-  ═══════════════════════════════════════════ -->
-  <div class="schedule-cta">
-    <h2 class="cta-headline">Ready to train?</h2>
-    <p class="cta-subtext">Book your free first class — no commitment.</p>
-    <a href="/#trial" class="cta-btn">BOOK FREE TRIAL →</a>
+    <div class="notes-block">
+      <span class="notes-label">Notes</span>
+      <ul class="notes-list">
+        {notes.map((note) => <li class="notes-item">{note}</li>)}
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -232,6 +225,21 @@ const mobileDays = daysFor("adults");
         var isActive = btn.getAttribute("data-day") === dayStr;
         btn.classList.toggle("tab-btn--active", isActive);
         btn.setAttribute("aria-selected", isActive ? "true" : "false");
+        // The strip scrolls sideways with a hidden scrollbar; on narrow
+        // phones Sat/Sun start off-screen. Keep the active day in view
+        // (scrolls only the strip, never the page).
+        var strip = btn.parentElement;
+        if (isActive && strip) {
+          var left = btn.offsetLeft - strip.offsetLeft;
+          if (left < strip.scrollLeft) {
+            strip.scrollLeft = left;
+          } else if (
+            left + btn.offsetWidth >
+            strip.scrollLeft + strip.clientWidth
+          ) {
+            strip.scrollLeft = left + btn.offsetWidth - strip.clientWidth;
+          }
+        }
       });
       mobilePanels.forEach(function (panel) {
         panel.classList.toggle(
@@ -254,8 +262,7 @@ const mobileDays = daysFor("adults");
 <style>
   /* ─── Section wrapper ─── */
   .sg-section {
-    background: #0a0a0a;
-    padding: 0;
+    background: var(--color-bg);
   }
 
   .sr-only {
@@ -312,13 +319,11 @@ const mobileDays = daysFor("adults");
   }
   .mobile-schedule {
     display: block;
-    padding: 0 24px;
   }
 
   @media (min-width: 768px) {
     .desktop-grid {
       display: block;
-      padding: 0 24px;
     }
     .mobile-schedule {
       display: none;
@@ -333,43 +338,38 @@ const mobileDays = daysFor("adults");
   }
 
   .table-head {
-    max-width: 1200px;
-    margin: 0 auto 16px;
+    margin: 0 0 16px;
   }
 
   .table-title {
     display: flex;
     align-items: center;
     gap: 14px;
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 34px;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 600;
     color: var(--color-accent);
     margin: 0 0 6px;
-    line-height: 1;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+    line-height: 1.08;
   }
 
   .table-title::after {
     content: "";
     flex: 1;
     height: 1px;
-    background: #242424;
+    background: var(--color-border);
   }
 
   .table-blurb {
-    font-family: "Barlow", sans-serif;
-    font-size: 14px;
-    color: var(--color-secondary);
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text-muted);
     margin: 0;
     line-height: 1.5;
   }
 
   .table-scroll {
     overflow-x: auto;
-    max-width: 1200px;
-    margin: 0 auto;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -383,16 +383,16 @@ const mobileDays = daysFor("adults");
   /* Header row */
   .th-band-head,
   .schedule-th {
-    background: #111;
+    background: var(--color-surface);
     border-bottom: 2px solid var(--color-accent);
-    border-right: 1px solid #1f1f1f;
+    border-right: 1px solid var(--color-border);
     padding: 13px 10px;
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 20px;
-    color: #f5f5f5;
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--color-text);
     text-align: center;
-    font-weight: 400;
-    letter-spacing: 1.5px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
   }
 
   .th-band-head {
@@ -407,7 +407,7 @@ const mobileDays = daysFor("adults");
   /* Today's column header (added by JS) */
   .th-today {
     background: var(--color-accent);
-    color: #0a0a0a;
+    color: var(--color-bg);
   }
 
   /* Band label cells */
@@ -415,50 +415,53 @@ const mobileDays = daysFor("adults");
     position: sticky;
     left: 0;
     z-index: 2;
-    background: #0e0e0e;
+    background: var(--color-bg);
     width: 152px;
     min-width: 152px;
     padding: 14px 12px;
     text-align: left;
     vertical-align: top;
-    border-right: 1px solid #1f1f1f;
-    border-bottom: 1px solid #1f1f1f;
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
     font-weight: 400;
   }
 
   .band-label {
     display: block;
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 19px;
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 500;
     color: var(--color-accent);
-    letter-spacing: 0.5px;
-    line-height: 1.1;
+    line-height: 1.15;
   }
 
   .band-span {
     display: block;
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 13px;
-    color: #6a6a6a;
-    letter-spacing: 0.5px;
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    color: var(--color-text-muted);
     font-variant-numeric: tabular-nums;
   }
 
   /* Body cells */
   .grid-cell {
-    background: #101010;
-    border-right: 1px solid #1f1f1f;
-    border-bottom: 1px solid #1f1f1f;
+    background: var(--color-bg);
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
     padding: 0;
     vertical-align: top;
   }
 
   .grid-cell--filled {
-    background: #171717;
+    background: var(--color-surface);
   }
 
   .cell-today.grid-cell--filled {
-    background: #1c1a12;
+    background: color-mix(
+      in srgb,
+      var(--color-accent) 7%,
+      var(--color-surface)
+    );
   }
 
   .cell-entry {
@@ -470,44 +473,39 @@ const mobileDays = daysFor("adults");
   }
 
   .cell-entry--stacked {
-    border-top: 1px solid #1f1f1f;
+    border-top: 1px solid var(--color-border);
   }
 
   .cell-time {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 15.5px;
+    font-family: var(--font-display);
+    font-size: 14.5px;
+    font-weight: 500;
     color: var(--color-accent);
-    line-height: 1.2;
-    letter-spacing: 0.5px;
+    line-height: 1.25;
     font-variant-numeric: tabular-nums;
   }
 
   .cell-name {
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 16.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #f5f5f5;
-    line-height: 1.2;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.25;
   }
 
   .cell-detail {
-    font-family: "Barlow Condensed", sans-serif;
+    font-family: var(--font-body);
     font-size: 13px;
-    text-transform: uppercase;
-    color: var(--color-secondary);
+    color: var(--color-text-muted);
     line-height: 1.3;
-    letter-spacing: 0.3px;
   }
 
   .cell-tag {
     align-self: flex-start;
     margin-top: 4px;
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 11px;
+    font-family: var(--font-body);
+    font-size: 12px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
     color: var(--hue);
     border: 1px solid var(--hue);
     padding: 1px 7px;
@@ -533,15 +531,14 @@ const mobileDays = daysFor("adults");
 
   .tab-btn {
     flex-shrink: 0;
-    background: #111;
-    color: #666;
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 14px;
+    min-height: 44px; /* tap target */
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: 15px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
     padding: 9px 15px;
-    border: 1px solid #222;
+    border: 1px solid var(--color-border);
     border-radius: 0;
     cursor: pointer;
     line-height: 1;
@@ -552,7 +549,7 @@ const mobileDays = daysFor("adults");
 
   .tab-btn--active {
     background: var(--color-accent);
-    color: #0a0a0a;
+    color: var(--color-bg);
     border-color: var(--color-accent);
   }
 
@@ -576,21 +573,19 @@ const mobileDays = daysFor("adults");
     display: flex;
     align-items: center;
     gap: 12px;
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 26px;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
     color: var(--color-accent);
     margin: 0 0 10px;
-    line-height: 1;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+    line-height: 1.08;
   }
 
   .m-group-title::after {
     content: "";
     flex: 1;
     height: 1px;
-    background: #242424;
+    background: var(--color-border);
   }
 
   .m-cards {
@@ -600,7 +595,7 @@ const mobileDays = daysFor("adults");
   }
 
   .m-card {
-    background: #171717;
+    background: var(--color-surface);
     border-left: 3px solid var(--hue);
     padding: 14px 16px;
     display: flex;
@@ -610,13 +605,13 @@ const mobileDays = daysFor("adults");
   }
 
   .m-time {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 16.5px;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 500;
     color: var(--color-accent);
-    min-width: 112px;
+    min-width: 132px;
     flex-shrink: 0;
     line-height: 1.15;
-    letter-spacing: 0.5px;
     font-variant-numeric: tabular-nums;
   }
 
@@ -626,34 +621,31 @@ const mobileDays = daysFor("adults");
   }
 
   .m-name {
-    font-family: "Barlow Condensed", sans-serif;
+    font-family: var(--font-body);
     font-size: 17px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #f5f5f5;
+    font-weight: 600;
+    color: var(--color-text);
     line-height: 1.2;
   }
 
   .m-detail {
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 13px;
-    text-transform: uppercase;
-    color: var(--color-secondary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text-muted);
     line-height: 1.3;
-    letter-spacing: 0.3px;
   }
 
   .m-closed {
     text-align: center;
     padding: 40px 0;
-    font-family: "Barlow", sans-serif;
-    font-size: 15px;
-    color: #666;
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text-muted);
     line-height: 1.8;
   }
 
   .m-closed p {
-    margin: 0;
+    margin: 0 auto;
   }
 
   .m-phone {
@@ -665,25 +657,16 @@ const mobileDays = daysFor("adults");
      NOTES
   ════════════════════════════════════ */
   .notes-block {
-    background: #111;
+    background: var(--color-surface);
     padding: 24px;
-    margin: 40px 24px 0;
-    max-width: 1200px;
-  }
-
-  @media (min-width: 768px) {
-    .notes-block {
-      margin: 40px auto 0;
-    }
+    margin: 40px 0 0;
   }
 
   .notes-label {
     display: block;
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 11px;
+    font-family: var(--font-body);
+    font-size: 15px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 4px;
     color: var(--color-accent);
     margin-bottom: 10px;
   }
@@ -698,50 +681,9 @@ const mobileDays = daysFor("adults");
   }
 
   .notes-item {
-    font-family: "Barlow", sans-serif;
-    font-size: 14px;
-    color: var(--color-secondary);
-    line-height: 1.5;
-  }
-
-  /* ════════════════════════════════════
-     BOOK TRIAL CTA
-  ════════════════════════════════════ */
-  .schedule-cta {
-    padding: 48px 24px;
-    text-align: center;
-  }
-
-  .cta-headline {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 44px;
-    color: #f5f5f5;
-    margin: 0 0 10px;
-    line-height: 1;
-  }
-
-  .cta-subtext {
-    font-family: "Barlow", sans-serif;
+    font-family: var(--font-body);
     font-size: 15px;
-    color: #666;
-    margin: 0 0 28px;
+    color: var(--color-text-muted);
     line-height: 1.5;
-  }
-
-  .cta-btn {
-    display: inline-block;
-    background: var(--color-accent);
-    color: #0a0a0a;
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 20px;
-    letter-spacing: 3px;
-    padding: 18px 40px;
-    border-radius: 0;
-    text-decoration: none;
-    line-height: 1;
-  }
-
-  .cta-btn:hover {
-    opacity: 0.9;
   }
 </style>

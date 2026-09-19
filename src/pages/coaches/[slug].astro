@@ -1,7 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Footer from "../../components/Footer.astro";
 import CoachProfile from "../../components/CoachProfile.astro";
+import PageHero from "../../components/PageHero.astro";
+import ClosingBand from "../../components/ClosingBand.astro";
 import { coaches, getDisciplines } from "../../lib/coaches";
 
 export function getStaticPaths() {
@@ -16,26 +17,37 @@ const disciplines = getDisciplines(coach.scheduleName);
 ---
 
 <Layout
-  title={`${coach.displayName} — ${coach.role} at Zen MMA, Chilliwack BC`}
+  title={`${coach.displayName} — ${coach.role} at Zen Martial Arts, Chilliwack BC`}
   description={coach.bio}
 >
-  <section class="coach-page">
-    <div class="coach-page-inner">
-      <a href="/#instructors" class="back-link">← All coaches</a>
+  <PageHero
+    title={`Meet ${coach.displayName}`}
+    lede={`${coach.role} at Zen Martial Arts & Fitness in Chilliwack, BC.`}
+    breadcrumb={[
+      { label: "Home", href: "/" },
+      { label: "About", href: "/about" },
+      { label: coach.displayName },
+    ]}
+  />
 
-      <CoachProfile coach={coach} headingLevel="h1" />
+  <section class="coach-page section">
+    <div class="coach-page-inner wrap">
+      <CoachProfile coach={coach} />
 
       {
         disciplines.length > 0 && (
-          <section class="teaches">
-            <h2 class="teaches-title">Classes {coach.displayName} Teaches</h2>
+          <section class="teaches" aria-labelledby="teaches-title">
+            <span class="stripe" aria-hidden="true" />
+            <h2 id="teaches-title" class="teaches-title">
+              Classes {coach.displayName} teaches
+            </h2>
             <ul class="teaches-list" role="list">
               {disciplines.map((d) => (
                 <li class="teaches-item">{d}</li>
               ))}
             </ul>
             <a href="/schedule" class="coach-btn coach-btn--ghost">
-              View Class Schedule
+              View class schedule
             </a>
           </section>
         )
@@ -44,8 +56,9 @@ const disciplines = getDisciplines(coach.scheduleName);
       {
         coach.archive && coach.archive.length > 0 && (
           <section class="archive" aria-labelledby="archive-title">
+            <span class="stripe steel" aria-hidden="true" />
             <h2 id="archive-title" class="archive-title">
-              From the Archives
+              From the archives
             </h2>
             {coach.archive.map((moment) => (
               <figure class="moment">
@@ -67,44 +80,19 @@ const disciplines = getDisciplines(coach.scheduleName);
           </section>
         )
       }
-
-      <div class="coach-actions">
-        <a href="/#trial" class="coach-btn coach-btn--primary">
-          Book a Free Trial
-        </a>
-        <a href="/about" class="coach-btn coach-btn--ghost">About the Gym</a>
-      </div>
     </div>
   </section>
-  <Footer />
+
+  <ClosingBand
+    heading={`Train with ${coach.displayName}`}
+    text="Your first week is free — the best way to know if a coach is right for you is to take their class."
+    secondary={{ label: "About the gym", href: "/about" }}
+  />
 </Layout>
 
 <style>
   .coach-page {
     background: var(--color-bg);
-    padding: 40px 24px 80px;
-  }
-
-  .coach-page-inner {
-    max-width: 960px;
-    margin: 0 auto;
-  }
-
-  .back-link {
-    display: inline-block;
-    font-family: var(--font-ui);
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    margin-bottom: 24px;
-    transition: color 0.15s;
-  }
-
-  .back-link:hover {
-    color: var(--color-text);
   }
 
   .teaches {
@@ -113,10 +101,9 @@ const disciplines = getDisciplines(coach.scheduleName);
 
   .teaches-title {
     font-family: var(--font-display);
-    font-size: clamp(28px, 7vw, 40px);
-    text-transform: uppercase;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
     color: var(--color-text);
-    line-height: 1;
+    line-height: 1.08;
     margin: 0 0 20px;
   }
 
@@ -130,13 +117,11 @@ const disciplines = getDisciplines(coach.scheduleName);
   }
 
   .teaches-item {
-    font-family: var(--font-ui);
-    font-size: 13px;
+    font-family: var(--font-body);
+    font-size: 15px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
     color: var(--color-text);
-    background: #0d0d0d;
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-left: 3px solid var(--color-accent);
     padding: 12px 18px;
@@ -148,16 +133,15 @@ const disciplines = getDisciplines(coach.scheduleName);
 
   .archive-title {
     font-family: var(--font-display);
-    font-size: clamp(28px, 7vw, 40px);
-    text-transform: uppercase;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
     color: var(--color-text);
-    line-height: 1;
+    line-height: 1.08;
     margin: 0 0 20px;
   }
 
   .moment {
     margin: 0;
-    background: #0d0d0d;
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
   }
 
@@ -183,45 +167,34 @@ const disciplines = getDisciplines(coach.scheduleName);
   }
 
   .moment-year {
-    font-family: var(--font-ui);
-    font-size: 12px;
+    font-family: var(--font-body);
+    font-size: 15px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 3px;
     color: var(--color-accent);
   }
 
   .moment-title {
     font-family: var(--font-display);
-    font-size: clamp(24px, 6vw, 30px);
-    text-transform: uppercase;
+    font-size: clamp(22px, 5vw, 28px);
+    font-weight: 600;
     color: var(--color-text);
-    line-height: 1;
+    line-height: 1.08;
   }
 
   .moment-text {
     font-family: var(--font-body);
-    font-size: 15px;
-    color: var(--color-secondary);
+    font-size: 16px;
+    color: var(--color-text-muted);
     line-height: 1.7;
     margin: 6px 0 0;
     max-width: 60ch;
   }
 
-  .coach-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 48px;
-  }
-
   .coach-btn {
     display: inline-block;
-    font-family: var(--font-ui);
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 600;
     padding: 16px 32px;
     text-align: center;
     text-decoration: none;
@@ -232,30 +205,14 @@ const disciplines = getDisciplines(coach.scheduleName);
     opacity: 0.85;
   }
 
-  .coach-btn--primary {
-    background: var(--color-accent);
-    color: #0a0a0a;
-  }
-
   .coach-btn--ghost {
     background: transparent;
     color: var(--color-text);
-    border: 1px solid #333;
+    border: 1px solid var(--color-border);
   }
 
   .coach-btn--ghost:hover {
-    border-color: #555;
+    border-color: var(--color-text-muted);
     opacity: 1;
-  }
-
-  @media (min-width: 700px) {
-    .coach-actions {
-      flex-direction: row;
-      align-items: center;
-    }
-
-    .coach-btn {
-      flex: 0 0 auto;
-    }
   }
 </style>

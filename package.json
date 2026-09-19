@@ -17,9 +17,9 @@
     "*.{astro,ts,js,mjs,css,json,md}": "prettier --write"
   },
   "dependencies": {
-    "@fontsource/barlow": "^5.2.8",
-    "@fontsource/barlow-condensed": "^5.2.8",
-    "@fontsource/bebas-neue": "^5.2.7",
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource/oswald": "^5.3.0",
+    "@fontsource/work-sans": "^5.3.0",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.9",
     "tailwindcss": "^4.2.2"

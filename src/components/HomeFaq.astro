@@ -1,0 +1,41 @@
+---
+import FaqAccordion from "./FaqAccordion.astro";
+
+const items = [
+  {
+    q: "Do I need any experience to join?",
+    a: "No. Most of our members had never trained anything before their first class. Every program runs a fundamentals track built specifically for beginners.",
+  },
+  {
+    q: "What should I wear to my first class?",
+    a: "A t-shirt and athletic shorts or leggings — no shoes on the mats. If you stick with BJJ, we'll walk you through gi vs. no-gi gear after your first couple of classes.",
+  },
+  {
+    q: "Is there a contract?",
+    a: "No. Memberships run month to month, no long-term commitment required.",
+  },
+];
+---
+
+<section class="section on-soft" id="faq">
+  <div class="wrap">
+    <div class="faq-head">
+      <span class="stripe" aria-hidden="true"></span>
+      <h2>Common questions</h2>
+    </div>
+    <FaqAccordion items={items} />
+    <p class="faq-more">
+      <a class="btn btn-ghost" href="/faq">See all FAQs →</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .faq-head {
+    margin-bottom: 32px;
+  }
+
+  .faq-more {
+    margin: 20px 0 0;
+  }
+</style>

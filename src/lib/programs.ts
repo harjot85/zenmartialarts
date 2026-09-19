@@ -1,181 +1,160 @@
 import scheduleData from "../content/schedule.json";
 
-// Single source of truth for the programs shown on the homepage teaser
-// (short copy) and the full /programs page (long copy). Both derive from
-// schedule.json so a program only appears if it's actually on the schedule.
+// Single source of truth for the six programs: the homepage cards (short
+// copy), the /programs cards (longer copy), the header/footer program links
+// and the /programs/<slug> detail pages. Each program lists the schedule.json
+// class names it covers, so its days and its schedule table are derived from
+// the live schedule rather than hard-coded.
 
-export type ProgramKey =
-  | "bjj-nogi"
-  | "bjj-gi"
-  | "muay-thai"
-  | "kickboxing"
+export type ProgramSlug =
+  | "bjj"
+  | "muay-thai-kickboxing"
   | "boxing"
   | "wrestling"
-  | "kids-mma"
-  | "ladies-self-defence"
-  | "yoga";
+  | "kids-martial-arts"
+  | "womens-self-defense";
 
-export interface Program {
-  key: ProgramKey;
+export interface ProgramDef {
+  slug: ProgramSlug;
   name: string;
-  /** One-line teaser copy for the homepage. */
+  /** Card copy for the homepage. */
   short: string;
-  /** Fuller copy for the dedicated /programs page. */
+  /** Card copy for the /programs page. */
   description: string;
+  /** Link text on cards, e.g. "Explore BJJ". */
+  cta: string;
+  /** schedule.json class `name`s this program covers. */
+  classNames: string[];
+  /**
+   * Restricts matching to one audience. Kids only picks up "Wrestling" blocks
+   * that are open to kids ("both"), never an adults-only block.
+   */
+  audience?: "adults" | "kids";
+}
+
+export interface Program extends ProgramDef {
+  href: string;
   /** Short day names this program runs on, ordered Mon→Sun. */
   days: string[];
 }
 
-// Controls display order everywhere.
-const programOrder: ProgramKey[] = [
-  "bjj-nogi",
-  "bjj-gi",
-  "muay-thai",
-  "kickboxing",
-  "boxing",
-  "wrestling",
-  "kids-mma",
-  "ladies-self-defence",
-  "yoga",
-];
+type ScheduleClass = { name: string; detail?: string; category: string };
 
-const programDefs: Record<ProgramKey, Omit<Program, "key" | "days">> = {
-  "bjj-nogi": {
-    name: "Brazilian Jiu-Jitsu (No Gi)",
+// Display order everywhere (mockup order).
+const programDefs: ProgramDef[] = [
+  {
+    slug: "bjj",
+    name: "Brazilian Jiu-Jitsu",
     short:
-      "Fast, athletic grappling built on control, leverage, and submissions — no gi required.",
+      "Gi and no-gi grappling built on control, leverage, and submissions.",
     description:
-      "Grappling without the traditional gi — fast-paced, athletic, and built on control, leverage, and submissions. Sessions run from fundamentals through all-levels rolling, so there's a place for you whatever your experience.",
+      "Gi and no-gi grappling built on control, leverage, and submissions — fundamentals through advanced.",
+    cta: "Explore BJJ",
+    classNames: [
+      "No-Gi BJJ",
+      "Adv No-Gi BJJ",
+      "Gi BJJ",
+      "BJJ Fundamentals",
+      "Adv BJJ Gi",
+      "BJJ Open Mat",
+    ],
+    audience: "adults",
   },
-  "bjj-gi": {
-    name: "Brazilian Jiu-Jitsu (Gi)",
-    short:
-      "Classic ground fighting in the traditional gi — grips, sweeps, and submissions.",
-    description:
-      "The classic art of ground fighting in the traditional gi. Learn positional control, sweeps, and submissions while using the grips and friction the gi provides. All levels welcome on the mat.",
-  },
-  "muay-thai": {
-    name: "Muay Thai",
+  {
+    slug: "muay-thai-kickboxing",
+    name: "Muay Thai & Kickboxing",
     short:
       "The art of eight limbs — punches, elbows, knees, and kicks with real pad work.",
     description:
-      "The 'art of eight limbs' — striking with fists, elbows, knees, and shins. Sharpen your stand-up game through pad work, clinch, and conditioning in every class.",
+      "The art of eight limbs — punches, elbows, knees, and kicks with real pad work.",
+    cta: "Explore Muay Thai",
+    classNames: ["Kickboxing", "Muay Thai"],
+    audience: "adults",
   },
-  kickboxing: {
-    name: "Kickboxing",
-    short:
-      "Punches and kicks at pace — Level 1 builds the technique, then you step up to Level 2 Muay Thai.",
-    description:
-      "Striking that pairs boxing hands with kicks, knees, and footwork. Our Level 1 classes build clean technique and conditioning from the ground up, and flow straight into Level 2 Muay Thai for anyone who wants the full art of eight limbs.",
-  },
-  boxing: {
+  {
+    slug: "boxing",
     name: "Boxing",
     short:
-      "Sharp footwork, head movement, and punching power — for fitness or the ring.",
+      "Footwork, head movement, and punching power, from fundamentals to advanced.",
     description:
-      "Footwork, head movement, and clean punching power. Our adult boxing classes build technique and cardio whether you're training for fitness or the ring.",
+      "Footwork, head movement, and punching power, from fundamentals to advanced.",
+    cta: "Explore Boxing",
+    classNames: ["Fund. Boxing", "Adv. Boxing", "Boxing"],
+    audience: "adults",
   },
-  wrestling: {
+  {
+    slug: "wrestling",
     name: "Wrestling",
     short:
-      "Takedowns, control, and top pressure — the relentless backbone of MMA.",
+      "Takedowns, control, and top pressure — the backbone of every grappling art.",
     description:
-      "Takedowns, control, and top pressure — the backbone of MMA. Open to adults and kids 8+, wrestling builds toughness, balance, and relentless conditioning.",
+      "Takedowns, control, and top pressure — the backbone of every grappling art.",
+    cta: "Explore Wrestling",
+    classNames: ["Kids Wrestling", "Wrestling"],
   },
-  "kids-mma": {
-    name: "Kids MMA",
+  {
+    slug: "kids-martial-arts",
+    name: "Kids Martial Arts",
     short:
-      "Confidence, coordination, and respect through striking and grappling for ages 4–13.",
+      "Confidence, coordination and respect through age-appropriate BJJ and MMA, ages 4–13.",
     description:
-      "A fun, disciplined introduction to mixed martial arts for ages 4–13. Kids build coordination, confidence, and respect while learning striking and grappling basics in a safe, supportive environment.",
+      "Confidence, coordination and respect through age-appropriate BJJ and MMA, ages 4–13.",
+    cta: "Explore Kids' Program",
+    classNames: [
+      "Kids BJJ",
+      "Gi BJJ Kids",
+      "Kids Wrestling",
+      "Wrestling",
+      "Kids MMA",
+    ],
+    audience: "kids",
   },
-  yoga: {
-    name: "Yoga",
+  {
+    slug: "womens-self-defense",
+    name: "Women's Self-Defense",
     short:
-      "Mobility, breathing, and recovery — the session that keeps the rest of your training going.",
+      "Practical, confidence-building self-defense for women — no experience needed.",
     description:
-      "A recovery-focused session built for people who train hard. Open hips and shoulders, restore mobility, and work on breathing and control so you come back to the mats fresher and stay injury-free.",
+      "Practical, confidence-building self-defense for women — no experience needed.",
+    cta: "Explore Self-Defense",
+    classNames: ["Ladies", "Ladies Self-Defence"],
+    audience: "adults",
   },
-  "ladies-self-defence": {
-    name: "Ladies Self-Defence",
-    short:
-      "Practical, confidence-building self-defence for women — no experience needed.",
-    description:
-      "Practical, confidence-building self-defence for women. Learn to recognize threats and respond with simple, effective techniques — no experience required.",
-  },
-};
+];
 
-// Maps a schedule class to a program key. Keyed by "Name | Detail" first so
-// classes that share a name can differ (Level 1 is Kickboxing, Level 2 is Muay
-// Thai), falling back to the bare name. `null` means the class is intentionally
-// not surfaced as its own program (e.g. drop-in Open Mat).
-const nameToKey: Record<string, ProgramKey | null> = {
-  // No-Gi BJJ
-  "No-Gi BJJ": "bjj-nogi",
-  "Adv No-Gi BJJ": "bjj-nogi",
-  "Kids BJJ": "bjj-nogi",
-  // Gi BJJ
-  "Gi BJJ": "bjj-gi",
-  "Gi BJJ Kids": "bjj-gi",
-  "BJJ Fundamentals": "bjj-gi",
-  "Adv BJJ Gi": "bjj-gi",
-  // Striking
-  "Muay Thai": "muay-thai",
-  Kickboxing: "kickboxing",
-  "Fund. Boxing": "boxing",
-  "Adv. Boxing": "boxing",
-  Boxing: "boxing",
-  // Wrestling
-  Wrestling: "wrestling",
-  "Kids Wrestling": "wrestling",
-  // Other
-  "Kids MMA": "kids-mma",
-  Ladies: "ladies-self-defence",
-  "Ladies Self-Defence": "ladies-self-defence",
-  Yoga: "yoga",
-  // Drop-in sessions — not standalone programs
-  "Open Mat": null,
-  "MMA Open Mat": null,
-  "BJJ Open Mat": null,
-};
+// Classes on the schedule that deliberately have no program card: Yoga (on
+// the schedule, not a program per the redesign) and the drop-in open mats.
+const unlistedClassNames = new Set(["Yoga", "Open Mat", "MMA Open Mat"]);
 
-/** Looks up a class's program key, preferring the name+detail form. */
-export const keyFor = (cls: { name: string; detail?: string }) => {
-  const compound = cls.detail ? `${cls.name} | ${cls.detail}` : null;
-  if (compound && compound in nameToKey) return nameToKey[compound];
-  if (cls.name in nameToKey) return nameToKey[cls.name];
-  throw new Error(
-    `programs.ts: unmapped class "${compound ?? cls.name}" in schedule.json. Add it to nameToKey.`,
-  );
-};
+const inAudience = (cls: ScheduleClass, audience?: "adults" | "kids") =>
+  !audience || cls.category === audience || cls.category === "both";
 
-const dayOrder: Record<string, number> = {
-  Mon: 0,
-  Tue: 1,
-  Wed: 2,
-  Thu: 3,
-  Fri: 4,
-  Sat: 5,
-  Sun: 6,
-};
+/** Does this schedule class belong to the given program? */
+export const programIncludes = (program: ProgramDef, cls: ScheduleClass) =>
+  program.classNames.includes(cls.name) && inAudience(cls, program.audience);
 
-// Collect, per program, which days it runs on (derived from the live schedule).
-const programDays = new Map<ProgramKey, Set<string>>();
+// Fail the build if a class is added to schedule.json that no program (or the
+// unlisted set) accounts for, so it can't silently disappear from the site.
 for (const day of scheduleData.days) {
   for (const cls of day.classes) {
-    const key = keyFor(cls);
-    if (!key) continue;
-    if (!programDays.has(key)) programDays.set(key, new Set());
-    programDays.get(key)!.add(day.shortDay);
+    const covered =
+      unlistedClassNames.has(cls.name) ||
+      programDefs.some((p) => programIncludes(p, cls));
+    if (!covered) {
+      throw new Error(
+        `programs.ts: class "${cls.name}" (${cls.category}) in schedule.json isn't in any program. Add it to a program's classNames or to unlistedClassNames.`,
+      );
+    }
   }
 }
 
-export const programs: Program[] = programOrder
-  .filter((key) => programDays.has(key))
-  .map((key) => ({
-    key,
-    ...programDefs[key],
-    days: Array.from(programDays.get(key)!).sort(
-      (a, b) => dayOrder[a] - dayOrder[b],
-    ),
-  }));
+export const programs: Program[] = programDefs.map((def) => ({
+  ...def,
+  href: `/programs/${def.slug}`,
+  days: scheduleData.days
+    .filter((day) => day.classes.some((cls) => programIncludes(def, cls)))
+    .map((day) => day.shortDay),
+}));
+
+export const getProgram = (slug: string) =>
+  programs.find((p) => p.slug === slug);

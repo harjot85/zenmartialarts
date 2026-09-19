@@ -1,0 +1,330 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "../../layouts/Layout.astro";
+import ProgramCard from "../../components/ProgramCard.astro";
+import FaqAccordion from "../../components/FaqAccordion.astro";
+import { programs, type Program } from "../../lib/programs";
+import { programScheduleRows } from "../../lib/schedule";
+import {
+  programPages,
+  type ProgramPage,
+  type SectionBg,
+} from "../../content/program-pages";
+
+export const getStaticPaths = (() =>
+  programs.map((program) => ({
+    params: { slug: program.slug },
+    props: { program, page: programPages[program.slug] },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  program: Program;
+  page: ProgramPage;
+}
+
+const { program, page } = Astro.props;
+
+const bgClass: Record<SectionBg, string | undefined> = {
+  ink: undefined,
+  soft: "on-soft",
+  paper: "on-paper",
+};
+
+const site = Astro.site ?? new URL("https://zenmartialarts.ca");
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: new URL("/", site).href,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Programs",
+      item: new URL("/programs", site).href,
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: program.name,
+      item: new URL(program.href, site).href,
+    },
+  ],
+};
+---
+
+<Layout title={page.title} description={page.description}>
+  <script
+    slot="jsonld"
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(breadcrumbSchema)}
+  />
+
+  <section class="section program-hero">
+    <div class="wrap">
+      <nav aria-label="Breadcrumb" class="breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/programs">Programs</a></li>
+          <li aria-current="page">{program.name}</li>
+        </ol>
+      </nav>
+      <span
+        class:list={["stripe", { steel: page.heroStripe === "steel" }]}
+        aria-hidden="true"></span>
+      <h1>{page.h1}</h1>
+      <p class="lede">{page.lede}</p>
+      <div class="btn-row">
+        <a href="/#trial" class="btn btn-primary">{page.ctaLabel}</a>
+      </div>
+    </div>
+  </section>
+
+  {
+    page.sections.map((section) => (
+      <section class:list={["section", bgClass[section.bg]]}>
+        <div class="wrap">
+          <div
+            class:list={[
+              "section-head",
+              {
+                "section-head--flush":
+                  section.type === "explainer" && !section.cards,
+              },
+            ]}
+          >
+            <span
+              class:list={["stripe", { steel: section.stripe === "steel" }]}
+              aria-hidden="true"
+            />
+            <h2>{section.heading}</h2>
+            {section.type === "explainer" && section.intro && (
+              <p>{section.intro}</p>
+            )}
+          </div>
+
+          {section.type === "explainer" && section.cards && (
+            <>
+              <ul
+                class="card-grid"
+                role="list"
+                data-count={section.cards.length}
+              >
+                {section.cards.map((card) => (
+                  <ProgramCard title={card.title} text={card.text} />
+                ))}
+              </ul>
+              {section.note && <p class="card-note">{section.note}</p>}
+            </>
+          )}
+
+          {section.type === "schedule" && (
+            <>
+              <div class="table-scroll">
+                <table class="schedule-table">
+                  <caption class="visually-hidden">
+                    {program.name} classes by day
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Day</th>
+                      <th scope="col">Time</th>
+                      <th scope="col">{section.classColumn ?? "Class"}</th>
+                      {section.showAges && <th scope="col">Ages</th>}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {programScheduleRows(program, {
+                      showAges: section.showAges,
+                    }).map((row) => (
+                      <tr>
+                        <td>{row.day}</td>
+                        <td class="nowrap">{row.time}</td>
+                        <td>{row.label}</td>
+                        {section.showAges && <td>{row.ages ?? "—"}</td>}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p class="after-block">
+                <a class="btn btn-ghost" href="/schedule">
+                  See the full weekly schedule →
+                </a>
+              </p>
+            </>
+          )}
+
+          {section.type === "faq" && (
+            <>
+              <FaqAccordion items={section.items} openIndex={0} />
+              <p class="after-block after-block--faq">
+                <a class="btn btn-ghost" href="/faq">
+                  More general questions →
+                </a>
+              </p>
+            </>
+          )}
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="section on-paper closing">
+    <div class="wrap">
+      <h2>{page.closing.heading}</h2>
+      <p>{page.closing.text}</p>
+      <a href="/#trial" class="btn btn-primary">{page.ctaLabel}</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .program-hero {
+    padding-block: 88px 32px;
+  }
+
+  .breadcrumb {
+    margin-bottom: 18px;
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    padding: 0 0.4em;
+  }
+
+  .breadcrumb a {
+    color: inherit;
+    text-decoration: underline;
+    /* 40px-tall tap target without moving the layout */
+    display: inline-block;
+    padding-block: 12px;
+    margin-block: -12px;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-text);
+  }
+
+  .lede {
+    max-width: 56ch;
+    margin: 0 0 28px;
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+  }
+
+  .section-head {
+    max-width: 62ch;
+    margin-bottom: 40px;
+  }
+
+  .section-head--flush {
+    margin-bottom: 0;
+  }
+
+  .section-head p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (min-width: 700px) {
+    .card-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .card-grid[data-count="3"] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .card-note {
+    max-width: 62ch;
+    margin: 16px 0 0;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Schedule table (mockup .schedule-table) */
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  .schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .schedule-table th {
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .after-block {
+    margin: 20px 0 0;
+  }
+
+  .after-block--faq {
+    margin-top: 16px;
+  }
+
+  .closing {
+    text-align: center;
+  }
+
+  .closing p {
+    max-width: 62ch;
+    margin: 0 auto 20px;
+  }
+</style>

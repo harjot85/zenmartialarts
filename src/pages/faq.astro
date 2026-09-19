@@ -1,0 +1,71 @@
+---
+import Layout from "../layouts/Layout.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+import { faqItems } from "../content/faq";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
+---
+
+<Layout
+  title="FAQ — Zen Martial Arts, Chilliwack BC"
+  description="Answers to common questions about training BJJ, Muay Thai, boxing, wrestling and kids martial arts at Zen Martial Arts in Chilliwack, BC."
+>
+  <script
+    slot="jsonld"
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(faqSchema)}
+  />
+
+  <section class="section faq-hero">
+    <div class="wrap">
+      <span class="stripe" aria-hidden="true"></span>
+      <h1>Frequently asked questions</h1>
+      <p class="lede">Everything people ask before their first class.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Questions and answers">
+    <div class="wrap">
+      <FaqAccordion items={faqItems} openIndex={0} />
+    </div>
+  </section>
+
+  <section class="section on-paper closing" aria-labelledby="faq-cta">
+    <div class="wrap">
+      <h2 id="faq-cta">Still have a question?</h2>
+      <p>Call, email, or just come try a class and ask a coach directly.</p>
+      <a href="tel:+17788356590" class="btn btn-primary">778-835-6590</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .faq-hero {
+    padding-block: clamp(56px, 10vw, 88px) 32px;
+  }
+
+  .lede {
+    max-width: 56ch;
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+  }
+
+  .closing {
+    text-align: center;
+  }
+
+  .closing p {
+    max-width: 62ch;
+    margin: 0 auto 20px;
+  }
+</style>

@@ -2,18 +2,25 @@
 const slides = [
   {
     src: "/images/zen_group_.jpg",
-    alt: "The team and members of Zen MMA in Chilliwack, BC",
+    alt: "The team and members of Zen Martial Arts in Chilliwack, BC",
     position: "60% center",
   },
   {
     src: "/images/team-bjj-wide.jpg",
-    alt: "Zen MMA members training Brazilian Jiu-Jitsu on the mats",
+    alt: "Zen Martial Arts members training Brazilian Jiu-Jitsu on the mats",
     position: "center center",
   },
 ];
+
+const stats = [
+  { value: "4", label: "Years open in Chilliwack" },
+  { value: "6", label: "Coaches on staff" },
+  { value: "0", label: "Contracts required" },
+  { value: "1", label: "Week free trial" },
+];
 ---
 
-<section class="relative overflow-hidden bg-[#1a1400] flex flex-col min-h-svh">
+<section class="relative overflow-hidden bg-bg flex flex-col min-h-svh">
   <!-- Hero image carousel — full-bleed background -->
   <div
     class="hero-carousel absolute inset-0"
@@ -21,7 +28,7 @@ const slides = [
     data-interval="5000"
     role="group"
     aria-roledescription="carousel"
-    aria-label="Zen MMA gym photos"
+    aria-label="Zen Martial Arts gym photos"
   >
     {
       slides.map((slide, i) => (
@@ -44,13 +51,13 @@ const slides = [
     }
   </div>
 
-  <!-- Diagonal red line pattern overlay -->
+  <!-- Diagonal gold line pattern overlay -->
   <div
     class="hero-pattern absolute inset-0 opacity-[0.045] pointer-events-none"
   >
   </div>
 
-  <!-- Top-right red glow -->
+  <!-- Top-right gold glow -->
   <div class="hero-glow absolute pointer-events-none"></div>
 
   <!-- Bottom-to-top gradient overlay for text legibility -->
@@ -63,45 +70,44 @@ const slides = [
     >
       <!-- Badge -->
       <div
-        class="self-start flex items-center gap-2 bg-[#0a0a0a]/85 backdrop-blur-sm border border-[#2a2a2a] px-4 py-2"
+        class="self-start flex items-center gap-2 bg-bg/85 backdrop-blur-sm border border-border px-4 py-2"
       >
         <span class="w-2 h-2 shrink-0 rounded-full bg-[var(--color-accent)]"
         ></span>
-        <span
-          class="[font-family:var(--font-ui)] text-[13px] uppercase tracking-widest text-[var(--color-accent)]"
-        >
+        <span class="font-body text-sm font-medium text-[var(--color-accent)]">
           Now enrolling · Chilliwack, BC
         </span>
       </div>
 
       <!-- Headline -->
       <h1
-        class="[font-family:var(--font-display)] text-[72px] md:text-[96px] lg:text-[112px] leading-none uppercase text-[var(--color-text)] max-w-3xl"
+        class="font-display font-bold text-[56px] sm:text-[72px] md:text-[88px] lg:text-[104px] leading-[1.02] tracking-[0.01em] text-[var(--color-text)] max-w-3xl mb-0"
       >
-        FORGE YOUR <span class="text-[var(--color-accent)]">EDGE.</span>
+        Forge your <span class="text-[var(--color-accent)]">edge.</span>
       </h1>
 
       <!-- Subheading -->
       <p
-        class="[font-family:var(--font-body)] text-base md:text-lg text-[#d5d5d5] max-w-xl leading-relaxed"
+        class="font-body text-base md:text-lg text-text/85 max-w-xl leading-relaxed"
       >
-        World-class Muay Thai, BJJ, and MMA training. All levels welcome — from
-        first-timers to competitors.
+        World-class Muay Thai, BJJ, boxing and wrestling — taught by people who
+        remember what your first class felt like. Complete beginners are not
+        just welcome here, they're most of the room.
       </p>
 
       <!-- Buttons -->
       <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
         <a
           href="/#trial"
-          class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest font-semibold bg-[var(--color-accent)] text-[#0a0a0a] px-8 py-4 text-center rounded-none hover:opacity-90 transition-opacity w-full sm:w-auto"
+          class="font-body text-base font-semibold bg-[var(--color-accent)] text-bg px-8 py-4 text-center rounded-none hover:opacity-90 transition-opacity w-full sm:w-auto"
         >
-          Book Your Free Trial →
+          Book your free trial
         </a>
         <a
-          href="/schedule"
-          class="[font-family:var(--font-ui)] text-sm uppercase tracking-widest font-semibold bg-transparent text-white border border-[#333] px-8 py-4 text-center rounded-none hover:border-white transition-colors w-full sm:w-auto"
+          href="/#start-here"
+          class="font-body text-base font-semibold bg-transparent text-text border border-border px-8 py-4 text-center rounded-none hover:border-text transition-colors w-full sm:w-auto"
         >
-          View Class Schedule
+          New to martial arts? Start here
         </a>
       </div>
     </div>
@@ -127,45 +133,23 @@ const slides = [
   </div>
 
   <!-- Stat strip -->
-  <div class="relative z-10 border-t border-[#1f1f1f] bg-[#0a0a0a]/80">
+  <div class="relative z-10 border-t border-border bg-bg/80">
     <div
       class="mx-auto max-w-[var(--container-max)] px-[var(--section-padding-x)]"
     >
-      <div class="grid grid-cols-3 divide-x divide-[#1f1f1f]">
-        <div class="flex flex-col items-center py-6 gap-1">
-          <span
-            class="[font-family:var(--font-display)] text-4xl text-[var(--color-accent)] leading-none"
-            >4</span
-          >
-          <span
-            class="[font-family:var(--font-ui)] text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-text-muted)]"
-            >Years Open</span
-          >
-        </div>
-
-        <div class="flex flex-col items-center py-6 gap-1">
-          <!-- TODO: Replace with real member count -->
-          <span
-            class="[font-family:var(--font-display)] text-4xl text-[var(--color-accent)] leading-none"
-            >—</span
-          >
-          <span
-            class="[font-family:var(--font-ui)] text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-text-muted)]"
-            >Members</span
-          >
-        </div>
-
-        <div class="flex flex-col items-center py-6 gap-1">
-          <!-- TODO: Replace with real coach count -->
-          <span
-            class="[font-family:var(--font-display)] text-4xl text-[var(--color-accent)] leading-none"
-            >6</span
-          >
-          <span
-            class="[font-family:var(--font-ui)] text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-text-muted)]"
-            >Coaches</span
-          >
-        </div>
+      <div class="grid grid-cols-4 divide-x divide-border">
+        {
+          stats.map((stat) => (
+            <div class="flex flex-col items-center py-6 px-1 gap-1 text-center">
+              <span class="font-display font-semibold text-4xl text-[var(--color-accent)] leading-none">
+                {stat.value}
+              </span>
+              <span class="font-body text-xs md:text-sm text-[var(--color-text-muted)]">
+                {stat.label}
+              </span>
+            </div>
+          ))
+        }
       </div>
     </div>
   </div>
@@ -175,8 +159,8 @@ const slides = [
   .hero-pattern {
     background-image: repeating-linear-gradient(
       45deg,
-      #cc1c1c 0,
-      #cc1c1c 1px,
+      var(--color-accent) 0,
+      var(--color-accent) 1px,
       transparent 0,
       transparent 50%
     );
@@ -191,7 +175,7 @@ const slides = [
     border-radius: 50%;
     background: radial-gradient(
       circle,
-      rgba(204, 28, 28, 0.12) 0%,
+      color-mix(in srgb, var(--color-accent) 10%, transparent) 0%,
       transparent 70%
     );
   }
@@ -199,13 +183,30 @@ const slides = [
   .hero-overlay {
     background: linear-gradient(
       to top,
-      rgba(10, 10, 10, 0.97) 0%,
-      rgba(10, 10, 10, 0.75) 35%,
-      rgba(10, 10, 10, 0.2) 70%,
-      rgba(10, 10, 10, 0.05) 100%
+      color-mix(in srgb, var(--color-bg) 97%, transparent) 0%,
+      color-mix(in srgb, var(--color-bg) 75%, transparent) 35%,
+      color-mix(in srgb, var(--color-bg) 20%, transparent) 70%,
+      color-mix(in srgb, var(--color-bg) 5%, transparent) 100%
     );
   }
+
+  /* Below desktop the headline and lede sit higher up the photo, where the
+     overlay above is nearly clear — "edge." fell to ~1.4:1 on bright frames.
+     Carry the shade further up so the text stays readable on both slides. */
+  @media (max-width: 1199px) {
+    .hero-overlay {
+      background: linear-gradient(
+        to top,
+        color-mix(in srgb, var(--color-bg) 97%, transparent) 0%,
+        color-mix(in srgb, var(--color-bg) 82%, transparent) 45%,
+        color-mix(in srgb, var(--color-bg) 60%, transparent) 80%,
+        color-mix(in srgb, var(--color-bg) 45%, transparent) 100%
+      );
+    }
+  }
+
   .hero-dot {
+    position: relative;
     width: 32px;
     height: 3px;
     background: rgba(255, 255, 255, 0.28);
@@ -213,6 +214,13 @@ const slides = [
     transition:
       background-color 0.3s ease,
       width 0.3s ease;
+  }
+
+  /* Invisible hit area: the visible bar is only 3px tall. */
+  .hero-dot::before {
+    content: "";
+    position: absolute;
+    inset: -20px -6px;
   }
 
   .hero-dot:hover {

@@ -1,9 +1,5 @@
 ---
-import "@fontsource/bebas-neue/400.css";
-import "@fontsource/barlow-condensed/400.css";
-import "@fontsource/barlow-condensed/600.css";
-import "@fontsource/barlow/400.css";
-import "@fontsource/barlow/600.css";
+// Oswald 500/600/700 + Work Sans 400/500/600 are imported once, in global.css.
 import "../styles/design-tokens.css";
 import "../styles/global.css";
 
@@ -12,16 +8,25 @@ interface Props {
   description: string;
   canonicalURL: string;
   ogImage?: string;
+  /** Adds <meta name="robots" content="noindex"> (e.g. draft legal pages). */
+  noindex?: boolean;
 }
 
-const { title, description, canonicalURL, ogImage } = Astro.props;
+const {
+  title,
+  description,
+  canonicalURL,
+  ogImage,
+  noindex = false,
+} = Astro.props;
 
 const ogImageAbsolute = ogImage ? new URL(ogImage, Astro.site).href : undefined;
 
 const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  name: "Zen MMA",
+  name: "Zen Martial Arts & Fitness",
+  alternateName: "Zen MMA",
   address: {
     "@type": "PostalAddress",
     streetAddress: "48640 Yale Rd",
@@ -32,6 +37,7 @@ const localBusinessSchema = {
   },
   telephone: "+17788356590",
   url: "https://zenmartialarts.ca",
+  sameAs: ["https://www.instagram.com/zenmartialartsandfitness/"],
   openingHours: [
     "Mo 06:00-21:30",
     "Tu 06:00-21:30",
@@ -39,6 +45,7 @@ const localBusinessSchema = {
     "Th 06:00-21:30",
     "Fr 06:00-21:30",
     "Sa 08:00-21:30",
+    "Su 08:00-21:30",
   ],
 };
 ---
@@ -50,6 +57,7 @@ const localBusinessSchema = {
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalURL} />
+{noindex && <meta name="robots" content="noindex" />}
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
@@ -65,8 +73,9 @@ const localBusinessSchema = {
 {ogImageAbsolute && <meta name="twitter:image" content={ogImageAbsolute} />}
 
 <!-- Favicons -->
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="icon" href="/favicon.ico" />
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
 <!-- LocalBusiness JSON-LD -->
 <script

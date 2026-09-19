@@ -1,0 +1,73 @@
+{
+  "currency": "CAD",
+  "tryOut": {
+    "heading": "Just want to try it out?",
+    "plans": [
+      {
+        "name": "Drop-In",
+        "price": 20,
+        "unit": null,
+        "blurb": "Any single class. No commitment.",
+        "tag": null
+      },
+      {
+        "name": "10-Class Punch Pass",
+        "price": 150,
+        "unit": null,
+        "blurb": "Save $50 versus drop-in pricing. Use anytime, no expiry pressure.",
+        "tag": null
+      }
+    ]
+  },
+  "adult": {
+    "heading": "Adult memberships",
+    "intro": "Pick a lane, or train everything.",
+    "plans": [
+      {
+        "name": "Grappling",
+        "price": 120,
+        "unit": "mo",
+        "blurb": "BJJ and wrestling classes.",
+        "tag": null
+      },
+      {
+        "name": "Striking",
+        "price": 120,
+        "unit": "mo",
+        "blurb": "Kickboxing, boxing, and Muay Thai classes.",
+        "tag": null
+      },
+      {
+        "name": "Unlimited",
+        "price": 140,
+        "unit": "mo",
+        "blurb": "Every adult class on the schedule — grappling and striking both.",
+        "tag": "Best Value"
+      }
+    ]
+  },
+  "kids": {
+    "heading": "Kids memberships",
+    "plans": [
+      {
+        "name": "Twice a Week",
+        "price": 100,
+        "unit": "mo",
+        "blurb": "Two classes a week, any kids' program.",
+        "tag": null
+      },
+      {
+        "name": "3+ Times a Week",
+        "price": 140,
+        "unit": "mo",
+        "blurb": "Three or more classes a week for kids who can't get enough mat time.",
+        "tag": null
+      }
+    ],
+    "note": "Also available: private lessons, group rates, and family discounts. Families who train together save together — ask Coach Eric about custom pricing."
+  },
+  "cleanAndTrain": {
+    "heading": "The Clean & Train Program",
+    "body": "If money is the only thing keeping you off the mats, that should never be the reason you stay home. Reach out to Coach Eric — we would love to have you train."
+  }
+}

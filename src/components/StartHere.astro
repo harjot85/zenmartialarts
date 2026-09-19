@@ -1,0 +1,115 @@
+---
+const points = [
+  {
+    title: "You won't be the only beginner.",
+    text: "Every class has a fundamentals track built for people who joined this month, not this decade.",
+  },
+  {
+    title: "No gear, no problem.",
+    text: "Show up in a t-shirt and shorts. We'll tell you what to bring after class one, not before.",
+  },
+  {
+    title: "Nobody is grading your fitness.",
+    text: "Coaches scale every drill to the person doing it. Go at your pace — that's the only pace that exists here.",
+  },
+  {
+    title: "It's normal to be nervous.",
+    text: "Almost everyone sits in the parking lot for a minute before their first class. Come in anyway.",
+  },
+];
+---
+
+<section id="start-here" class="start-section section on-paper">
+  <div class="wrap start-here">
+    <div class="start-copy">
+      <span class="stripe steel" aria-hidden="true"></span>
+      <h2>New to martial arts? Start here.</h2>
+      <p>
+        Most people who walk through our doors have never trained anything in
+        their life. They're not 22 and athletic — they're in their 30s, 40s, and
+        50s, coming back to their body after years away from it. If that's you,
+        this is exactly who this gym is built for.
+      </p>
+      <p>
+        You don't need to get in shape before you start. That's what the first
+        few months are for. You just need to show up once.
+      </p>
+      <a href="/#trial" class="btn btn-primary">Claim your free week</a>
+    </div>
+
+    <ol class="start-list">
+      {
+        points.map((point, i) => (
+          <li>
+            <span class="start-mark" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <div>
+              <b>{point.title}</b>
+              <span class="start-text">{point.text}</span>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .start-here {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .start-here {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .start-copy p {
+    max-width: 62ch;
+    margin: 0 0 1em;
+  }
+
+  .start-copy .btn {
+    margin-top: 8px;
+  }
+
+  .start-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .start-list li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 14px;
+    padding: 16px 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .start-list li:last-child {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .start-list b {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: var(--color-text-on-paper);
+  }
+
+  .start-text {
+    color: var(--color-text-muted);
+  }
+
+  .start-mark {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--color-accent-deep);
+  }
+</style>

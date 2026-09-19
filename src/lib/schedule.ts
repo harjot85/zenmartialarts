@@ -1,5 +1,5 @@
 import scheduleData from "../content/schedule.json";
-import { keyFor, type ProgramKey } from "./programs";
+import { programIncludes, type ProgramDef } from "./programs";
 
 export type Audience = "adults" | "kids" | "both";
 
@@ -61,7 +61,7 @@ export const inAudience = (cls: ClassEntry, audience: "adults" | "kids") =>
   cls.category === audience || cls.category === "both";
 
 export const audienceLabel = (category: string) =>
-  category === "kids" ? "Kids" : category === "both" ? "All Ages" : "Adults";
+  category === "kids" ? "Kids" : category === "both" ? "All ages" : "Adults";
 
 /** Days filtered to one audience, each still carrying its full day metadata. */
 export const daysFor = (audience: "adults" | "kids") =>
@@ -91,9 +91,10 @@ export const indexByDayAndStart = (list: ScheduleDay[]) => {
 /* ─────────────────────────── Colour + level ─────────────────────────── */
 
 /**
- * Colour groups are coarser than program keys: Gi and No-Gi BJJ share one hue,
- * as do Muay Thai and Kickboxing, and Ladies/Yoga. Derived from the program
- * mapping so there is only one place that knows what a class actually is.
+ * Colour groups for the schedule grid, keyed by schedule.json class name.
+ * Coarser than the classes themselves: Gi and No-Gi BJJ (adults and kids)
+ * share one hue, as do Muay Thai and Kickboxing, and Ladies/Yoga. Open mats
+ * take the neutral silver.
  */
 export type Discipline =
   | "bjj"
@@ -104,22 +105,38 @@ export type Discipline =
   | "specialty"
   | "openmat";
 
-const GROUP: Record<ProgramKey, Discipline> = {
-  "bjj-nogi": "bjj",
-  "bjj-gi": "bjj",
-  "muay-thai": "striking",
-  kickboxing: "striking",
-  boxing: "boxing",
-  wrestling: "wrestling",
-  "kids-mma": "mma",
-  "ladies-self-defence": "specialty",
-  yoga: "specialty",
+const DISCIPLINE_BY_NAME: Record<string, Discipline> = {
+  "No-Gi BJJ": "bjj",
+  "Adv No-Gi BJJ": "bjj",
+  "Kids BJJ": "bjj",
+  "Gi BJJ": "bjj",
+  "Gi BJJ Kids": "bjj",
+  "BJJ Fundamentals": "bjj",
+  "Adv BJJ Gi": "bjj",
+  "Muay Thai": "striking",
+  Kickboxing: "striking",
+  "Fund. Boxing": "boxing",
+  "Adv. Boxing": "boxing",
+  Boxing: "boxing",
+  Wrestling: "wrestling",
+  "Kids Wrestling": "wrestling",
+  "Kids MMA": "mma",
+  Ladies: "specialty",
+  "Ladies Self-Defence": "specialty",
+  Yoga: "specialty",
+  "Open Mat": "openmat",
+  "MMA Open Mat": "openmat",
+  "BJJ Open Mat": "openmat",
 };
 
-/** Open Mat has no program of its own, so it takes the neutral silver. */
 export const disciplineOf = (cls: ClassEntry): Discipline => {
-  const key = keyFor(cls);
-  return key ? GROUP[key] : "openmat";
+  const discipline = DISCIPLINE_BY_NAME[cls.name];
+  if (!discipline) {
+    throw new Error(
+      `schedule.ts: unmapped class "${cls.name}" in schedule.json. Add it to DISCIPLINE_BY_NAME.`,
+    );
+  }
+  return discipline;
 };
 
 export type Level = "advanced" | "fundamental" | "standard";
@@ -188,3 +205,61 @@ export const bandRows = (list: ScheduleDay[]) =>
         .sort((a, b) => parseMinutes(a.start) - parseMinutes(b.start)),
     ),
   })).filter((row) => row.perDay.some((classes) => classes.length > 0));
+
+/* ─────────────────────────── Program tables ─────────────────────────── */
+
+const EXPANDED_NAMES: Record<string, string> = {
+  "Fund. Boxing": "Fundamentals Boxing",
+  "Adv. Boxing": "Advanced Boxing",
+};
+
+/** Name + detail pairs that read as one name rather than "Name — Detail". */
+const JOINED_LABELS: Record<string, string> = {
+  "Ladies | Self-Defence": "Ladies Self-Defence",
+};
+
+/** Readable class name, e.g. "Gi BJJ — All Levels", "Advanced Boxing". */
+export const classLabel = (cls: ClassEntry, withDetail = true) => {
+  const joined = JOINED_LABELS[`${cls.name} | ${cls.detail ?? ""}`];
+  if (joined) return joined;
+  const name = EXPANDED_NAMES[cls.name] ?? cls.name;
+  return withDetail && cls.detail ? `${name} — ${cls.detail}` : name;
+};
+
+/** "Ages 4–8" → "4–8"; "both" classes → "All ages"; otherwise undefined. */
+export const ageBand = (cls: ClassEntry) => {
+  const m = cls.detail?.match(/^Ages?\s+(.+)$/i);
+  if (m) return m[1];
+  return cls.category === "both" ? "All ages" : undefined;
+};
+
+export type ProgramScheduleRow = {
+  day: string;
+  time: string;
+  label: string;
+  /** Only set when `showAges` is on. */
+  ages?: string;
+};
+
+/**
+ * One row per class in the given program, Mon→Sun, in time order. With
+ * `showAges`, an "Ages 4–8" detail moves out of the label into `ages`.
+ */
+export const programScheduleRows = (
+  program: ProgramDef,
+  { showAges = false } = {},
+): ProgramScheduleRow[] =>
+  days.flatMap((day) =>
+    day.classes
+      .filter((cls) => programIncludes(program, cls))
+      .sort((a, b) => parseMinutes(a.start) - parseMinutes(b.start))
+      .map((cls) => {
+        const ageDetail = /^Ages?\s/i.test(cls.detail ?? "");
+        return {
+          day: day.day,
+          time: formatRange(cls.start, cls.end),
+          label: classLabel(cls, !(showAges && ageDetail)),
+          ages: showAges ? ageBand(cls) : undefined,
+        };
+      }),
+  );

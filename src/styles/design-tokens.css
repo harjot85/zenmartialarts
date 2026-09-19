@@ -1,14 +1,25 @@
 :root {
-  /* Colors */
-  --color-accent: #c9a84c; /* gold */
-  --color-accent-subtle: rgba(201, 168, 76, 0.12); /* gold at 12% opacity */
-  --color-accent-border: rgba(201, 168, 76, 0.4); /* gold at 40% opacity */
-  --color-secondary: #a8a8a8; /* silver — secondary text */
-  --color-bg: #0a0a0a;
-  --color-surface: #141414;
-  --color-border: #2a2a2a;
-  --color-text: #f5f5f5;
-  --color-text-muted: #a0a0a0;
+  /* Colors — sampled from the logo (see zen-martial-arts-site3 mockup) */
+  --color-accent: #c9a227; /* gold */
+  --color-accent-bright: #e3c15a; /* gold — hover, links on dark */
+  --color-accent-deep: #8a6d1d; /* gold — text/icons on paper */
+  --color-accent-subtle: rgba(201, 162, 39, 0.12); /* gold at 12% opacity */
+  --color-accent-border: rgba(201, 162, 39, 0.4); /* gold at 40% opacity */
+  --color-secondary: #9a9a9c; /* steel — secondary accent */
+  --color-secondary-bright: #c4c4c6; /* steel — lighter */
+  --color-bg: #0a0a0a; /* ink */
+  --color-surface: #161616; /* soft ink — alternate sections, panels */
+  --color-border: #2c2c2c; /* hairlines on ink */
+  --color-text: #f4f1ea; /* cream */
+  --color-text-muted: #9ea3aa;
+
+  /* Paper — warm light sections */
+  --color-paper: #eeeae1;
+  --color-paper-border: rgba(21, 23, 27, 0.14);
+  --color-text-on-paper: #0a0a0a;
+  --color-text-muted-on-paper: #55524a;
+  --color-paper-field: #faf8f3; /* form fields on paper */
+  --color-paper-field-border: rgba(21, 23, 27, 0.32);
 
   /* Discipline colours — schedule grid. Each pair is one hue: the standard
      shade, and a brighter shade for advanced classes. All clear 4.5:1 on the
@@ -29,12 +40,16 @@
   --discipline-openmat-adv: #c4c4c4;
 
   /* Fonts */
-  --font-display: "Bebas Neue", sans-serif;
-  --font-ui: "Barlow Condensed", sans-serif;
-  --font-body: "Barlow", sans-serif;
+  --font-display: "Oswald", "Arial Narrow", sans-serif;
+  --font-body: "Work Sans", system-ui, sans-serif;
+  --font-ui: var(
+    --font-body
+  ); /* legacy alias — mockup has no separate UI face */
 
   /* Spacing */
   --section-padding-x: clamp(1.25rem, 5vw, 4rem);
   --section-padding-y: clamp(3rem, 8vw, 7rem);
-  --container-max: 1200px;
+  --container-max: 1120px;
+  --container-padding-x: 24px;
+  --section-padding-block: 72px;
 }

@@ -1,0 +1,129 @@
+---
+/**
+ * Inner-page hero (mockup `.hero`): optional breadcrumb, a stripe, the page
+ * <h1> and a muted lede capped at 56ch. The section's hairline comes from
+ * the global `.section` rule.
+ *
+ * Pass the lede as the `lede` prop, or as the default slot when it needs
+ * markup (links). Buttons can go in the `actions` slot.
+ */
+interface Crumb {
+  label: string;
+  /** Omit on the last crumb, which is the current page. */
+  href?: string;
+}
+
+interface Props {
+  title: string;
+  lede?: string;
+  breadcrumb?: Crumb[];
+  stripe?: "gold" | "steel";
+}
+
+const { title, lede, breadcrumb, stripe = "gold" } = Astro.props;
+const hasLedeSlot = Astro.slots.has("default");
+const hasActions = Astro.slots.has("actions");
+---
+
+<section class="section page-hero">
+  <div class="wrap">
+    {
+      breadcrumb && breadcrumb.length > 0 && (
+        <nav aria-label="Breadcrumb" class="breadcrumb">
+          <ol>
+            {breadcrumb.map((crumb) => (
+              <li>
+                {crumb.href ? (
+                  <a href={crumb.href}>{crumb.label}</a>
+                ) : (
+                  <span aria-current="page">{crumb.label}</span>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+    <span
+      class:list={["stripe", { steel: stripe === "steel" }]}
+      aria-hidden="true"></span>
+    <h1>{title}</h1>
+    {
+      hasLedeSlot ? (
+        <p class="lede">
+          <slot />
+        </p>
+      ) : (
+        lede && <p class="lede">{lede}</p>
+      )
+    }
+    {
+      hasActions && (
+        <div class="btn-row">
+          <slot name="actions" />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding-block: clamp(56px, 10vw, 88px) 32px;
+  }
+
+  .page-hero h1 {
+    margin-bottom: 16px;
+  }
+
+  .lede {
+    max-width: 56ch;
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+  }
+
+  .lede :global(a) {
+    color: var(--color-accent);
+  }
+
+  .lede :global(a:hover) {
+    color: var(--color-accent-bright);
+  }
+
+  .lede + .btn-row {
+    margin-top: 28px;
+  }
+
+  .breadcrumb {
+    margin-bottom: 18px;
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumb li + li::before {
+    content: "/";
+    padding: 0 0.4em;
+  }
+
+  .breadcrumb a {
+    color: inherit;
+    text-decoration: underline;
+    /* 40px-tall tap target without moving the layout */
+    display: inline-block;
+    padding-block: 12px;
+    margin-block: -12px;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-text);
+  }
+</style>

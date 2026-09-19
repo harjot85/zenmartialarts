@@ -1,0 +1,240 @@
+---
+// The site's program card: rounded, gold top bar, uppercase gold title and a
+// hover lift when it links somewhere. Renders an <li>, so place it in a list.
+// With `href`, the title link is stretched over the whole card, so the card
+// has one link whose accessible name is the title.
+interface Props {
+  title: string;
+  text: string;
+  href?: string;
+  /** Visible link cue, e.g. "Explore BJJ" (decorative; the title is the link). */
+  cta?: string;
+  /** Short day names for the schedule bar; omit to hide the bar. */
+  days?: string[];
+  headingLevel?: 2 | 3;
+  size?: "default" | "large";
+  class?: string;
+}
+
+const {
+  title,
+  text,
+  href,
+  cta,
+  days,
+  headingLevel = 3,
+  size = "default",
+  class: className,
+} = Astro.props;
+
+const Heading = headingLevel === 2 ? "h2" : "h3";
+const showFooter = (days && days.length > 0) || (href && cta);
+---
+
+<li
+  class:list={[
+    "program-card",
+    `program-card--${size}`,
+    { "program-card--link": href },
+    className,
+  ]}
+>
+  <span class="program-card__accent" aria-hidden="true"></span>
+  <Heading class="program-card__name">
+    {
+      href ? (
+        <a href={href} class="program-card__link">
+          {title}
+        </a>
+      ) : (
+        title
+      )
+    }
+  </Heading>
+  <p class="program-card__desc">{text}</p>
+  {
+    showFooter && (
+      <div
+        class:list={[
+          "program-card__footer",
+          { "program-card__schedule": days && days.length > 0 },
+        ]}
+      >
+        {days && days.length > 0 && (
+          <>
+            <span class="program-card__schedule-label">Schedule</span>
+            <span class="program-card__schedule-days">{days.join(" · ")}</span>
+          </>
+        )}
+        {href && cta && (
+          <span class="program-card__cta" aria-hidden="true">
+            {cta} →
+          </span>
+        )}
+      </div>
+    )
+  }
+</li>
+
+<style>
+  .program-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 24px 22px;
+    overflow: hidden;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  .program-card--large {
+    padding: 36px 30px;
+  }
+
+  /* Gold accent bar — highlights the program at a glance. */
+  .program-card__accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--color-accent);
+  }
+
+  .program-card--link:hover,
+  .program-card--link:focus-within {
+    border-color: var(--color-accent-border);
+    transform: translateY(-2px);
+  }
+
+  .program-card--link:focus-within {
+    outline: 2px solid var(--color-accent-bright);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .program-card--link:hover,
+    .program-card--link:focus-within {
+      transform: none;
+    }
+  }
+
+  /* Card title casing/tracking intentionally kept (user decision). */
+  .program-card__name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-accent);
+    line-height: 1.15;
+    margin: 0 0 10px;
+  }
+
+  .program-card--large .program-card__name {
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  .program-card__link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Stretch the title link over the whole card. */
+  .program-card__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .program-card__link:focus-visible {
+    outline: none;
+  }
+
+  .program-card__desc {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .program-card--large .program-card__desc {
+    font-size: 15px;
+    line-height: 1.7;
+    /* Minimum gap before the schedule bar; shorter cards get more because
+       the bar stays pinned to the bottom of the row. */
+    margin-bottom: 32px;
+  }
+
+  .program-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+    /* Pin to the card bottom so footers align across a row. */
+    margin-top: auto;
+    padding-top: 16px;
+  }
+
+  .program-card__schedule {
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .program-card:not(.program-card--large) .program-card__schedule {
+    margin-top: 20px;
+    padding-top: 16px;
+  }
+
+  /* Schedule bar kept as-is (user decision). */
+  .program-card__schedule-label {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  .program-card__schedule-days {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--color-accent);
+  }
+
+  .program-card__cta {
+    margin-left: auto;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-accent-bright);
+  }
+
+  .program-card--link:hover .program-card__cta {
+    text-decoration: underline;
+  }
+
+  /* On paper sections: paper card, darker gold and muted text for contrast. */
+  :global(.on-paper) .program-card {
+    background: var(--color-paper);
+  }
+
+  :global(.on-paper) .program-card__name,
+  :global(.on-paper) .program-card__schedule-days,
+  :global(.on-paper) .program-card__cta {
+    color: var(--color-accent-deep);
+  }
+
+  :global(.on-paper) .program-card__desc {
+    color: var(--color-text-muted);
+  }
+</style>

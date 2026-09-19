@@ -1,0 +1,297 @@
+---
+import { programs } from "../lib/programs";
+
+const programLinks = programs.map((p) => ({ href: p.href, label: p.name }));
+
+// Normalise "/about/" and "/about" to the same key.
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const current = (href: string) =>
+  currentPath === href ? ("page" as const) : undefined;
+---
+
+<header class="site-header" data-site-header>
+  <div class="header-inner">
+    <a href="/" class="logo" aria-current={current("/")}>
+      <img
+        src="/images/zen-logo.jpg"
+        alt=""
+        width="42"
+        height="42"
+        loading="eager"
+        class="logo-mark"
+      />
+      Zen Martial Arts
+    </a>
+
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-label="Menu"
+      aria-controls="primary-nav"
+      aria-expanded="false"
+      data-nav-toggle
+    >
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary" data-nav>
+      <a href="/" aria-current={current("/")}>Home</a>
+      <div class="has-dropdown" data-dropdown>
+        <a href="/programs" aria-current={current("/programs")}>Programs</a>
+        <div class="dropdown">
+          {
+            programLinks.map((p) => (
+              <a href={p.href} aria-current={current(p.href)}>
+                {p.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <a href="/schedule" aria-current={current("/schedule")}>Schedule</a>
+      <a href="/pricing" aria-current={current("/pricing")}>Pricing</a>
+      <a href="/about" aria-current={current("/about")}>About</a>
+      <a href="/faq" aria-current={current("/faq")}>FAQ</a>
+      <a href="/#trial" class="nav-cta">Free Trial</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-site-header]");
+  const toggle = header?.querySelector<HTMLButtonElement>("[data-nav-toggle]");
+  const nav = header?.querySelector<HTMLElement>("[data-nav]");
+  const dropdown = header?.querySelector<HTMLElement>("[data-dropdown]");
+  const dropdownLink = dropdown?.querySelector<HTMLAnchorElement>(":scope > a");
+  const mobile = window.matchMedia("(max-width: 880px)");
+
+  function setMenu(open: boolean) {
+    if (!toggle || !nav) return;
+    nav.classList.toggle("open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+    if (!open) dropdown?.classList.remove("open");
+  }
+
+  toggle?.addEventListener("click", () => {
+    setMenu(!nav?.classList.contains("open"));
+  });
+
+  // On mobile there's no hover, so the first tap on "Programs" opens its
+  // sub-list instead of navigating. A second tap follows the link.
+  dropdownLink?.addEventListener("click", (e) => {
+    if (mobile.matches && !dropdown?.classList.contains("open")) {
+      e.preventDefault();
+      dropdown?.classList.add("open");
+    }
+  });
+
+  // Close after following a link (matters for same-page links like /#trial).
+  nav?.addEventListener("click", (e) => {
+    if (e.defaultPrevented) return;
+    if ((e.target as Element).closest("a")) setMenu(false);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && nav?.classList.contains("open")) {
+      setMenu(false);
+      toggle?.focus();
+    }
+  });
+
+  // The panel only exists below the breakpoint; reset it when leaving.
+  mobile.addEventListener("change", (e) => {
+    if (!e.matches) setMenu(false);
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--color-bg) 96%, transparent);
+    border-bottom: 1px solid var(--color-border);
+    -webkit-backdrop-filter: saturate(140%) blur(6px);
+    backdrop-filter: saturate(140%) blur(6px);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--container-padding-x);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px; /* tap target */
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .logo:hover {
+    color: var(--color-accent-bright);
+  }
+
+  .logo-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 420px) {
+    .logo {
+      font-size: 1.02rem;
+    }
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+    }
+  }
+
+  .primary-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .primary-nav a {
+    display: block;
+    padding: 6px 0;
+    font-family: var(--font-body);
+    font-size: 0.98rem;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .primary-nav a:hover {
+    color: var(--color-accent-bright);
+  }
+
+  .has-dropdown {
+    position: relative;
+  }
+
+  .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: -14px;
+    min-width: 230px;
+    padding: 8px 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  .has-dropdown:hover .dropdown,
+  .has-dropdown:focus-within .dropdown {
+    display: block;
+  }
+
+  .dropdown a {
+    padding: 10px 16px;
+    font-size: 0.92rem;
+  }
+
+  .dropdown a:hover {
+    background: var(--color-bg);
+  }
+
+  .primary-nav .nav-cta {
+    padding: 10px 18px;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    font-weight: 700;
+  }
+
+  .primary-nav .nav-cta:hover {
+    background: var(--color-accent-bright);
+    color: var(--color-bg);
+  }
+
+  .nav-toggle {
+    display: none;
+    min-width: 44px; /* tap target */
+    min-height: 44px;
+    padding: 8px 10px;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  @media (max-width: 880px) {
+    .nav-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .primary-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+      padding: 12px var(--container-padding-x) 24px;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      /* Short screens: with Programs expanded the panel outgrows the
+         viewport, so let it scroll instead of cutting off the CTA. */
+      max-height: calc(100vh - 73px);
+      max-height: calc(100dvh - 73px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .primary-nav.open {
+      display: flex;
+    }
+
+    .primary-nav a,
+    .dropdown a {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .dropdown {
+      position: static;
+      min-width: 0;
+      padding: 0 0 0 12px;
+      border: none;
+      background: none;
+    }
+
+    .has-dropdown:hover .dropdown {
+      display: none;
+    }
+
+    .has-dropdown.open .dropdown,
+    .has-dropdown.open:hover .dropdown {
+      display: block;
+    }
+
+    .primary-nav .nav-cta {
+      margin-top: 8px;
+      padding: 12px 18px;
+      text-align: center;
+      border-bottom: none;
+    }
+  }
+</style>

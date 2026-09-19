@@ -1,0 +1,57 @@
+---
+/**
+ * Centred paper CTA band that closes an inner page (mockup
+ * `section.on-paper.center`): a heading, one line of copy and a primary
+ * button. An optional secondary link renders as a ghost button beside it.
+ */
+interface Link {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  heading: string;
+  text: string;
+  cta?: Link;
+  secondary?: Link;
+}
+
+const {
+  heading,
+  text,
+  cta = { label: "Book your free trial", href: "/#trial" },
+  secondary,
+} = Astro.props;
+---
+
+<section class="section on-paper closing-band">
+  <div class="wrap">
+    <h2>{heading}</h2>
+    <p>{text}</p>
+    <div class="btn-row closing-band__actions">
+      <a href={cta.href} class="btn btn-primary">{cta.label}</a>
+      {
+        secondary && (
+          <a href={secondary.href} class="btn btn-ghost">
+            {secondary.label}
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .closing-band {
+    text-align: center;
+  }
+
+  .closing-band p {
+    max-width: 56ch;
+    margin: 0 auto 20px;
+  }
+
+  .closing-band__actions {
+    justify-content: center;
+  }
+</style>

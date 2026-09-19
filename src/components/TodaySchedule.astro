@@ -18,11 +18,11 @@ const combined = days.map((day) => ({
 }));
 ---
 
-<section class="today-section">
-  <div class="today-inner">
+<section class="today-section section on-soft">
+  <div class="today-inner wrap">
     <div class="today-header">
-      <span class="today-label">Today at Zen MMA</span>
-      <h2 class="today-title">TODAY'S CLASSES</h2>
+      <span class="stripe steel" aria-hidden="true"></span>
+      <h2 class="today-title">Today's classes</h2>
       <p class="today-date" id="today-date">&nbsp;</p>
     </div>
 
@@ -71,7 +71,7 @@ const combined = days.map((day) => ({
     </div>
 
     <div class="today-footer">
-      <a href="/schedule" class="today-link">View Full Schedule →</a>
+      <a href="/schedule" class="today-link">View the full weekly schedule →</a>
     </div>
   </div>
 </section>
@@ -97,45 +97,19 @@ const combined = days.map((day) => ({
 </script>
 
 <style>
-  .today-section {
-    background: #0a0a0a;
-    padding: 48px 24px;
-  }
-
-  .today-inner {
-    max-width: 680px;
-    margin: 0 auto;
-  }
-
   .today-header {
     margin-bottom: 32px;
   }
 
-  .today-label {
-    display: block;
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    color: var(--color-accent);
-    margin-bottom: 8px;
-  }
-
   .today-title {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 44px;
-    color: #f5f5f5;
-    margin: 0 0 6px;
-    line-height: 1;
+    color: var(--color-text);
+    margin: 0 0 12px;
   }
 
   .today-date {
-    font-family: "Barlow", sans-serif;
-    font-size: 14px;
-    color: var(--color-secondary);
+    font-family: var(--font-body);
+    color: var(--color-text-muted);
     margin: 0;
-    line-height: 1.4;
   }
 
   [data-discipline="bjj"] {
@@ -184,7 +158,7 @@ const combined = days.map((day) => ({
   }
 
   .class-card {
-    background: #171717;
+    background: var(--color-bg);
     border-left: 3px solid var(--hue);
     padding: 16px;
     display: flex;
@@ -195,13 +169,13 @@ const combined = days.map((day) => ({
   }
 
   .class-time {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 16.5px;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 500;
     font-variant-numeric: tabular-nums;
     color: var(--color-accent);
-    min-width: 116px;
+    min-width: 136px;
     line-height: 1.15;
-    letter-spacing: 0.5px;
     flex-shrink: 0;
   }
 
@@ -211,30 +185,26 @@ const combined = days.map((day) => ({
   }
 
   .class-name {
-    font-family: "Barlow Condensed", sans-serif;
+    font-family: var(--font-body);
     font-size: 17px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #f5f5f5;
+    font-weight: 600;
+    color: var(--color-text);
     line-height: 1.2;
   }
 
   .class-detail {
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 13px;
-    text-transform: uppercase;
-    color: var(--color-secondary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text-muted);
     line-height: 1.3;
   }
 
   .class-category-badge {
-    background: #1a1a1a;
-    border: 1px solid #333;
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--color-secondary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    color: var(--color-text-muted);
     padding: 4px 10px;
     border-radius: 0;
     flex-shrink: 0;
@@ -245,14 +215,15 @@ const combined = days.map((day) => ({
   .no-classes {
     text-align: center;
     padding: 32px 0;
-    font-family: "Barlow", sans-serif;
-    font-size: 15px;
-    color: #666;
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text-muted);
     line-height: 1.7;
   }
 
   .no-classes p {
-    margin: 0;
+    margin: 0 auto;
+    color: var(--color-text-muted);
   }
 
   .no-classes-phone {
@@ -266,17 +237,15 @@ const combined = days.map((day) => ({
   }
 
   .today-link {
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 600;
     color: var(--color-accent);
     text-decoration: none;
   }
 
   .today-link:hover {
-    opacity: 0.8;
+    color: var(--color-accent-bright);
   }
 
   @media (max-width: 520px) {

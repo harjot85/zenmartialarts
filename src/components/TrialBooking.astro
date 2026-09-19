@@ -2,98 +2,108 @@
 const accessKey = import.meta.env.WEB3FORMS_KEY;
 ---
 
-<section class="trial-section" id="trial">
+<section class="trial-section section on-paper" id="trial">
   <span class="trial-decor" aria-hidden="true">FREE</span>
 
-  <div class="trial-inner">
+  <div class="trial-inner wrap">
     <div class="trial-header">
-      <span class="trial-label">No commitment</span>
-      <h2 class="trial-title">BOOK YOUR FREE TRIAL</h2>
+      <span class="stripe" aria-hidden="true"></span>
+      <h2 class="trial-title">Book your free trial</h2>
       <p class="trial-subtext">
-        One class, on us. Show up, train hard, see if it fits.
+        One week, on us. Show up, train hard, see if it fits. No credit card, no
+        pressure — just show up.
+      </p>
+      <p class="trial-visit">
+        48640 Yale Rd, Chilliwack, BC V4Z 0B1 ·
+        <a href="tel:+17788356590">778-835-6590</a>
       </p>
     </div>
 
-    <form id="trial-form" class="trial-form">
-      <!-- Web3Forms hidden fields -->
-      <input type="hidden" name="access_key" value={accessKey} />
-      <input
-        type="hidden"
-        name="subject"
-        value="New Free Trial Booking — Zen MMA"
-      />
-      <input type="hidden" name="from_name" value="Zen MMA Website" />
+    <div class="trial-body">
+      <form id="trial-form" class="trial-form">
+        <!-- Web3Forms hidden fields -->
+        <input type="hidden" name="access_key" value={accessKey} />
+        <input
+          type="hidden"
+          name="subject"
+          value="New Free Trial Booking — Zen MMA"
+        />
+        <input type="hidden" name="from_name" value="Zen MMA Website" />
 
-      <div class="trial-fields">
-        <input
-          class="trial-input"
-          type="text"
-          name="name"
-          id="full_name"
-          placeholder="Your full name"
-          autocomplete="name"
-          required
-        />
-        <input
-          class="trial-input"
-          type="tel"
-          name="phone"
-          id="phone"
-          placeholder="Phone number"
-          autocomplete="tel"
-          required
-        />
-        <input
-          class="trial-input"
-          type="email"
-          name="email"
-          id="email"
-          placeholder="Email address"
-          autocomplete="email"
-          required
-        />
-        <select
-          class="trial-input trial-select"
-          name="class"
-          id="class_interest"
-          required
-        >
-          <option value="" disabled selected>Which class interests you?</option>
-          <option value="muay-thai">Muay Thai</option>
-          <option value="bjj">BJJ / Jiu-Jitsu</option>
-          <option value="kickboxing">Kickboxing</option>
-          <option value="kids-program">Kids Program</option>
-          <option value="not-sure">Not sure yet</option>
-        </select>
-        <div class="trial-date-wrap">
-          <label class="trial-date-label" for="preferred_date"
-            >Preferred date to come in</label
-          >
+        <div class="trial-fields">
           <input
-            class="trial-input trial-date"
-            type="date"
-            name="preferred_date"
-            id="preferred_date"
+            class="trial-input"
+            type="text"
+            name="name"
+            id="full_name"
+            placeholder="Your full name"
+            autocomplete="name"
+            required
           />
+          <input
+            class="trial-input"
+            type="tel"
+            name="phone"
+            id="phone"
+            placeholder="Phone number"
+            autocomplete="tel"
+            required
+          />
+          <input
+            class="trial-input"
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Email address"
+            autocomplete="email"
+            required
+          />
+          <select
+            class="trial-input trial-select"
+            name="class"
+            id="class_interest"
+            required
+          >
+            <option value="" disabled selected
+              >Which class interests you?</option
+            >
+            <option value="muay-thai-kickboxing">Muay Thai / Kickboxing</option>
+            <option value="bjj">BJJ / Jiu-Jitsu</option>
+            <option value="boxing">Boxing</option>
+            <option value="wrestling">Wrestling</option>
+            <option value="kids-program">Kids Program</option>
+            <option value="womens-self-defense">Women's Self-Defense</option>
+            <option value="not-sure">Not sure yet</option>
+          </select>
+          <div class="trial-date-wrap">
+            <label class="trial-date-label" for="preferred_date"
+              >Preferred date to come in</label
+            >
+            <input
+              class="trial-input trial-date"
+              type="date"
+              name="preferred_date"
+              id="preferred_date"
+            />
+          </div>
         </div>
+
+        <div id="trial-error" class="trial-error hidden">
+          Something went wrong. Please try again or call us directly.
+        </div>
+
+        <button id="trial-submit" class="trial-submit" type="submit"
+          >Claim your free week →</button
+        >
+      </form>
+
+      <!-- Success state -->
+      <div id="trial-success" class="trial-success hidden">
+        <p class="trial-success-heading">You're in!</p>
+        <p class="trial-success-sub">
+          We'll be in touch soon to confirm your free week. See you on the mat.
+        </p>
       </div>
-
-      <div id="trial-error" class="trial-error hidden">
-        Something went wrong. Please try again or call us directly.
-      </div>
-
-      <button id="trial-submit" class="trial-submit" type="submit"
-        >CLAIM YOUR FREE CLASS →</button
-      >
-      <p class="trial-note">No credit card. No pressure. Just show up.</p>
-    </form>
-
-    <!-- Success state -->
-    <div id="trial-success" class="trial-success hidden">
-      <p class="trial-success-heading">YOU'RE IN!</p>
-      <p class="trial-success-sub">
-        We'll be in touch soon to confirm your free class. See you on the mat.
-      </p>
     </div>
   </div>
 </section>
@@ -110,7 +120,7 @@ const accessKey = import.meta.env.WEB3FORMS_KEY;
       e.preventDefault();
 
       // Loading state
-      submit.textContent = "SENDING...";
+      submit.textContent = "Sending…";
       submit.disabled = true;
       error.classList.add("hidden");
 
@@ -146,9 +156,6 @@ const accessKey = import.meta.env.WEB3FORMS_KEY;
 
 <style>
   .trial-section {
-    background: #f5f5f5;
-    color: #0a0a0a;
-    padding: 48px 24px;
     position: relative;
     overflow: hidden;
   }
@@ -157,50 +164,68 @@ const accessKey = import.meta.env.WEB3FORMS_KEY;
     position: absolute;
     top: -10px;
     right: -10px;
-    font-family: "Bebas Neue", sans-serif;
+    font-family: var(--font-display);
+    font-weight: 700;
     font-size: 120px;
-    color: var(--color-accent);
-    opacity: 0.06;
+    color: var(--color-accent-deep);
+    opacity: 0.08;
     pointer-events: none;
     z-index: 0;
     line-height: 1;
     user-select: none;
   }
 
+  /* Two columns like the mockup: pitch on the left, form on the right.
+     Stacks under 800px. */
   .trial-inner {
     position: relative;
     z-index: 2;
-    max-width: 480px;
-    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .trial-inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
   }
 
   .trial-header {
-    margin-bottom: 32px;
+    max-width: 480px;
   }
 
-  .trial-label {
-    display: block;
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    color: var(--color-accent);
-    margin-bottom: 8px;
+  .trial-visit {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--color-text-muted-on-paper);
+    margin: 20px 0 0;
+    line-height: 1.5;
+  }
+
+  .trial-visit a {
+    color: var(--color-text-on-paper);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent-deep);
+    text-underline-offset: 0.2em;
+    transition: color 0.15s;
+  }
+
+  .trial-visit a:hover {
+    color: var(--color-accent-deep);
   }
 
   .trial-title {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 52px;
-    color: #0a0a0a;
-    line-height: 1;
+    color: var(--color-text-on-paper);
     margin: 0 0 12px;
   }
 
   .trial-subtext {
-    font-family: "Barlow", sans-serif;
-    font-size: 14px;
-    color: #555;
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text-muted-on-paper);
     margin: 0;
     line-height: 1.5;
   }
@@ -220,36 +245,35 @@ const accessKey = import.meta.env.WEB3FORMS_KEY;
   .trial-input {
     width: 100%;
     box-sizing: border-box;
-    background: #fff;
-    border: 2px solid #bbb;
+    background: var(--color-paper-field);
+    border: 2px solid var(--color-paper-field-border);
     border-radius: 0;
     padding: 20px 18px;
-    font-family: "Barlow", sans-serif;
-    font-size: 15px;
-    color: #0a0a0a;
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text-on-paper);
     -webkit-appearance: none;
     appearance: none;
-    outline: none;
   }
 
   .trial-input::placeholder {
-    color: #aaa;
+    color: var(--color-text-muted-on-paper);
   }
 
   .trial-input:focus {
-    border-color: var(--color-accent);
+    border-color: var(--color-accent-deep);
   }
 
   .trial-select {
     cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2355524a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 18px center;
     padding-right: 44px;
   }
 
   .trial-select option[value=""][disabled] {
-    color: #aaa;
+    color: var(--color-text-muted-on-paper);
   }
 
   .trial-date {
@@ -260,32 +284,31 @@ const accessKey = import.meta.env.WEB3FORMS_KEY;
 
   .trial-date-label {
     display: block;
-    font-family: "Barlow", sans-serif;
-    font-size: 13px;
-    color: #555;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text-muted-on-paper);
     margin-bottom: 6px;
   }
 
   .trial-error {
-    font-family: "Barlow", sans-serif;
-    font-size: 13px;
-    color: var(--color-accent);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-accent-deep);
     margin-bottom: 10px;
   }
 
   .trial-submit {
     width: 100%;
     background: var(--color-accent);
-    color: #0a0a0a;
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 22px;
-    letter-spacing: 4px;
+    color: var(--color-bg);
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 600;
     padding: 20px;
     border: none;
     border-radius: 0;
     cursor: pointer;
     line-height: 1;
-    margin-bottom: 14px;
   }
 
   .trial-submit:hover {
@@ -297,32 +320,24 @@ const accessKey = import.meta.env.WEB3FORMS_KEY;
     cursor: not-allowed;
   }
 
-  .trial-note {
-    font-family: "Barlow", sans-serif;
-    font-size: 13px;
-    color: #888;
-    text-align: center;
-    margin: 0;
-    line-height: 1.5;
-  }
-
   .trial-success {
     text-align: center;
     padding: 32px 0;
   }
 
   .trial-success-heading {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 64px;
-    color: var(--color-accent);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 56px;
+    color: var(--color-accent-deep);
     line-height: 1;
     margin: 0 0 12px;
   }
 
   .trial-success-sub {
-    font-family: "Barlow", sans-serif;
-    font-size: 15px;
-    color: #555;
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text-muted-on-paper);
     margin: 0;
     line-height: 1.6;
   }

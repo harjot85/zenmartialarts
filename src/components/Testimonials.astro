@@ -35,11 +35,11 @@ const testimonials = (testimonialsData.testimonials as Testimonial[]).map(
 );
 ---
 
-<section class="testimonials-section">
-  <div class="testimonials-inner">
+<section class="testimonials-section section">
+  <div class="testimonials-inner wrap">
     <div class="testimonials-header">
-      <span class="testimonials-label">Real members</span>
-      <h2 class="testimonials-title">WHAT THEY SAY</h2>
+      <span class="stripe steel" aria-hidden="true"></span>
+      <h2 class="testimonials-title">What members say</h2>
     </div>
 
     <ul class="testimonials-list" role="list">
@@ -71,36 +71,17 @@ const testimonials = (testimonialsData.testimonials as Testimonial[]).map(
 
 <style>
   .testimonials-section {
-    background: #0d0d0d;
-    padding: 48px 24px;
-  }
-
-  .testimonials-inner {
-    max-width: 640px;
-    margin: 0 auto;
+    background: var(--color-bg);
   }
 
   .testimonials-header {
-    margin-bottom: 32px;
-  }
-
-  .testimonials-label {
-    display: block;
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    color: var(--color-accent);
-    margin-bottom: 8px;
+    max-width: 62ch;
+    margin-bottom: 40px;
   }
 
   .testimonials-title {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 44px;
-    color: #f5f5f5;
+    color: var(--color-text);
     margin: 0;
-    line-height: 1;
   }
 
   .testimonials-list {
@@ -110,10 +91,11 @@ const testimonials = (testimonialsData.testimonials as Testimonial[]).map(
     display: flex;
     flex-direction: column;
     gap: 16px;
+    max-width: 760px;
   }
 
   .testimonial-card {
-    background: #111;
+    background: var(--color-surface);
     border-top: 2px solid var(--color-accent);
     padding: 24px;
   }
@@ -121,7 +103,7 @@ const testimonials = (testimonialsData.testimonials as Testimonial[]).map(
   .testimonial-stars {
     color: var(--color-accent);
     font-size: 13px;
-    letter-spacing: 2px;
+    letter-spacing: 2px; /* spacing between star glyphs, not text tracking */
     margin-bottom: 12px;
   }
 
@@ -130,9 +112,9 @@ const testimonials = (testimonialsData.testimonials as Testimonial[]).map(
   }
 
   .testimonial-para {
-    font-family: "Barlow", sans-serif;
-    font-size: 15px;
-    color: #ccc;
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text);
     line-height: 1.7;
     font-style: italic;
     margin: 0 0 12px;
@@ -156,9 +138,10 @@ const testimonials = (testimonialsData.testimonials as Testimonial[]).map(
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 16px;
-    color: #0a0a0a;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--color-bg);
     flex-shrink: 0;
   }
 
@@ -169,11 +152,10 @@ const testimonials = (testimonialsData.testimonials as Testimonial[]).map(
   }
 
   .testimonial-name {
-    font-family: "Barlow Condensed", sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #f5f5f5;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
     line-height: 1.2;
   }
 </style>

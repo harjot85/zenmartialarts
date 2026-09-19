@@ -1,0 +1,380 @@
+---
+import Layout from "../layouts/Layout.astro";
+import pricingData from "../content/pricing.json";
+
+// All prices and plan copy live in src/content/pricing.json so they can be
+// edited without touching this markup.
+interface Plan {
+  name: string;
+  price: number;
+  /** Billing period suffix, e.g. "mo". null for one-off purchases. */
+  unit: string | null;
+  blurb: string;
+  /** Optional corner tag, e.g. "Best Value". */
+  tag: string | null;
+}
+
+interface PricingData {
+  currency: string;
+  tryOut: { heading: string; plans: Plan[] };
+  adult: { heading: string; intro: string; plans: Plan[] };
+  kids: { heading: string; plans: Plan[]; note: string };
+  cleanAndTrain: { heading: string; body: string };
+}
+
+const pricing: PricingData = pricingData;
+const { tryOut, adult, kids, cleanAndTrain } = pricing;
+
+const pageURL = new URL("/pricing", Astro.site).href;
+
+// Offer catalogue for search engines, built from the same data as the cards.
+const allPlans = [...tryOut.plans, ...adult.plans, ...kids.plans];
+const offerCatalogSchema = {
+  "@context": "https://schema.org",
+  "@type": "OfferCatalog",
+  name: "Zen Martial Arts & Fitness memberships",
+  url: pageURL,
+  provider: {
+    "@type": "LocalBusiness",
+    name: "Zen Martial Arts & Fitness",
+    url: "https://zenmartialarts.ca",
+  },
+  itemListElement: allPlans.map((plan) => ({
+    "@type": "Offer",
+    name: plan.name,
+    description: plan.blurb,
+    price: plan.price.toFixed(2),
+    priceCurrency: pricing.currency,
+    url: pageURL,
+    priceSpecification: {
+      "@type": "UnitPriceSpecification",
+      price: plan.price.toFixed(2),
+      priceCurrency: pricing.currency,
+      ...(plan.unit === "mo"
+        ? {
+            unitCode: "MON",
+            unitText: "month",
+            referenceQuantity: {
+              "@type": "QuantitativeValue",
+              value: 1,
+              unitCode: "MON",
+            },
+          }
+        : {}),
+    },
+  })),
+};
+---
+
+<Layout
+  title="Membership Pricing — Zen Martial Arts & Fitness, Chilliwack BC"
+  description="Simple, honest pricing at Zen Martial Arts in Chilliwack, BC. Drop-ins, punch passes, and grappling, striking or unlimited memberships for adults and kids."
+>
+  <script
+    slot="jsonld"
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(offerCatalogSchema)}
+  />
+
+  <!-- Hero -->
+  <section class="pricing-hero section">
+    <div class="wrap">
+      <span class="stripe" aria-hidden="true"></span>
+      <h1>Simple, honest pricing</h1>
+      <p class="pricing-lede">
+        Train as much as you want, or start with a single drop-in. No hidden
+        fees, no surprise renewal terms.
+      </p>
+      <div class="btn-row">
+        <a href="/#trial" class="btn btn-primary">Start with a free trial</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Drop-in and punch pass -->
+  <section class="section" aria-labelledby="pricing-tryout">
+    <div class="wrap">
+      <div class="pricing-head">
+        <span class="stripe steel" aria-hidden="true"></span>
+        <h2 id="pricing-tryout">{tryOut.heading}</h2>
+      </div>
+      <ul class="pricing-grid" role="list">
+        {
+          tryOut.plans.map((plan) => (
+            <li class:list={["price-card", { "price-card--tagged": plan.tag }]}>
+              <span class="price-card__accent" aria-hidden="true" />
+              {plan.tag && <span class="price-card__tag">{plan.tag}</span>}
+              <h3 class="price-card__name">{plan.name}</h3>
+              <p class="price-card__price">
+                ${plan.price}
+                {plan.unit && (
+                  <span class="price-card__unit">/{plan.unit}</span>
+                )}
+              </p>
+              <p class="price-card__blurb">{plan.blurb}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Adult memberships -->
+  <section class="section on-paper" aria-labelledby="pricing-adult">
+    <div class="wrap">
+      <div class="pricing-head">
+        <span class="stripe" aria-hidden="true"></span>
+        <h2 id="pricing-adult">{adult.heading}</h2>
+        <p>{adult.intro}</p>
+      </div>
+      <ul class="pricing-grid" role="list">
+        {
+          adult.plans.map((plan) => (
+            <li class:list={["price-card", { "price-card--tagged": plan.tag }]}>
+              <span class="price-card__accent" aria-hidden="true" />
+              {plan.tag && <span class="price-card__tag">{plan.tag}</span>}
+              <h3 class="price-card__name">{plan.name}</h3>
+              <p class="price-card__price">
+                ${plan.price}
+                {plan.unit && (
+                  <span class="price-card__unit">/{plan.unit}</span>
+                )}
+              </p>
+              <p class="price-card__blurb">{plan.blurb}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Kids memberships -->
+  <section class="section" aria-labelledby="pricing-kids">
+    <div class="wrap">
+      <div class="pricing-head">
+        <span class="stripe steel" aria-hidden="true"></span>
+        <h2 id="pricing-kids">{kids.heading}</h2>
+      </div>
+      <ul class="pricing-grid" role="list">
+        {
+          kids.plans.map((plan) => (
+            <li class:list={["price-card", { "price-card--tagged": plan.tag }]}>
+              <span class="price-card__accent" aria-hidden="true" />
+              {plan.tag && <span class="price-card__tag">{plan.tag}</span>}
+              <h3 class="price-card__name">{plan.name}</h3>
+              <p class="price-card__price">
+                ${plan.price}
+                {plan.unit && (
+                  <span class="price-card__unit">/{plan.unit}</span>
+                )}
+              </p>
+              <p class="price-card__blurb">{plan.blurb}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="pricing-note">{kids.note}</p>
+    </div>
+  </section>
+
+  <!-- Clean & Train -->
+  <section
+    class="section on-paper pricing-center"
+    aria-labelledby="pricing-clean"
+  >
+    <div class="wrap">
+      <span class="stripe pricing-stripe-center" aria-hidden="true"></span>
+      <h2 id="pricing-clean">{cleanAndTrain.heading}</h2>
+      <p class="pricing-center__body">{cleanAndTrain.body}</p>
+      <a href="tel:+17788356590" class="btn btn-ghost">Call 778-835-6590</a>
+    </div>
+  </section>
+
+  <!-- Closing CTA -->
+  <section class="section pricing-center" aria-labelledby="pricing-cta">
+    <div class="wrap">
+      <h2 id="pricing-cta">Come train. Bring your family.</h2>
+      <p class="pricing-center__body">
+        Everyone is welcome on the mats. Your first week is free.
+      </p>
+      <a href="/#trial" class="btn btn-primary">Book your free trial</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* ---------- Hero ---------- */
+  .pricing-hero {
+    padding-block: clamp(56px, 10vw, 88px) 32px;
+  }
+
+  .pricing-lede {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    max-width: 56ch;
+    margin: 0 0 28px;
+  }
+
+  /* ---------- Section heads ---------- */
+  .pricing-head {
+    max-width: 62ch;
+    margin-bottom: 40px;
+  }
+
+  .pricing-head h2 {
+    margin-bottom: 0;
+  }
+
+  .pricing-head p {
+    color: var(--color-text-muted);
+    margin: 12px 0 0;
+  }
+
+  /* ---------- Cards (based on .program-card in Programs.astro) ---------- */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .price-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 28px 24px;
+    overflow: hidden;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  /* Gold accent bar, as on the program cards. */
+  .price-card__accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--color-accent);
+  }
+
+  .price-card:hover {
+    border-color: var(--color-accent-border);
+    transform: translateY(-2px);
+  }
+
+  .price-card__name {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.15;
+    margin: 0 0 12px;
+  }
+
+  /* Leave room for the corner tag so a long name never runs under it. */
+  .price-card--tagged .price-card__name {
+    padding-right: 96px;
+  }
+
+  .price-card__price {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--color-text);
+    margin: 0 0 10px;
+  }
+
+  .price-card__unit {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-left: 2px;
+  }
+
+  .price-card__blurb {
+    font-size: 0.97rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .price-card__tag {
+    position: absolute;
+    top: 18px;
+    right: 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.4;
+    padding: 2px 9px;
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  /* Paper sections: light card on the warm paper ground, deep gold for text. */
+  .on-paper .price-card {
+    background: var(--color-paper-field);
+  }
+
+  .on-paper .price-card:hover {
+    border-color: var(--color-accent-deep);
+  }
+
+  .on-paper .price-card__name,
+  .on-paper .price-card__price {
+    color: var(--color-text-on-paper);
+  }
+
+  .on-paper .price-card__unit,
+  .on-paper .price-card__blurb {
+    color: var(--color-text-muted-on-paper);
+  }
+
+  .on-paper .price-card__tag {
+    border-color: var(--color-accent-deep);
+    color: var(--color-accent-deep);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .price-card {
+      transition: border-color 0.15s ease;
+    }
+
+    .price-card:hover {
+      transform: none;
+    }
+  }
+
+  /* ---------- Kids note ---------- */
+  .pricing-note {
+    color: var(--color-text-muted);
+    margin: 24px 0 0;
+    max-width: 72ch;
+  }
+
+  /* ---------- Centered bands ---------- */
+  .pricing-center {
+    text-align: center;
+  }
+
+  .pricing-stripe-center {
+    margin-inline: auto;
+  }
+
+  .pricing-center__body {
+    max-width: 56ch;
+    margin: 0 auto 20px;
+  }
+
+  .pricing-center:not(.on-paper) .pricing-center__body {
+    color: var(--color-text-muted);
+  }
+</style>

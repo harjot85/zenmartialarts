@@ -1,154 +1,107 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Footer from "../components/Footer.astro";
+import PageHero from "../components/PageHero.astro";
+import ClosingBand from "../components/ClosingBand.astro";
 import CoachProfile from "../components/CoachProfile.astro";
-import { getCoachByScheduleName } from "../lib/coaches";
+import CoachList from "../components/CoachList.astro";
+import { coachRoster, getCoachByScheduleName } from "../lib/coaches";
 
 const eric = getCoachByScheduleName("Eric A.")!;
+// Eric already has the full profile card above; list everyone else.
+const otherCoaches = coachRoster.filter((c) => c.profileSlug !== eric.slug);
 ---
 
 <Layout
-  title="About Zen MMA — Coach Eric & Our Gym in Chilliwack, BC"
+  title="About Zen Martial Arts — Coach Eric & Our Gym in Chilliwack, BC"
   description="Meet Coach Eric, a BJJ Black Belt under Marcus Soares (Carlson Gracie), and learn about Zen Martial Arts & Fitness — 4 years of BJJ, Muay Thai, and MMA in Chilliwack, BC."
 >
-  <section class="about-section">
-    <div class="about-inner">
+  <PageHero
+    title="About Zen Martial Arts"
+    lede="Four years in Chilliwack, built around one idea: real martial arts training shouldn't require you to already be an athlete. It's how you become one."
+  />
+
+  <section class="section" aria-labelledby="about-story-title">
+    <div class="wrap">
       <header class="about-header">
-        <span class="about-label">Our story</span>
-        <h1 class="about-title">ABOUT ZEN</h1>
+        <span class="stripe steel" aria-hidden="true"></span>
+        <h2 id="about-story-title">Our story</h2>
         <p class="about-intro">
           Zen Martial Arts &amp; Fitness has proudly served the Chilliwack
           community for 4 years, offering high-quality Brazilian Jiu-Jitsu,
           wrestling, Muay Thai, boxing, and MMA training for all ages and
           experience levels.
         </p>
+        <p class="about-intro">
+          Whether you&rsquo;re a complete beginner or an experienced martial
+          artist, Coach Eric and the Zen team are here to help you grow in a
+          supportive, family-oriented environment.
+        </p>
       </header>
+    </div>
+  </section>
 
+  <section class="about-section section">
+    <div class="about-inner wrap">
       <div class="coach-slot">
         <CoachProfile coach={eric} />
       </div>
-
-      <p class="about-closer">
-        Whether you&rsquo;re a complete beginner or an experienced martial
-        artist, Coach Eric and the Zen team are here to help you grow in a
-        supportive, family-oriented environment.
-      </p>
-
-      <div class="about-actions">
-        <a href="/#trial" class="about-btn about-btn--primary"
-          >Book a Free Trial</a
-        >
-        <a href="/programs" class="about-btn about-btn--ghost">View Programs</a>
-      </div>
     </div>
   </section>
-  <Footer />
+
+  <section
+    class="about-coaches section on-soft"
+    id="coaches"
+    aria-labelledby="about-coaches-title"
+  >
+    <div class="wrap">
+      <header class="about-coaches-head">
+        <span class="stripe" aria-hidden="true"></span>
+        <h2 id="about-coaches-title">The rest of the team</h2>
+        <p>The people who&rsquo;ll actually be teaching your class.</p>
+      </header>
+
+      <CoachList coaches={otherCoaches} />
+    </div>
+  </section>
+
+  <ClosingBand
+    heading="Come meet us in person"
+    text="Your first week is free — the best way to know if a gym is right for you is to train in it."
+  />
 </Layout>
 
 <style>
   .about-section {
     background: var(--color-bg);
-    padding: 64px 24px 80px;
-  }
-
-  .about-inner {
-    max-width: 960px;
-    margin: 0 auto;
   }
 
   .about-header {
-    margin-bottom: 48px;
-    max-width: 680px;
+    max-width: 62ch;
   }
 
-  .about-label {
-    display: block;
-    font-family: var(--font-ui);
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    color: var(--color-accent);
-    margin-bottom: 10px;
-  }
-
-  .about-title {
-    font-family: var(--font-display);
-    font-size: clamp(44px, 12vw, 68px);
-    color: var(--color-text);
-    margin: 0;
-    line-height: 1;
+  .about-header h2 {
+    margin-bottom: 0;
   }
 
   .about-intro {
     font-family: var(--font-body);
-    font-size: 16px;
-    color: var(--color-secondary);
+    font-size: 17px;
+    color: var(--color-text-muted);
     line-height: 1.7;
     margin: 16px 0 0;
   }
 
   .coach-slot {
-    margin-bottom: 48px;
+    margin-bottom: 0;
   }
 
-  .about-closer {
-    font-family: var(--font-body);
-    font-size: 16px;
-    color: var(--color-secondary);
-    line-height: 1.7;
-    margin: 0 0 40px;
-    max-width: 680px;
+  .about-coaches-head {
+    max-width: 62ch;
+    margin-bottom: 40px;
   }
 
-  .about-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-  }
-
-  .about-btn {
-    font-family: var(--font-ui);
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    padding: 16px 32px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 0;
-    transition: opacity 0.15s;
-  }
-
-  .about-btn:hover {
-    opacity: 0.85;
-  }
-
-  .about-btn--primary {
-    background: var(--color-accent);
-    color: #0a0a0a;
-  }
-
-  .about-btn--ghost {
-    background: transparent;
-    color: var(--color-text);
-    border: 1px solid #333;
-  }
-
-  .about-btn--ghost:hover {
-    border-color: #555;
-    opacity: 1;
-  }
-
-  @media (min-width: 700px) {
-    .about-actions {
-      flex-direction: row;
-      align-items: center;
-    }
-
-    .about-btn {
-      flex: 0 0 auto;
-    }
+  .about-coaches-head p {
+    color: var(--color-text-muted);
+    margin: 0;
   }
 </style>

@@ -110,7 +110,7 @@ const DISCIPLINE_BY_NAME: Record<string, Discipline> = {
   "Adv No-Gi BJJ": "bjj",
   "Kids BJJ": "bjj",
   "Gi BJJ": "bjj",
-  "Gi BJJ Kids": "bjj",
+  "Kids Gi BJJ": "bjj",
   "BJJ Fundamentals": "bjj",
   "Adv BJJ Gi": "bjj",
   "Muay Thai": "striking",

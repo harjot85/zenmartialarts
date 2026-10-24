@@ -102,7 +102,7 @@ const programDefs: ProgramDef[] = [
     cta: "Explore Kids' Program",
     classNames: [
       "Kids BJJ",
-      "Gi BJJ Kids",
+      "Kids Gi BJJ",
       "Kids Wrestling",
       "Wrestling",
       "Kids MMA",

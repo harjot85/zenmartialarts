@@ -30,7 +30,7 @@ export const faqItems: FaqItem[] = [
   },
   {
     q: "What ages do you accept for kids' classes?",
-    a: "Kids' BJJ and Kids' MMA run from age 4 through 13, split into age-appropriate groups (roughly 4–8 and 9–13). Kids' Wrestling runs ages 4–9, with a combined kids-and-adults wrestling block afterward.",
+    a: "Kids' BJJ, Wrestling and MMA all run from age 4 through 13, in one coach-led group per class that's scaled to the ages on the mat. Saturday morning wrestling is open to all ages, kids and adults together.",
   },
   {
     q: "Is martial arts safe for kids?",

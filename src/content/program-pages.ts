@@ -321,12 +321,12 @@ export const programPages: Record<ProgramSlug, ProgramPage> = {
       "Kids BJJ and Kids MMA in Chilliwack, BC for ages 4–13. Confidence, coordination and respect through age-appropriate martial arts. 1 week free trial.",
     h1: "Kids martial arts in Chilliwack, BC",
     heroStripe: "steel",
-    lede: "Confidence, coordination, and respect, taught through age-appropriate BJJ, wrestling, and MMA for ages 4–13. Split into groups by age so the four-year-olds and the thirteen-year-olds are never learning side by side.",
+    lede: "Confidence, coordination, and respect, taught through age-appropriate BJJ, wrestling, and MMA for ages 4–13. One class a night, five nights a week, with coaches scaling every drill to the kids on the mat.",
     ctaLabel: "Book a free trial class",
     sections: [
       {
         type: "explainer",
-        heading: "Three programs, split by age",
+        heading: "Three programs, five nights a week",
         bg: "ink",
         stripe: "gold",
         cards: [
@@ -343,7 +343,7 @@ export const programPages: Record<ProgramSlug, ProgramPage> = {
             text: "A blend of striking fundamentals and grappling, scaled for younger athletes, with an emphasis on listening, discipline, and controlled movement.",
           },
         ],
-        note: "BJJ and MMA run in two age bands: 4–8 and 9–13. Kids Wrestling runs ages 4–9, with an older-kids-and-adults wrestling block later the same evening.",
+        note: "Every kids' class runs 5:00 PM on weeknights and covers ages 4–13 in one group. Saturday morning wrestling is an all-ages block for kids and adults together.",
       },
       {
         type: "faq",
@@ -374,7 +374,6 @@ export const programPages: Record<ProgramSlug, ProgramPage> = {
         heading: "Kids' classes on the schedule",
         bg: "soft",
         stripe: "steel",
-        showAges: true,
       },
     ],
     closing: {

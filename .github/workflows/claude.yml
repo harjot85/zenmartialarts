@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
       issues: read
       id-token: write
       actions: read
@@ -37,3 +37,17 @@ jobs:
           claude_args: '--append-system-prompt "Before doing anything, read and follow .github/claude/change-requests.md" --allowedTools "Bash(npm ci:*),Bash(npm run:*)"'
           branch_prefix: 'change/'
           branch_name_template: '{{prefix}}{{entityNumber}}-{{description}}'
+
+      - name: Open PR
+        if: success() && github.event_name == 'issue_comment' && !github.event.issue.pull_request && steps.claude.outputs.branch_name != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ steps.claude.outputs.branch_name }}
+          ISSUE: ${{ github.event.issue.number }}
+          TITLE: ${{ github.event.issue.title }}
+        run: |
+          AHEAD=$(gh api "repos/$REPO/compare/main...$BRANCH" --jq .ahead_by 2>/dev/null || echo 0)
+          if [ "$AHEAD" = "0" ]; then echo "No changes, skipping"; exit 0; fi
+          if [ -n "$(gh pr list --repo "$REPO" --head "$BRANCH" --json number --jq '.[0].number')" ]; then echo "PR already exists"; exit 0; fi
+          gh pr create --repo "$REPO" --base main --head "$BRANCH" --title "$TITLE" --body "From #$ISSUE. Closes #$ISSUE"

@@ -267,13 +267,6 @@
           "end": "12:00 PM",
           "name": "MMA Open Mat",
           "category": "adults"
-        },
-        {
-          "start": "12:00 PM",
-          "end": "2:00 PM",
-          "name": "Open Mat",
-          "detail": "All Levels",
-          "category": "adults"
         }
       ]
     }

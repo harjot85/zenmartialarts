@@ -34,4 +34,6 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           additional_permissions: |
             actions: read
-          claude_args: '--append-system-prompt "Before doing anything, read and follow .github/claude/change-requests.md" --allowedTools "Bash(npm ci),Bash(npm run build)"'
+          claude_args: '--append-system-prompt "Before doing anything, read and follow .github/claude/change-requests.md" --allowedTools "Bash(npm ci:*),Bash(npm run:*)"'
+          branch_prefix: 'change/'
+          branch_name_template: '{{prefix}}{{entityNumber}}-{{description}}'
